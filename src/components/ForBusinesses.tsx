@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const springTransition = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
@@ -24,14 +25,19 @@ const ForBusinesses = () => {
             <p className="mt-4 text-muted-foreground leading-relaxed">
               Post internships in minutes, reach motivated candidates aged 16–22, and build your pipeline of future employees. No recruitment fees, no complexity.
             </p>
-            <motion.button
+            <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={springTransition}
-              className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-6 text-sm font-semibold hover:bg-primary/90 transition-smooth will-change-transform"
+              className="mt-6 inline-block"
             >
-              Post an Internship <ArrowRight className="h-4 w-4" />
-            </motion.button>
+              <Link
+                to="/post-internship"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-6 text-sm font-semibold hover:bg-primary/90 transition-smooth will-change-transform"
+              >
+                Post an Internship <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
       </div>

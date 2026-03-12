@@ -14,24 +14,24 @@ const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          <a href="#internships" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
+          <Link to="/browse" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
             Browse Internships
-          </a>
+          </Link>
           <a href="#how-it-works" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
             How It Works
           </a>
-          <a href="#businesses" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
+          <Link to="/post-internship" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
             For Businesses
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="hidden sm:inline-flex text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
+          <Link to="/signin" className="hidden sm:inline-flex text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
             Sign In
-          </button>
-          <button className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground h-9 px-4 text-sm font-medium hover:bg-primary/90 transition-smooth will-change-transform">
+          </Link>
+          <Link to="/signup" className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground h-9 px-4 text-sm font-medium hover:bg-primary/90 transition-smooth will-change-transform">
             Get Started
-          </button>
+          </Link>
         </div>
       </div>
     </nav>

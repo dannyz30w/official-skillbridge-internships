@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const springTransition = { type: "spring" as const, duration: 0.4, bounce: 0 };
 
@@ -25,24 +26,32 @@ const HeroSection = () => {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <motion.button
+            <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={springTransition}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-12 px-6 text-base font-semibold hover:bg-primary/90 transition-smooth will-change-transform"
             >
-              Find an Internship
-              <ArrowRight className="h-4 w-4" />
-            </motion.button>
+              <Link
+                to="/browse"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-12 px-6 text-base font-semibold hover:bg-primary/90 transition-smooth will-change-transform"
+              >
+                Find an Internship
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </motion.div>
 
-            <motion.button
+            <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={springTransition}
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-background text-accent-foreground h-12 px-6 text-base font-medium hover:bg-accent transition-smooth will-change-transform"
             >
-              Post an Internship
-            </motion.button>
+              <Link
+                to="/post-internship"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/20 bg-background text-accent-foreground h-12 px-6 text-base font-medium hover:bg-accent transition-smooth will-change-transform"
+              >
+                Post an Internship
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
       </div>
