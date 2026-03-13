@@ -2,17 +2,17 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const springTransition = { type: "spring" as const, duration: 0.4, bounce: 0 };
+const ease = [0.16, 1, 0.3, 1];
 
 const ForBusinesses = () => {
   return (
     <section id="businesses" className="py-12 sm:py-20 px-4 sm:px-6">
       <div className="container mx-auto max-w-4xl">
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease }}
           className="bg-card rounded-xl border border-border shadow-card p-8 sm:p-12"
         >
           <div className="max-w-xl">
@@ -26,9 +26,8 @@ const ForBusinesses = () => {
               Post internships in minutes, reach motivated candidates aged 16–22, and build your pipeline of future employees. No recruitment fees, no complexity.
             </p>
             <motion.div
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              transition={springTransition}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               className="mt-6 inline-block"
             >
               <Link

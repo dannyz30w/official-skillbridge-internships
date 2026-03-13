@@ -1,15 +1,26 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, Mail, Lock, User, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Mail, Lock, User, Loader2, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 
+const pageTransition = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+};
+
 const SignUp = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [accountType, setAccountType] = useState<"intern" | "business">("intern");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,28 +34,52 @@ const SignUp = () => {
     }
     setError("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
+
+    const { error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: name, account_type: accountType },
+        emailRedirectTo: window.location.origin,
+      },
+    });
+
     setLoading(false);
-    setError("Account creation is not yet connected. Coming soon!");
+
+    if (signUpError) {
+      setError(signUpError.message);
+      return;
+    }
+
+    setSuccess(true);
+    toast.success("Account created! Check your email to confirm.");
+    setTimeout(() => navigate("/"), 2000);
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <div className="p-4 sm:p-6">
+      <motion.div {...pageTransition} className="p-4 sm:p-6">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
           <ArrowLeft className="h-4 w-4" /> Back to home
         </Link>
-      </div>
+      </motion.div>
 
       <div className="flex-1 flex items-center justify-center px-4 pb-16">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
           className="w-full max-w-sm"
         >
           <div className="text-center mb-8">
-            <img src={skillbridgeLogo} alt="SkillBridge" className="h-10 w-auto mx-auto mb-6" />
+            <motion.img
+              src={skillbridgeLogo}
+              alt="SkillBridge"
+              className="h-10 w-auto mx-auto mb-6"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            />
             <h1 className="font-display text-2xl font-bold text-foreground tracking-tight">
               Create your account
             </h1>
@@ -54,6 +89,28 @@ const SignUp = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-muted-foreground tracking-wide uppercase mb-1.5">
+                I am a...
+              </label>
+              <div className="flex gap-3">
+                {(["intern", "business"] as const).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setAccountType(t)}
+                    className={`flex-1 h-10 px-4 rounded-lg border text-sm font-medium transition-smooth ${
+                      accountType === t
+                        ? "border-primary bg-accent text-accent-foreground"
+                        : "border-input bg-background text-muted-foreground hover:border-ring"
+                    }`}
+                  >
+                    {t === "intern" ? "Job Seeker" : "Business"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-medium text-muted-foreground tracking-wide uppercase mb-1.5">
                 Full Name
@@ -102,29 +159,38 @@ const SignUp = () => {
               </div>
             </div>
 
-            {error && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-sm text-destructive"
-              >
-                {error}
-              </motion.p>
-            )}
+            <AnimatePresence mode="wait">
+              {error && (
+                <motion.p
+                  key="error"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="text-sm text-destructive"
+                >
+                  {error}
+                </motion.p>
+              )}
+            </AnimatePresence>
 
-            <button
+            <motion.button
               type="submit"
-              disabled={loading}
+              disabled={loading || success}
               className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-10 text-sm font-semibold hover:bg-primary/90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed"
+              whileTap={{ scale: 0.98 }}
             >
-              {loading ? (
+              {success ? (
+                <>
+                  <CheckCircle2 className="h-4 w-4" /> Account Created!
+                </>
+              ) : loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" /> Creating account...
                 </>
               ) : (
                 "Create Account"
               )}
-            </button>
+            </motion.button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
