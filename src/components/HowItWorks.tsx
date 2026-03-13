@@ -19,7 +19,7 @@ const steps = [
   },
 ];
 
-const ease = [0.16, 1, 0.3, 1];
+const ease = [0.16, 1, 0.3, 1] as const;
 
 const HowItWorks = () => {
   return (

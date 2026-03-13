@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, Building2, MapPin, DollarSign, Briefcase, FileText, CheckCircle2, LogIn } from "lucide-react";
