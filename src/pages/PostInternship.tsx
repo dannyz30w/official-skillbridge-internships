@@ -1,12 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ArrowLeft, Loader2, Building2, MapPin, DollarSign, Briefcase, FileText } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, Loader2, Building2, MapPin, DollarSign, Briefcase, FileText, CheckCircle2, LogIn } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 
 const PostInternship = () => {
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "",
     title: "",
@@ -21,6 +27,10 @@ const PostInternship = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      setError("You must be signed in to post an internship.");
+      return;
+    }
     const { companyName, title, location, pay, description } = formData;
     if (!companyName || !title || !location || !pay || !description) {
       setError("Please fill in all fields.");
@@ -28,10 +38,77 @@ const PostInternship = () => {
     }
     setError("");
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
+
+    const { error: insertError } = await supabase.from("internships").insert({
+      posted_by: user.id,
+      company_name: companyName,
+      title,
+      location,
+      type: formData.type,
+      pay,
+      description,
+    });
+
     setLoading(false);
-    setError("Internship posting is not yet connected to a backend. Coming soon!");
+
+    if (insertError) {
+      setError(insertError.message);
+      return;
+    }
+
+    setSuccess(true);
+    toast.success("Internship posted successfully!");
+    setTimeout(() => navigate("/browse"), 1500);
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <nav className="border-b border-border bg-background/80 backdrop-blur-md">
+          <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+            <Link to="/" className="flex items-center gap-2">
+              <img src={skillbridgeLogo} alt="SkillBridge" className="h-9 w-auto" />
+            </Link>
+            <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
+              <ArrowLeft className="h-4 w-4" /> Back to home
+            </Link>
+          </div>
+        </nav>
+        <div className="flex-1 flex items-center justify-center px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center max-w-sm"
+          >
+            <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-muted mx-auto mb-4">
+              <LogIn className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <h2 className="font-display text-xl font-bold text-foreground">Sign in to post</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              You need an account to post internship listings.
+            </p>
+            <div className="mt-6 flex items-center justify-center gap-3">
+              <Link to="/signin" className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground h-10 px-5 text-sm font-semibold hover:bg-primary/90 transition-smooth">
+                Sign In
+              </Link>
+              <Link to="/signup" className="inline-flex items-center justify-center rounded-lg border border-primary/20 bg-background text-accent-foreground h-10 px-5 text-sm font-medium hover:bg-accent transition-smooth">
+                Create Account
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -49,9 +126,9 @@ const PostInternship = () => {
       <div className="flex-1 py-12 px-4 sm:px-6">
         <div className="container mx-auto max-w-xl">
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
             <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">
               Post an Internship
@@ -140,29 +217,38 @@ const PostInternship = () => {
                 </div>
               </div>
 
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm text-destructive"
-                >
-                  {error}
-                </motion.p>
-              )}
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.p
+                    key="error"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    className="text-sm text-destructive"
+                  >
+                    {error}
+                  </motion.p>
+                )}
+              </AnimatePresence>
 
-              <button
+              <motion.button
                 type="submit"
-                disabled={loading}
+                disabled={loading || success}
                 className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 text-sm font-semibold hover:bg-primary/90 transition-smooth disabled:opacity-50 disabled:cursor-not-allowed"
+                whileTap={{ scale: 0.98 }}
               >
-                {loading ? (
+                {success ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4" /> Posted!
+                  </>
+                ) : loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" /> Submitting...
                   </>
                 ) : (
                   "Post Internship"
                 )}
-              </button>
+              </motion.button>
             </form>
           </motion.div>
         </div>
