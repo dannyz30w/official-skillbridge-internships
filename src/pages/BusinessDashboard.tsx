@@ -57,7 +57,7 @@ const BusinessDashboard = () => {
     setLoading(true);
     const { data: listings } = await db.from('listings').select('id').eq('business_id', user?.id);
     if (!listings?.length) { setApps([]); setLoading(false); return; }
-    const ids = listings.map((l: any) => l.id);
+    const ids: string[] = listings.map((l: any) => l.id);
     const { data } = await db.from('listing_applications').select('*').in('listing_id', ids).order('applied_at', { ascending: false });
     if (data) { setApps(data); const internIds = [...new Set(data.map((a: any) => a.intern_id))]; await loadInterns(internIds); }
     setLoading(false);

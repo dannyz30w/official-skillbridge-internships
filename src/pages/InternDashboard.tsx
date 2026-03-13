@@ -68,7 +68,7 @@ const InternDashboard = () => {
     const { data } = await db.from('listing_applications').select('*').eq('intern_id', user?.id).order('applied_at', { ascending: false });
     if (data) {
       setMyApps(data);
-      const lIds = [...new Set(data.map((a: any) => a.listing_id))];
+      const lIds: string[] = [...new Set(data.map((a: any) => a.listing_id))] as string[];
       if (lIds.length) { const { data: ls } = await db.from('listings').select('id, title, business_id').in('id', lIds); if (ls) { const t: Record<string, string> = {}; ls.forEach((l: any) => t[l.id] = l.title); setListingTitles(t); await loadBizNames(ls.map((l: any) => l.business_id)); } }
     }
     setLoading(false);
