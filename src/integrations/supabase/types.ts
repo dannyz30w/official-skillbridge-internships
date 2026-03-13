@@ -49,6 +49,93 @@ export type Database = {
           },
         ]
       }
+      business_profiles: {
+        Row: {
+          business_email: string | null
+          business_name: string
+          business_type: string | null
+          contact_name: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_email?: string | null
+          business_name?: string
+          business_type?: string | null
+          contact_name?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_email?: string | null
+          business_name?: string
+          business_type?: string | null
+          contact_name?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      intern_profiles: {
+        Row: {
+          bio: string | null
+          city: string | null
+          created_at: string
+          date_of_birth: string | null
+          first_name: string
+          gpa: number | null
+          id: string
+          languages: Json | null
+          last_name: string
+          phone: string | null
+          school: string | null
+          skills: string[] | null
+          test_scores: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          first_name?: string
+          gpa?: number | null
+          id?: string
+          languages?: Json | null
+          last_name?: string
+          phone?: string | null
+          school?: string | null
+          skills?: string[] | null
+          test_scores?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          date_of_birth?: string | null
+          first_name?: string
+          gpa?: number | null
+          id?: string
+          languages?: Json | null
+          last_name?: string
+          phone?: string | null
+          school?: string | null
+          skills?: string[] | null
+          test_scores?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       internships: {
         Row: {
           company_name: string
@@ -88,6 +175,142 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_applications: {
+        Row: {
+          applied_at: string
+          id: string
+          intern_id: string
+          listing_id: string
+          status: string
+        }
+        Insert: {
+          applied_at?: string
+          id?: string
+          intern_id: string
+          listing_id: string
+          status?: string
+        }
+        Update: {
+          applied_at?: string
+          id?: string
+          intern_id?: string
+          listing_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_applications_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          age_requirement: string | null
+          business_id: string
+          category: string | null
+          created_at: string
+          description: string
+          duration: string | null
+          hours_per_week: string | null
+          id: string
+          location: string | null
+          pay_rate: string
+          preferred_hours: string | null
+          preferred_languages: string[] | null
+          requirements: string[] | null
+          skills_learned: string[] | null
+          start_date: string | null
+          status: string
+          title: string
+          updated_at: string
+          work_setting: string
+        }
+        Insert: {
+          age_requirement?: string | null
+          business_id: string
+          category?: string | null
+          created_at?: string
+          description?: string
+          duration?: string | null
+          hours_per_week?: string | null
+          id?: string
+          location?: string | null
+          pay_rate?: string
+          preferred_hours?: string | null
+          preferred_languages?: string[] | null
+          requirements?: string[] | null
+          skills_learned?: string[] | null
+          start_date?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          work_setting?: string
+        }
+        Update: {
+          age_requirement?: string | null
+          business_id?: string
+          category?: string | null
+          created_at?: string
+          description?: string
+          duration?: string | null
+          hours_per_week?: string | null
+          id?: string
+          location?: string | null
+          pay_rate?: string
+          preferred_hours?: string | null
+          preferred_languages?: string[] | null
+          requirements?: string[] | null
+          skills_learned?: string[] | null
+          start_date?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          work_setting?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          business_id: string
+          content: string
+          id: string
+          intern_id: string
+          listing_id: string | null
+          read: boolean
+          sent_at: string
+        }
+        Insert: {
+          business_id: string
+          content: string
+          id?: string
+          intern_id: string
+          listing_id?: string | null
+          read?: boolean
+          sent_at?: string
+        }
+        Update: {
+          business_id?: string
+          content?: string
+          id?: string
+          intern_id?: string
+          listing_id?: string | null
+          read?: boolean
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           account_type: string
@@ -123,7 +346,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_business: { Args: { _user_id: string }; Returns: boolean }
+      is_intern: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
