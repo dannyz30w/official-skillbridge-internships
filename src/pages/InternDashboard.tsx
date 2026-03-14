@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Home, Search, Briefcase, FileText, Bell, Settings, LogOut, Loader2, CheckCircle2, MapPin, DollarSign, Clock, Send, Globe, User } from "lucide-react";
+import { Home, Search, Briefcase, FileText, Bell, Settings, LogOut, Loader2, CheckCircle2, MapPin, DollarSign, Clock, Send, Globe } from "lucide-react";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 
 const db = supabase as any;
-const inputCls = "w-full h-10 px-3 rounded-xl glass-input text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 transition-smooth";
-const labelCls = "block text-xs font-medium text-muted-foreground tracking-wide uppercase mb-1.5";
+const inputCls = "w-full h-[44px] px-4 rounded-xl text-[15px] text-foreground placeholder:text-muted-foreground/50 glass-input";
+const labelCls = "block text-[13px] font-medium tracking-[0.01em] text-muted-foreground mb-1.5";
 const SKILLS_LIST = ['Communication', 'Teamwork', 'Problem Solving', 'Microsoft Office', 'Social Media', 'Customer Service', 'Data Entry', 'Writing', 'Research', 'Organization', 'Time Management', 'Leadership', 'Creativity', 'Public Speaking', 'Coding', 'Design', 'Marketing', 'Sales', 'Photography', 'Video Editing'];
 const LANG_OPTIONS = ['English', 'Spanish', 'French', 'Mandarin', 'Cantonese', 'Arabic', 'Portuguese', 'Other'];
 const PROFICIENCY = ['Native', 'Fluent', 'Intermediate', 'Basic'];
@@ -25,6 +25,8 @@ const TABS = [
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 const InternDashboard = () => {
   const { user, signOut } = useAuth();
@@ -46,10 +48,7 @@ const InternDashboard = () => {
   useEffect(() => { fetchProfile(); fetchWeeklyCount(); fetchNotifications(); }, []);
   useEffect(() => { if (tab === 'browse') fetchListings(); if (tab === 'applications') fetchApps(); if (tab === 'notifications') fetchNotifications(); }, [tab]);
 
-  const fetchProfile = async () => {
-    const { data } = await db.from('intern_profiles').select('*').eq('user_id', user?.id).maybeSingle();
-    if (data) setProfile(data);
-  };
+  const fetchProfile = async () => { const { data } = await db.from('intern_profiles').select('*').eq('user_id', user?.id).maybeSingle(); if (data) setProfile(data); };
   const fetchListings = async () => {
     setLoading(true);
     const { data } = await db.from('listings').select('*').eq('status', 'live').order('created_at', { ascending: false });
@@ -115,63 +114,70 @@ const InternDashboard = () => {
   }, [listings, searchQuery, bizNames]);
 
   const calcAge = (dob: string | null) => { if (!dob) return null; const b = new Date(dob); const t = new Date(); let a = t.getFullYear() - b.getFullYear(); if (t.getMonth() < b.getMonth() || (t.getMonth() === b.getMonth() && t.getDate() < b.getDate())) a--; return a; };
-  const appSc = (s: string) => s === 'accepted' ? 'bg-success/10 text-success' : s === 'rejected' ? 'bg-destructive/10 text-destructive' : 'bg-warning/10 text-warning';
+
+  const appStatusBadge = (s: string) => {
+    const cls = s === 'accepted' ? 'badge-live' : s === 'rejected' ? 'badge-rejected' : 'badge-pending';
+    return <span className={cls}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>;
+  };
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="hidden md:flex flex-col w-60 h-screen fixed left-0 top-0 liquid-glass border-r border-border/20 p-4 z-40">
+    <div className="min-h-screen flex bg-background">
+      <aside className="hidden md:flex flex-col w-60 h-screen fixed left-0 top-0 glass-sidebar p-4 z-40">
         <div className="flex items-center gap-2 px-3 py-4"><img src={skillbridgeLogo} alt="" className="h-8 w-auto" /><span className="font-display font-bold text-sm">Intern</span></div>
         <nav className="flex-1 mt-4 space-y-1">{TABS.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-smooth ${tab === t.id ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'}`}>
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-fast ${tab === t.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+            style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)' } : { background: 'transparent' }}>
             <t.icon className="h-4 w-4" />{t.label}
             {t.id === 'notifications' && unreadCount > 0 && <span className="ml-auto bg-primary text-primary-foreground text-xs rounded-full px-2 py-0.5">{unreadCount}</span>}
           </button>
         ))}</nav>
-        <button onClick={signOut} className="flex items-center gap-3 px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground transition-smooth"><LogOut className="h-4 w-4" />Sign Out</button>
+        <button onClick={signOut} className="flex items-center gap-3 px-3 py-2.5 text-[13px] text-muted-foreground hover:text-foreground transition-fast"><LogOut className="h-4 w-4" />Sign Out</button>
       </aside>
-      <div className="md:hidden fixed top-0 left-0 right-0 liquid-glass z-50 px-4 py-3 border-b border-border/20">
+      <div className="md:hidden fixed top-0 left-0 right-0 liquid-glass z-50 px-4 py-3" style={{ height: 56 }}>
         <div className="flex items-center justify-between"><div className="flex items-center gap-2"><img src={skillbridgeLogo} alt="" className="h-7 w-auto" /><span className="font-display font-bold text-xs">Intern</span></div><button onClick={signOut}><LogOut className="h-4 w-4 text-muted-foreground" /></button></div>
-        <div className="flex gap-1 mt-3 overflow-x-auto pb-1">{TABS.map(t => (<button key={t.id} onClick={() => setTab(t.id)} className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium ${tab === t.id ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}>{t.label}{t.id === 'notifications' && unreadCount > 0 && <span className="ml-1 bg-primary text-primary-foreground rounded-full px-1.5 text-xs">{unreadCount}</span>}</button>))}</div>
+        <div className="flex gap-1 mt-3 overflow-x-auto pb-1">{TABS.map(t => (<button key={t.id} onClick={() => setTab(t.id)} className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-fast ${tab === t.id ? 'text-primary' : 'text-muted-foreground'}`} style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)' } : {}}>{t.label}{t.id === 'notifications' && unreadCount > 0 && <span className="ml-1 bg-primary text-primary-foreground rounded-full px-1.5 text-xs">{unreadCount}</span>}</button>))}</div>
       </div>
 
       <main className="flex-1 md:ml-60 p-4 md:p-8 pt-28 md:pt-8">
-        <motion.div key={tab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <motion.div key={tab} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }}>
 
-          {tab === 'home' && <div>
+          {tab === 'home' && <div className="stagger-children">
             <h1 className="font-display text-2xl font-bold mb-6">Dashboard</h1>
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="glass-card rounded-2xl p-5 text-center"><p className="text-3xl font-bold text-primary">{weeklyCount}</p><p className="text-sm text-muted-foreground mt-1">Applications this week</p><p className="text-xs text-muted-foreground">{weeklyCount}/5 limit</p></div>
-              <div className="glass-card rounded-2xl p-5 text-center"><p className="text-3xl font-bold text-foreground">{myApps.length}</p><p className="text-sm text-muted-foreground mt-1">Total Applications</p></div>
-              <div className="glass-card rounded-2xl p-5 text-center"><p className="text-3xl font-bold text-success">{myApps.filter(a => a.status === 'accepted').length}</p><p className="text-sm text-muted-foreground mt-1">Accepted</p></div>
+              <div className="glass-card rounded-2xl p-5 text-center card-hover"><p className="text-3xl font-bold text-primary">{weeklyCount}</p><p className="text-sm text-muted-foreground mt-1">Applications this week</p><p className="text-[13px] text-muted-foreground">{weeklyCount}/5 limit</p></div>
+              <div className="glass-card rounded-2xl p-5 text-center card-hover"><p className="text-3xl font-bold text-foreground">{myApps.length}</p><p className="text-sm text-muted-foreground mt-1">Total Applications</p></div>
+              <div className="glass-card rounded-2xl p-5 text-center card-hover"><p className="text-3xl font-bold" style={{ color: '#34C759' }}>{myApps.filter(a => a.status === 'accepted').length}</p><p className="text-sm text-muted-foreground mt-1">Accepted</p></div>
             </div>
           </div>}
 
           {tab === 'browse' && <div>
             <h1 className="font-display text-2xl font-bold mb-2">Browse Internships</h1>
-            <p className="text-muted-foreground text-sm mb-6">Real roles, real pay — from vetted companies.</p>
-            <div className="relative mb-6"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by role, company, or location..." className="w-full h-11 pl-10 pr-4 rounded-xl glass-input text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring/50 transition-smooth" /></div>
-            {loading ? <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /> : filtered.length === 0 ? (
+            <p className="text-muted-foreground text-[15px] mb-6">Real roles, real pay, from vetted companies.</p>
+            <div className="relative mb-6"><Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by role, company, or location..." className="w-full h-[44px] pl-11 pr-4 rounded-xl text-[15px] placeholder:text-muted-foreground/50 glass-input" /></div>
+            {loading ? <div className="skeleton-shimmer h-48 w-full" /> : filtered.length === 0 ? (
               <div className="glass-card rounded-2xl p-12 text-center"><Briefcase className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" /><p className="text-muted-foreground">{searchQuery ? 'No matches found.' : 'No internships available yet.'}</p></div>
             ) : <div className="space-y-4"><AnimatePresence mode="popLayout">{filtered.map((l, i) => (
-              <motion.div key={l.id} layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: i * 0.03 }}
-                className="glass-card rounded-2xl p-5 hover:border-primary/20 transition-smooth">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{bizNames[l.business_id] || '...'}</p>
+              <motion.div key={l.id} layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: i * 0.03, duration: 0.4, ease }}
+                className="glass-card rounded-2xl p-5 card-hover">
+                <p className="text-[13px] font-medium text-muted-foreground uppercase tracking-wider">{bizNames[l.business_id] || '...'}</p>
                 <h3 className="font-bold text-lg mt-1">{l.title}</h3>
                 <div className="flex flex-wrap gap-3 mt-2 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{l.work_setting === 'Remote' ? 'Remote' : l.location}</span>
-                  <span className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5 text-success" />{l.pay_rate}</span>
+                  <span className="flex items-center gap-1" style={{ color: '#34C759' }}><DollarSign className="h-3.5 w-3.5" />{l.pay_rate}</span>
                   {l.hours_per_week && <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{l.hours_per_week} hrs/week</span>}
                   {l.duration && <span>{l.duration}</span>}
                 </div>
-                {l.preferred_languages?.length > 0 && <div className="flex gap-1 mt-2">{l.preferred_languages.map(lang => <span key={lang} className="text-xs bg-accent text-accent-foreground px-2 py-0.5 rounded-full flex items-center gap-1"><Globe className="h-3 w-3" />{lang}</span>)}</div>}
+                {l.preferred_languages?.length > 0 && <div className="flex gap-1 mt-2">{l.preferred_languages.map(lang => <span key={lang} className="badge-remote text-[11px] flex items-center gap-1"><Globe className="h-3 w-3" />{lang}</span>)}</div>}
                 <p className="text-sm text-muted-foreground mt-3 line-clamp-2">{l.description}</p>
                 <div className="mt-4 flex justify-end">
                   {appliedIds.has(l.id) ? (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success bg-success/10 px-3 py-1.5 rounded-full"><CheckCircle2 className="h-3.5 w-3.5" />Applied ✓</span>
+                    <span className="badge-live flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" />Applied</span>
                   ) : (
                     <motion.button onClick={() => handleApply(l.id)} disabled={applyingTo === l.id} whileTap={{ scale: 0.97 }}
-                      className="h-9 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-smooth disabled:opacity-50 inline-flex items-center gap-2">
+                      className="h-9 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-92 disabled:opacity-50 inline-flex items-center gap-2 btn-press"
+                      style={{ transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
                       {applyingTo === l.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-3.5 w-3.5" />Apply</>}
                     </motion.button>
                   )}
@@ -182,11 +188,11 @@ const InternDashboard = () => {
 
           {tab === 'applications' && <div>
             <h1 className="font-display text-2xl font-bold mb-6">My Applications</h1>
-            {loading ? <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /> : myApps.length === 0 ? <p className="text-muted-foreground">No applications yet.</p> :
+            {loading ? <div className="skeleton-shimmer h-32 w-full" /> : myApps.length === 0 ? <p className="text-muted-foreground">No applications yet.</p> :
             <div className="space-y-3">{myApps.map(a => (
-              <div key={a.id} className="glass-card rounded-2xl p-4 flex items-center justify-between">
-                <div><h3 className="font-semibold">{listingTitles[a.listing_id] || '...'}</h3><p className="text-xs text-muted-foreground">{new Date(a.applied_at).toLocaleDateString()}</p></div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full ${appSc(a.status)}`}>{a.status.charAt(0).toUpperCase() + a.status.slice(1)}</span>
+              <div key={a.id} className="glass-card rounded-2xl p-4 flex items-center justify-between card-hover">
+                <div><h3 className="font-semibold">{listingTitles[a.listing_id] || '...'}</h3><p className="text-[13px] text-muted-foreground">{new Date(a.applied_at).toLocaleDateString()}</p></div>
+                {appStatusBadge(a.status)}
               </div>
             ))}</div>}
           </div>}
@@ -198,7 +204,7 @@ const InternDashboard = () => {
                 <div><label className={labelCls}>First Name</label><input value={profile.first_name} onChange={e => setProfile(p => ({ ...p, first_name: e.target.value }))} className={inputCls} /></div>
                 <div><label className={labelCls}>Last Name</label><input value={profile.last_name} onChange={e => setProfile(p => ({ ...p, last_name: e.target.value }))} className={inputCls} /></div>
               </div>
-              {profile.date_of_birth && <div><label className={labelCls}>Age</label><p className="text-sm font-medium">{calcAge(profile.date_of_birth)} years old</p></div>}
+              {profile.date_of_birth && <div><label className={labelCls}>Age</label><p className="text-[15px] font-medium">{calcAge(profile.date_of_birth)} years old</p></div>}
               <div><label className={labelCls}>City</label><input value={profile.city} onChange={e => setProfile(p => ({ ...p, city: e.target.value }))} placeholder="City, State" className={inputCls} /></div>
               <div><label className={labelCls}>School</label><input value={profile.school} onChange={e => setProfile(p => ({ ...p, school: e.target.value }))} placeholder="School name" className={inputCls} /></div>
               <div className="grid grid-cols-2 gap-4">
@@ -215,23 +221,26 @@ const InternDashboard = () => {
                     <select value={lang.proficiency || ''} onChange={e => { const n = [...(profile.languages || [])]; n[i] = { ...n[i], proficiency: e.target.value }; setProfile(p => ({ ...p, languages: n })); }} className={inputCls + " flex-1"}>
                       <option value="">Level...</option>{PROFICIENCY.map(p => <option key={p}>{p}</option>)}
                     </select>
-                    <button onClick={() => setProfile(p => ({ ...p, languages: (p.languages || []).filter((_: any, j: number) => j !== i) }))} className="text-destructive text-xs">✕</button>
+                    <button onClick={() => setProfile(p => ({ ...p, languages: (p.languages || []).filter((_: any, j: number) => j !== i) }))} className="text-[13px] font-medium" style={{ color: '#FF3B30' }}>✕</button>
                   </div>
                 ))}
-                <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-xs text-primary">+ Add language</button>
+                <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-[13px] text-primary font-medium">+ Add language</button>
               </div>
               <div><label className={labelCls}>Skills</label>
                 <div className="flex flex-wrap gap-2">{SKILLS_LIST.map(s => (
-                  <label key={s} className={`text-xs px-3 py-1.5 rounded-full cursor-pointer transition-smooth ${(profile.skills || []).includes(s) ? 'bg-primary/10 text-primary border border-primary/30' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}>
+                  <label key={s} className={`text-[13px] px-3 py-1.5 rounded-full cursor-pointer transition-fast ${(profile.skills || []).includes(s) ? 'text-primary' : 'text-muted-foreground'}`}
+                    style={(profile.skills || []).includes(s) ? { background: 'rgba(79, 70, 229, 0.1)', border: '1px solid rgba(79, 70, 229, 0.3)' } : { background: 'rgba(0,0,0,0.04)' }}>
                     <input type="checkbox" className="sr-only" checked={(profile.skills || []).includes(s)} onChange={e => setProfile(p => ({ ...p, skills: e.target.checked ? [...(p.skills || []), s] : (p.skills || []).filter(x => x !== s) }))} />{s}
                   </label>
                 ))}</div>
               </div>
               <div><label className={labelCls}>Short Bio ({(profile.bio || '').length}/200)</label>
-                <textarea value={profile.bio} onChange={e => { if (e.target.value.length <= 200) setProfile(p => ({ ...p, bio: e.target.value })); }} rows={3} placeholder="Tell us about yourself..." className={inputCls + " h-auto py-2"} /></div>
-              <button onClick={saveProfile} disabled={savingProfile} className="w-full h-10 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-smooth disabled:opacity-50 inline-flex items-center justify-center gap-2">
+                <textarea value={profile.bio} onChange={e => { if (e.target.value.length <= 200) setProfile(p => ({ ...p, bio: e.target.value })); }} rows={3} placeholder="Tell us about yourself..." className={inputCls + " !h-auto py-3"} /></div>
+              <motion.button onClick={saveProfile} disabled={savingProfile} whileTap={{ scale: 0.97 }}
+                className="w-full h-[44px] rounded-xl bg-primary text-primary-foreground text-[15px] font-semibold hover:opacity-92 disabled:opacity-50 inline-flex items-center justify-center gap-2 btn-press"
+                style={{ transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
                 {savingProfile ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : "Save Portfolio"}
-              </button>
+              </motion.button>
             </div>
           </div>}
 
@@ -239,15 +248,16 @@ const InternDashboard = () => {
             <h1 className="font-display text-2xl font-bold mb-6">Notifications</h1>
             {messages.length === 0 ? <p className="text-muted-foreground">No notifications yet.</p> :
             <div className="space-y-3">{messages.map(m => (
-              <div key={m.id} className={`glass-card rounded-2xl p-4 ${!m.read ? 'border-primary/20' : ''}`} onClick={() => !m.read && markRead(m.id)}>
+              <div key={m.id} className={`glass-card rounded-2xl p-4 card-hover cursor-pointer ${!m.read ? '' : ''}`} onClick={() => !m.read && markRead(m.id)}
+                style={!m.read ? { borderColor: 'rgba(79, 70, 229, 0.2)' } : {}}>
                 <div className="flex items-start justify-between">
                   <div>
                     {!m.read && <span className="inline-block w-2 h-2 rounded-full bg-primary mr-2" />}
-                    <span className="text-xs text-muted-foreground">{new Date(m.sent_at).toLocaleString()}</span>
+                    <span className="text-[13px] text-muted-foreground">{new Date(m.sent_at).toLocaleString()}</span>
                   </div>
                 </div>
                 <p className="text-sm mt-2">{m.content}</p>
-                <p className="text-xs text-muted-foreground mt-2 italic">A business has reached out to you. Contact them at the email or phone number provided in your notification.</p>
+                <p className="text-[13px] text-muted-foreground mt-2 italic">A business has reached out to you. Contact them at the email or phone number provided in your notification.</p>
               </div>
             ))}</div>}
           </div>}
@@ -255,7 +265,7 @@ const InternDashboard = () => {
           {tab === 'settings' && <div>
             <h1 className="font-display text-2xl font-bold mb-6">Settings</h1>
             <div className="glass-card rounded-2xl p-6"><p className="text-sm text-muted-foreground mb-4">Signed in as: {user?.email}</p>
-            <button onClick={signOut} className="h-10 px-4 rounded-xl bg-destructive text-destructive-foreground text-sm font-semibold">Sign Out</button></div>
+            <button onClick={signOut} className="h-[44px] px-6 rounded-xl text-[15px] font-semibold text-white btn-press" style={{ background: '#FF3B30' }}>Sign Out</button></div>
           </div>}
 
         </motion.div>
