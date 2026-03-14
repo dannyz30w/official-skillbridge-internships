@@ -53,7 +53,7 @@ const InternDashboard = () => {
   const fetchListings = async () => {
     setLoading(true);
     const { data } = await db.from('listings').select('*').eq('status', 'live').order('created_at', { ascending: false });
-    if (data) { setListings(data); const ids = [...new Set(data.map((l: any) => l.business_id))]; await loadBizNames(ids); }
+    if (data) { setListings(data); const ids: string[] = [...new Set(data.map((l: any) => l.business_id))] as string[]; await loadBizNames(ids); }
     const { data: apps } = await db.from('listing_applications').select('listing_id').eq('intern_id', user?.id);
     if (apps) setAppliedIds(new Set(apps.map((a: any) => a.listing_id)));
     setLoading(false);
