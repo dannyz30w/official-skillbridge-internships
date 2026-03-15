@@ -209,7 +209,6 @@ export type Database = {
       }
       listings: {
         Row: {
-          age_requirement: string | null
           business_id: string
           category: string | null
           created_at: string
@@ -230,7 +229,6 @@ export type Database = {
           work_setting: string
         }
         Insert: {
-          age_requirement?: string | null
           business_id: string
           category?: string | null
           created_at?: string
@@ -251,7 +249,6 @@ export type Database = {
           work_setting?: string
         }
         Update: {
-          age_requirement?: string | null
           business_id?: string
           category?: string | null
           created_at?: string
@@ -270,6 +267,33 @@ export type Database = {
           title?: string
           updated_at?: string
           work_setting?: string
+        }
+        Relationships: []
+      }
+      login_attempts: {
+        Row: {
+          created_at: string | null
+          email: string
+          failed_count: number
+          id: string
+          last_attempt: string | null
+          locked_until: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          failed_count?: number
+          id?: string
+          last_attempt?: string | null
+          locked_until?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          failed_count?: number
+          id?: string
+          last_attempt?: string | null
+          locked_until?: string | null
         }
         Relationships: []
       }

@@ -1,70 +1,92 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Briefcase, Search, Send } from "lucide-react";
 
-const steps = [
-  {
-    icon: Search,
-    title: "Browse Internships",
-    description: "Search by category, location, or pay rate. Every listing is a real, paid opportunity from a vetted company.",
-  },
-  {
-    icon: Send,
-    title: "Apply in Two Clicks",
-    description: "Your profile does the heavy lifting. Hit apply, add a short note, and you're done. No cover letter essays.",
-  },
-  {
-    icon: Briefcase,
-    title: "Start Building Skills",
-    description: "Get matched, start working, and build real experience. Track your hours, earnings, and skills gained — all in one place.",
-  },
+const internSteps = [
+  { num: "01", title: "Create your profile in five minutes", description: "Fill out your portfolio with your skills, school, and interests. No resume needed, no cover letter, no hassle." },
+  { num: "02", title: "Browse paid internships near you or remote", description: "Search real opportunities from verified businesses. Filter by category, location, pay rate, and work setting." },
+  { num: "03", title: "Apply with one click, no resume required", description: "Your profile does the heavy lifting. Hit apply and you are done. Businesses review your portfolio directly." },
+  { num: "04", title: "Complete your internship and earn a verified skill certificate", description: "Build real experience, earn real pay, and grow your professional portfolio with every completed role." },
+];
+
+const businessSteps = [
+  { num: "01", title: "Post your internship listing in ten minutes", description: "Fill out a simple form with role details, pay rate, and skills learned. Submit for a quick admin review." },
+  { num: "02", title: "Browse matched applicants through the admin-verified queue", description: "Every listing goes through our review process before going live, ensuring quality on both sides." },
+  { num: "03", title: "Interview and hire through the platform", description: "Review intern portfolios, accept top candidates, and message them directly to coordinate next steps." },
+  { num: "04", title: "Build your talent pipeline for future hires", description: "Develop relationships with motivated young professionals who can grow with your business over time." },
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const HowItWorks = () => {
+  const [view, setView] = useState<'intern' | 'business'>('intern');
+  const steps = view === 'intern' ? internSteps : businessSteps;
+
   return (
-    <section id="how-it-works" className="py-12 sm:py-20 px-4 sm:px-6 bg-muted/40">
-      <div className="container mx-auto max-w-4xl">
+    <section id="how-it-works" className="py-16 sm:py-24 px-4 sm:px-6">
+      <div className="container mx-auto max-w-3xl">
         <motion.h2
-          className="font-display text-3xl font-bold text-foreground tracking-tight"
-          initial={{ opacity: 0, y: 16 }}
+          className="font-display text-h2 font-bold text-center"
+          initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, ease }}
+          viewport={{ once: true, margin: "-48px" }}
+          transition={{ duration: 0.38, ease }}
         >
           How It Works
         </motion.h2>
-        <motion.p
-          className="mt-2 text-muted-foreground"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, ease, delay: 0.05 }}
-        >
-          From signup to first paycheck — here's the path.
-        </motion.p>
 
-        <div className="grid sm:grid-cols-3 gap-6 mt-10">
-          {steps.map((step, i) => (
-            <motion.div
-              key={step.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, ease, delay: 0.1 + i * 0.08 }}
-              whileHover={{ y: -2 }}
-              className="bg-card rounded-xl border border-border shadow-card hover:shadow-card-hover transition-card p-6"
+        <motion.div
+          className="flex justify-center mt-8"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-48px" }}
+          transition={{ duration: 0.38, ease, delay: 0.04 }}
+        >
+          <div className="glass-card-sm inline-flex p-1 gap-1" style={{ borderRadius: 100 }}>
+            <button
+              onClick={() => setView('intern')}
+              className="px-6 py-2 rounded-full text-small font-semibold transition-fast"
+              style={view === 'intern'
+                ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
+                : { color: 'rgba(60,60,67,0.6)' }
+              }
             >
-              <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-accent mb-4">
-                <step.icon className="h-5 w-5 text-accent-foreground" />
-              </div>
-              <span className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
-                Step {i + 1}
-              </span>
-              <h3 className="mt-1 text-lg font-bold text-foreground">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.description}</p>
-            </motion.div>
-          ))}
+              For Interns
+            </button>
+            <button
+              onClick={() => setView('business')}
+              className="px-6 py-2 rounded-full text-small font-semibold transition-fast"
+              style={view === 'business'
+                ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
+                : { color: 'rgba(60,60,67,0.6)' }
+              }
+            >
+              For Businesses
+            </button>
+          </div>
+        </motion.div>
+
+        <div className="mt-16 space-y-16">
+          {steps.map((step, i) => {
+            const isEven = i % 2 === 0;
+            return (
+              <motion.div
+                key={`${view}-${step.num}`}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-32px" }}
+                transition={{ duration: 0.38, ease, delay: i * 0.04 }}
+                className={`flex items-start gap-8 sm:gap-16 ${isEven ? '' : 'flex-row-reverse text-right'}`}
+              >
+                <div className="flex-shrink-0">
+                  <span className="font-display font-bold" style={{ fontSize: 80, lineHeight: 1, color: 'rgba(79, 70, 229, 0.08)' }}>{step.num}</span>
+                </div>
+                <div className="pt-4">
+                  <h3 className="font-display text-h4 font-bold">{step.title}</h3>
+                  <p className="mt-3 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>{step.description}</p>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
