@@ -12,8 +12,18 @@ export default {
     },
     extend: {
       fontFamily: {
+        display: ["'Bricolage Grotesque'", "system-ui", "sans-serif"],
         sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
-        display: ["'Inter Tight'", "system-ui", "-apple-system", "sans-serif"],
+      },
+      fontSize: {
+        'display': ['56px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        'h1': ['40px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        'h2': ['32px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        'h3': ['24px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        'h4': ['20px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        'body': ['16px', { lineHeight: '1.65' }],
+        'small': ['14px', { lineHeight: '1.65' }],
+        'caption': ['12px', { lineHeight: '1.4', letterSpacing: '0.03em' }],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -30,6 +40,10 @@ export default {
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
         success: { DEFAULT: "hsl(var(--success))", foreground: "hsl(var(--success-foreground))" },
         warning: { DEFAULT: "hsl(var(--warning))", foreground: "hsl(var(--warning-foreground))" },
+      },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
       },
       borderRadius: {
         "2xl": "20px",

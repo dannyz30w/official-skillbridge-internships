@@ -5,10 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Home, Search, Briefcase, FileText, Bell, Settings, LogOut, Loader2, CheckCircle2, MapPin, DollarSign, Clock, Send, Globe } from "lucide-react";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
+import SEOHead from "@/components/SEOHead";
 
 const db = supabase as any;
-const inputCls = "w-full h-[44px] px-4 rounded-xl text-[15px] text-foreground placeholder:text-muted-foreground/50 glass-input";
-const labelCls = "block text-[13px] font-medium tracking-[0.01em] text-muted-foreground mb-1.5";
+const inputCls = "w-full h-[48px] px-4 rounded-xl text-[15px] glass-input";
+const labelCls = "block text-small font-medium mb-2";
 const SKILLS_LIST = ['Communication', 'Teamwork', 'Problem Solving', 'Microsoft Office', 'Social Media', 'Customer Service', 'Data Entry', 'Writing', 'Research', 'Organization', 'Time Management', 'Leadership', 'Creativity', 'Public Speaking', 'Coding', 'Design', 'Marketing', 'Sales', 'Photography', 'Video Editing'];
 const LANG_OPTIONS = ['English', 'Spanish', 'French', 'Mandarin', 'Cantonese', 'Arabic', 'Portuguese', 'Other'];
 const PROFICIENCY = ['Native', 'Fluent', 'Intermediate', 'Basic'];
@@ -52,7 +53,7 @@ const InternDashboard = () => {
   const fetchListings = async () => {
     setLoading(true);
     const { data } = await db.from('listings').select('*').eq('status', 'live').order('created_at', { ascending: false });
-    if (data) { setListings(data); const ids: string[] = [...new Set(data.map((l: any) => l.business_id))] as string[]; await loadBizNames(ids); }
+    if (data) { setListings(data); const ids = [...new Set(data.map((l: any) => l.business_id))] as string[]; await loadBizNames(ids); }
     const { data: apps } = await db.from('listing_applications').select('listing_id').eq('intern_id', user?.id);
     if (apps) setAppliedIds(new Set(apps.map((a: any) => a.listing_id)));
     setLoading(false);
@@ -67,7 +68,7 @@ const InternDashboard = () => {
     const { data } = await db.from('listing_applications').select('*').eq('intern_id', user?.id).order('applied_at', { ascending: false });
     if (data) {
       setMyApps(data);
-      const lIds: string[] = [...new Set(data.map((a: any) => a.listing_id))] as string[];
+      const lIds = [...new Set(data.map((a: any) => a.listing_id))] as string[];
       if (lIds.length) { const { data: ls } = await db.from('listings').select('id, title, business_id').in('id', lIds); if (ls) { const t: Record<string, string> = {}; ls.forEach((l: any) => t[l.id] = l.title); setListingTitles(t); await loadBizNames(ls.map((l: any) => l.business_id)); } }
     }
     setLoading(false);
@@ -83,7 +84,7 @@ const InternDashboard = () => {
   };
 
   const handleApply = async (listingId: string) => {
-    if (weeklyCount >= 5) { toast.error("You've reached your weekly application limit (5/5). Try again next week."); return; }
+    if (weeklyCount >= 5) { toast.error("You have reached your weekly application limit (5/5). Try again next week."); return; }
     setApplyingTo(listingId);
     const { error } = await db.from('listing_applications').insert({ intern_id: user?.id, listing_id: listingId });
     setApplyingTo(null);
@@ -121,65 +122,65 @@ const InternDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-background">
+    <div className="min-h-screen flex" style={{ background: '#F2F2F7' }}>
+      <SEOHead title="Intern Dashboard" description="Manage your SkillBridge applications" path="/intern" noIndex />
       <aside className="hidden md:flex flex-col w-60 h-screen fixed left-0 top-0 glass-sidebar p-4 z-40">
-        <div className="flex items-center gap-2 px-3 py-4"><img src={skillbridgeLogo} alt="" className="h-8 w-auto" /><span className="font-display font-bold text-sm">Intern</span></div>
-        <nav className="flex-1 mt-4 space-y-1">{TABS.map(t => (
+        <div className="flex items-center gap-2 px-3 py-4"><img src={skillbridgeLogo} alt="SkillBridge" className="h-8 w-auto" width={128} height={32} /><span className="font-display font-bold text-small">Intern</span></div>
+        <nav className="flex-1 mt-4 space-y-1" aria-label="Intern navigation">{TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] font-medium transition-fast ${tab === t.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
-            style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)' } : { background: 'transparent' }}>
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-small font-medium transition-fast"
+            style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)', color: '#4F46E5' } : { color: 'rgba(60,60,67,0.6)' }}>
             <t.icon className="h-4 w-4" />{t.label}
-            {t.id === 'notifications' && unreadCount > 0 && <span className="ml-auto bg-primary text-primary-foreground text-xs rounded-full px-2 py-0.5">{unreadCount}</span>}
+            {t.id === 'notifications' && unreadCount > 0 && <span className="ml-auto text-caption font-semibold text-white rounded-full px-2 py-0.5" style={{ background: '#4F46E5' }}>{unreadCount}</span>}
           </button>
         ))}</nav>
-        <button onClick={signOut} className="flex items-center gap-3 px-3 py-2.5 text-[13px] text-muted-foreground hover:text-foreground transition-fast"><LogOut className="h-4 w-4" />Sign Out</button>
+        <button onClick={signOut} className="flex items-center gap-3 px-3 py-2.5 text-small transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}><LogOut className="h-4 w-4" />Sign Out</button>
       </aside>
-      <div className="md:hidden fixed top-0 left-0 right-0 liquid-glass z-50 px-4 py-3" style={{ height: 56 }}>
-        <div className="flex items-center justify-between"><div className="flex items-center gap-2"><img src={skillbridgeLogo} alt="" className="h-7 w-auto" /><span className="font-display font-bold text-xs">Intern</span></div><button onClick={signOut}><LogOut className="h-4 w-4 text-muted-foreground" /></button></div>
-        <div className="flex gap-1 mt-3 overflow-x-auto pb-1">{TABS.map(t => (<button key={t.id} onClick={() => setTab(t.id)} className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-fast ${tab === t.id ? 'text-primary' : 'text-muted-foreground'}`} style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)' } : {}}>{t.label}{t.id === 'notifications' && unreadCount > 0 && <span className="ml-1 bg-primary text-primary-foreground rounded-full px-1.5 text-xs">{unreadCount}</span>}</button>))}</div>
+      <div className="md:hidden fixed top-0 left-0 right-0 liquid-glass z-50 px-4 py-3" style={{ height: 96 }}>
+        <div className="flex items-center justify-between"><div className="flex items-center gap-2"><img src={skillbridgeLogo} alt="SkillBridge" className="h-7 w-auto" width={112} height={28} /><span className="font-display font-bold text-caption">Intern</span></div><button onClick={signOut}><LogOut className="h-4 w-4" style={{ color: 'rgba(60,60,67,0.6)' }} /></button></div>
+        <div className="flex gap-1 mt-3 overflow-x-auto pb-1">{TABS.map(t => (<button key={t.id} onClick={() => setTab(t.id)} className="flex-shrink-0 px-3 py-1.5 rounded-lg text-caption font-medium transition-fast" style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)', color: '#4F46E5' } : { color: 'rgba(60,60,67,0.6)' }}>{t.label}{t.id === 'notifications' && unreadCount > 0 && <span className="ml-1 text-caption font-semibold text-white rounded-full px-1.5" style={{ background: '#4F46E5' }}>{unreadCount}</span>}</button>))}</div>
       </div>
 
       <main className="flex-1 md:ml-60 p-4 md:p-8 pt-28 md:pt-8">
-        <motion.div key={tab} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }}>
+        <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }}>
 
           {tab === 'home' && <div className="stagger-children">
-            <h1 className="font-display text-2xl font-bold mb-6">Dashboard</h1>
+            <h1 className="font-display text-h2 font-bold mb-8">Dashboard</h1>
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="glass-card rounded-2xl p-5 text-center card-hover"><p className="text-3xl font-bold text-primary">{weeklyCount}</p><p className="text-sm text-muted-foreground mt-1">Applications this week</p><p className="text-[13px] text-muted-foreground">{weeklyCount}/5 limit</p></div>
-              <div className="glass-card rounded-2xl p-5 text-center card-hover"><p className="text-3xl font-bold text-foreground">{myApps.length}</p><p className="text-sm text-muted-foreground mt-1">Total Applications</p></div>
-              <div className="glass-card rounded-2xl p-5 text-center card-hover"><p className="text-3xl font-bold" style={{ color: '#34C759' }}>{myApps.filter(a => a.status === 'accepted').length}</p><p className="text-sm text-muted-foreground mt-1">Accepted</p></div>
+              <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#4F46E5' }}>{weeklyCount}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Applications this week</p><p className="text-caption" style={{ color: 'rgba(60,60,67,0.4)' }}>{weeklyCount}/5 limit</p></div>
+              <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold">{myApps.length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Total Applications</p></div>
+              <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#10B981' }}>{myApps.filter(a => a.status === 'accepted').length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Accepted</p></div>
             </div>
           </div>}
 
           {tab === 'browse' && <div>
-            <h1 className="font-display text-2xl font-bold mb-2">Browse Internships</h1>
-            <p className="text-muted-foreground text-[15px] mb-6">Real roles, real pay, from vetted companies.</p>
-            <div className="relative mb-6"><Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by role, company, or location..." className="w-full h-[44px] pl-11 pr-4 rounded-xl text-[15px] placeholder:text-muted-foreground/50 glass-input" /></div>
+            <h1 className="font-display text-h2 font-bold mb-2">Browse Internships</h1>
+            <p className="text-body mb-8" style={{ color: 'rgba(60,60,67,0.6)' }}>Real roles, real pay, from vetted companies.</p>
+            <div className="relative mb-8"><Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'rgba(60,60,67,0.4)' }} />
+              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by role, company, or location..." className="w-full h-[48px] pl-12 pr-4 rounded-xl text-[15px] glass-input" aria-label="Search internships" /></div>
             {loading ? <div className="skeleton-shimmer h-48 w-full" /> : filtered.length === 0 ? (
-              <div className="glass-card rounded-2xl p-12 text-center"><Briefcase className="h-10 w-10 text-muted-foreground/40 mx-auto mb-3" /><p className="text-muted-foreground">{searchQuery ? 'No matches found.' : 'No internships available yet.'}</p></div>
+              <div className="glass-card p-16 text-center"><Briefcase className="h-10 w-10 mx-auto mb-4" style={{ color: 'rgba(60,60,67,0.3)' }} /><p style={{ color: 'rgba(60,60,67,0.6)' }}>{searchQuery ? 'No matches found.' : 'No internships available yet.'}</p></div>
             ) : <div className="space-y-4"><AnimatePresence mode="popLayout">{filtered.map((l, i) => (
-              <motion.div key={l.id} layout initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: i * 0.03, duration: 0.4, ease }}
-                className="glass-card rounded-2xl p-5 card-hover">
-                <p className="text-[13px] font-medium text-muted-foreground uppercase tracking-wider">{bizNames[l.business_id] || '...'}</p>
-                <h3 className="font-bold text-lg mt-1">{l.title}</h3>
-                <div className="flex flex-wrap gap-3 mt-2 text-sm text-muted-foreground">
+              <motion.div key={l.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: i * 0.03, duration: 0.38, ease }}
+                className="glass-card p-6 card-hover">
+                <p className="text-caption font-semibold uppercase tracking-wider" style={{ color: 'rgba(60,60,67,0.6)' }}>{bizNames[l.business_id] || '...'}</p>
+                <h3 className="font-display font-bold text-h4 mt-1">{l.title}</h3>
+                <div className="flex flex-wrap gap-4 mt-2 text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>
                   <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{l.work_setting === 'Remote' ? 'Remote' : l.location}</span>
-                  <span className="flex items-center gap-1" style={{ color: '#34C759' }}><DollarSign className="h-3.5 w-3.5" />{l.pay_rate}</span>
+                  <span className="flex items-center gap-1" style={{ color: '#10B981' }}><DollarSign className="h-3.5 w-3.5" />{l.pay_rate}</span>
                   {l.hours_per_week && <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{l.hours_per_week} hrs/week</span>}
                   {l.duration && <span>{l.duration}</span>}
                 </div>
-                {l.preferred_languages?.length > 0 && <div className="flex gap-1 mt-2">{l.preferred_languages.map(lang => <span key={lang} className="badge-remote text-[11px] flex items-center gap-1"><Globe className="h-3 w-3" />{lang}</span>)}</div>}
-                <p className="text-sm text-muted-foreground mt-3 line-clamp-2">{l.description}</p>
+                {l.preferred_languages?.length > 0 && <div className="flex gap-1 mt-2">{l.preferred_languages.map(lang => <span key={lang} className="badge-remote text-caption flex items-center gap-1"><Globe className="h-3 w-3" />{lang}</span>)}</div>}
+                <p className="text-small mt-3 line-clamp-2" style={{ color: 'rgba(60,60,67,0.6)' }}>{l.description}</p>
                 <div className="mt-4 flex justify-end">
                   {appliedIds.has(l.id) ? (
                     <span className="badge-live flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5" />Applied</span>
                   ) : (
-                    <motion.button onClick={() => handleApply(l.id)} disabled={applyingTo === l.id} whileTap={{ scale: 0.97 }}
-                      className="h-9 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-92 disabled:opacity-50 inline-flex items-center gap-2 btn-press"
-                      style={{ transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+                    <button onClick={() => handleApply(l.id)} disabled={applyingTo === l.id}
+                      className="btn-glass-primary h-9 px-4 text-small font-semibold inline-flex items-center gap-2 disabled:opacity-50" style={{ padding: '8px 16px' }}>
                       {applyingTo === l.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-3.5 w-3.5" />Apply</>}
-                    </motion.button>
+                    </button>
                   )}
                 </div>
               </motion.div>
@@ -187,85 +188,84 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'applications' && <div>
-            <h1 className="font-display text-2xl font-bold mb-6">My Applications</h1>
-            {loading ? <div className="skeleton-shimmer h-32 w-full" /> : myApps.length === 0 ? <p className="text-muted-foreground">No applications yet.</p> :
+            <h1 className="font-display text-h2 font-bold mb-8">My Applications</h1>
+            {loading ? <div className="skeleton-shimmer h-32 w-full" /> : myApps.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No applications yet.</p> :
             <div className="space-y-3">{myApps.map(a => (
-              <div key={a.id} className="glass-card rounded-2xl p-4 flex items-center justify-between card-hover">
-                <div><h3 className="font-semibold">{listingTitles[a.listing_id] || '...'}</h3><p className="text-[13px] text-muted-foreground">{new Date(a.applied_at).toLocaleDateString()}</p></div>
+              <div key={a.id} className="glass-card p-4 flex items-center justify-between card-hover">
+                <div><h3 className="font-display font-bold">{listingTitles[a.listing_id] || '...'}</h3><p className="text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>{new Date(a.applied_at).toLocaleDateString()}</p></div>
                 {appStatusBadge(a.status)}
               </div>
             ))}</div>}
           </div>}
 
           {tab === 'portfolio' && <div>
-            <h1 className="font-display text-2xl font-bold mb-6">My Portfolio</h1>
-            <div className="glass-card rounded-2xl p-6 max-w-2xl space-y-4">
+            <h1 className="font-display text-h2 font-bold mb-8">My Portfolio</h1>
+            <div className="glass-card p-8 max-w-2xl space-y-6">
               <div className="grid grid-cols-2 gap-4">
-                <div><label className={labelCls}>First Name</label><input value={profile.first_name} onChange={e => setProfile(p => ({ ...p, first_name: e.target.value }))} className={inputCls} /></div>
-                <div><label className={labelCls}>Last Name</label><input value={profile.last_name} onChange={e => setProfile(p => ({ ...p, last_name: e.target.value }))} className={inputCls} /></div>
+                <div><label htmlFor="pf-fn" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>First Name</label><input id="pf-fn" value={profile.first_name} onChange={e => setProfile(p => ({ ...p, first_name: e.target.value }))} className={inputCls} /></div>
+                <div><label htmlFor="pf-ln" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Last Name</label><input id="pf-ln" value={profile.last_name} onChange={e => setProfile(p => ({ ...p, last_name: e.target.value }))} className={inputCls} /></div>
               </div>
-              {profile.date_of_birth && <div><label className={labelCls}>Age</label><p className="text-[15px] font-medium">{calcAge(profile.date_of_birth)} years old</p></div>}
-              <div><label className={labelCls}>City</label><input value={profile.city} onChange={e => setProfile(p => ({ ...p, city: e.target.value }))} placeholder="City, State" className={inputCls} /></div>
-              <div><label className={labelCls}>School</label><input value={profile.school} onChange={e => setProfile(p => ({ ...p, school: e.target.value }))} placeholder="School name" className={inputCls} /></div>
+              {profile.date_of_birth && <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Age</label><p className="text-body font-medium">{calcAge(profile.date_of_birth)} years old</p></div>}
+              <div><label htmlFor="pf-city" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>City</label><input id="pf-city" value={profile.city} onChange={e => setProfile(p => ({ ...p, city: e.target.value }))} placeholder="City, State" className={inputCls} /></div>
+              <div><label htmlFor="pf-school" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>School</label><input id="pf-school" value={profile.school} onChange={e => setProfile(p => ({ ...p, school: e.target.value }))} placeholder="School name" className={inputCls} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className={labelCls}>GPA (Optional)</label><input type="number" step="0.1" min="0" max="4" value={profile.gpa ?? ''} onChange={e => setProfile(p => ({ ...p, gpa: e.target.value ? parseFloat(e.target.value) : null }))} placeholder="3.7" className={inputCls} /></div>
-                <div><label className={labelCls}>Test Scores (Optional)</label><input value={profile.test_scores} onChange={e => setProfile(p => ({ ...p, test_scores: e.target.value }))} placeholder="SAT: 1320" className={inputCls} /></div>
+                <div><label htmlFor="pf-gpa" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>GPA (Optional)</label><input id="pf-gpa" type="number" step="0.1" min="0" max="4" value={profile.gpa ?? ''} onChange={e => setProfile(p => ({ ...p, gpa: e.target.value ? parseFloat(e.target.value) : null }))} placeholder="3.7" className={inputCls} /></div>
+                <div><label htmlFor="pf-test" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Test Scores (Optional)</label><input id="pf-test" value={profile.test_scores} onChange={e => setProfile(p => ({ ...p, test_scores: e.target.value }))} placeholder="SAT: 1320" className={inputCls} /></div>
               </div>
-              <div><label className={labelCls}>Phone Number</label><input value={profile.phone} onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))} placeholder="(555) 123-4567" className={inputCls} /></div>
-              <div><label className={labelCls}>Languages & Proficiency</label>
+              <div><label htmlFor="pf-phone" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Phone Number</label><input id="pf-phone" value={profile.phone} onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))} placeholder="(555) 123-4567" className={inputCls} /></div>
+              <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Languages and Proficiency</label>
                 {(profile.languages || []).map((lang: any, i: number) => (
                   <div key={i} className="flex gap-2 mb-2">
-                    <select value={lang.language || ''} onChange={e => { const n = [...(profile.languages || [])]; n[i] = { ...n[i], language: e.target.value }; setProfile(p => ({ ...p, languages: n })); }} className={inputCls + " flex-1"}>
+                    <select value={lang.language || ''} onChange={e => { const n = [...(profile.languages || [])]; n[i] = { ...n[i], language: e.target.value }; setProfile(p => ({ ...p, languages: n })); }} className={inputCls + " flex-1"} aria-label={`Language ${i + 1}`}>
                       <option value="">Language...</option>{LANG_OPTIONS.map(l => <option key={l}>{l}</option>)}
                     </select>
-                    <select value={lang.proficiency || ''} onChange={e => { const n = [...(profile.languages || [])]; n[i] = { ...n[i], proficiency: e.target.value }; setProfile(p => ({ ...p, languages: n })); }} className={inputCls + " flex-1"}>
+                    <select value={lang.proficiency || ''} onChange={e => { const n = [...(profile.languages || [])]; n[i] = { ...n[i], proficiency: e.target.value }; setProfile(p => ({ ...p, languages: n })); }} className={inputCls + " flex-1"} aria-label={`Proficiency ${i + 1}`}>
                       <option value="">Level...</option>{PROFICIENCY.map(p => <option key={p}>{p}</option>)}
                     </select>
-                    <button onClick={() => setProfile(p => ({ ...p, languages: (p.languages || []).filter((_: any, j: number) => j !== i) }))} className="text-[13px] font-medium" style={{ color: '#FF3B30' }}>✕</button>
+                    <button onClick={() => setProfile(p => ({ ...p, languages: (p.languages || []).filter((_: any, j: number) => j !== i) }))} className="text-small font-medium" style={{ color: '#FF3B30' }} aria-label="Remove language">X</button>
                   </div>
                 ))}
-                <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-[13px] text-primary font-medium">+ Add language</button>
+                <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-small font-semibold" style={{ color: '#4F46E5' }}>+ Add language</button>
               </div>
-              <div><label className={labelCls}>Skills</label>
+              <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Skills</label>
                 <div className="flex flex-wrap gap-2">{SKILLS_LIST.map(s => (
-                  <label key={s} className={`text-[13px] px-3 py-1.5 rounded-full cursor-pointer transition-fast ${(profile.skills || []).includes(s) ? 'text-primary' : 'text-muted-foreground'}`}
-                    style={(profile.skills || []).includes(s) ? { background: 'rgba(79, 70, 229, 0.1)', border: '1px solid rgba(79, 70, 229, 0.3)' } : { background: 'rgba(0,0,0,0.04)' }}>
+                  <label key={s} className="text-small px-3 py-1.5 rounded-full cursor-pointer transition-fast"
+                    style={(profile.skills || []).includes(s) ? { background: 'rgba(79, 70, 229, 0.1)', border: '1px solid rgba(79, 70, 229, 0.3)', color: '#4F46E5' } : { background: 'rgba(0,0,0,0.03)', color: 'rgba(60,60,67,0.6)' }}>
                     <input type="checkbox" className="sr-only" checked={(profile.skills || []).includes(s)} onChange={e => setProfile(p => ({ ...p, skills: e.target.checked ? [...(p.skills || []), s] : (p.skills || []).filter(x => x !== s) }))} />{s}
                   </label>
                 ))}</div>
               </div>
-              <div><label className={labelCls}>Short Bio ({(profile.bio || '').length}/200)</label>
-                <textarea value={profile.bio} onChange={e => { if (e.target.value.length <= 200) setProfile(p => ({ ...p, bio: e.target.value })); }} rows={3} placeholder="Tell us about yourself..." className={inputCls + " !h-auto py-3"} /></div>
-              <motion.button onClick={saveProfile} disabled={savingProfile} whileTap={{ scale: 0.97 }}
-                className="w-full h-[44px] rounded-xl bg-primary text-primary-foreground text-[15px] font-semibold hover:opacity-92 disabled:opacity-50 inline-flex items-center justify-center gap-2 btn-press"
-                style={{ transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+              <div><label htmlFor="pf-bio" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Short Bio ({(profile.bio || '').length}/200)</label>
+                <textarea id="pf-bio" value={profile.bio} onChange={e => { if (e.target.value.length <= 200) setProfile(p => ({ ...p, bio: e.target.value })); }} rows={3} placeholder="Tell us about yourself..." className={inputCls + " !h-auto py-3"} /></div>
+              <button onClick={saveProfile} disabled={savingProfile}
+                className="w-full h-[48px] btn-glass-primary inline-flex items-center justify-center gap-2 disabled:opacity-50">
                 {savingProfile ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : "Save Portfolio"}
-              </motion.button>
+              </button>
             </div>
           </div>}
 
           {tab === 'notifications' && <div>
-            <h1 className="font-display text-2xl font-bold mb-6">Notifications</h1>
-            {messages.length === 0 ? <p className="text-muted-foreground">No notifications yet.</p> :
+            <h1 className="font-display text-h2 font-bold mb-8">Notifications</h1>
+            {messages.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No notifications yet.</p> :
             <div className="space-y-3">{messages.map(m => (
-              <div key={m.id} className={`glass-card rounded-2xl p-4 card-hover cursor-pointer ${!m.read ? '' : ''}`} onClick={() => !m.read && markRead(m.id)}
-                style={!m.read ? { borderColor: 'rgba(79, 70, 229, 0.2)' } : {}}>
+              <div key={m.id} className={`glass-card p-4 card-hover cursor-pointer`} onClick={() => !m.read && markRead(m.id)}
+                style={!m.read ? { borderColor: 'rgba(79, 70, 229, 0.3)' } : {}}>
                 <div className="flex items-start justify-between">
                   <div>
-                    {!m.read && <span className="inline-block w-2 h-2 rounded-full bg-primary mr-2" />}
-                    <span className="text-[13px] text-muted-foreground">{new Date(m.sent_at).toLocaleString()}</span>
+                    {!m.read && <span className="inline-block w-2 h-2 rounded-full mr-2" style={{ background: '#4F46E5' }} />}
+                    <span className="text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>{new Date(m.sent_at).toLocaleString()}</span>
                   </div>
                 </div>
-                <p className="text-sm mt-2">{m.content}</p>
-                <p className="text-[13px] text-muted-foreground mt-2 italic">A business has reached out to you. Contact them at the email or phone number provided in your notification.</p>
+                <p className="text-body mt-2">{m.content}</p>
+                <p className="text-small mt-2 italic" style={{ color: 'rgba(60,60,67,0.6)' }}>A business has reached out to you. Contact them at the email or phone number provided in your notification.</p>
               </div>
             ))}</div>}
           </div>}
 
           {tab === 'settings' && <div>
-            <h1 className="font-display text-2xl font-bold mb-6">Settings</h1>
-            <div className="glass-card rounded-2xl p-6"><p className="text-sm text-muted-foreground mb-4">Signed in as: {user?.email}</p>
-            <button onClick={signOut} className="h-[44px] px-6 rounded-xl text-[15px] font-semibold text-white btn-press" style={{ background: '#FF3B30' }}>Sign Out</button></div>
+            <h1 className="font-display text-h2 font-bold mb-8">Settings</h1>
+            <div className="glass-card p-8"><p className="text-small mb-4" style={{ color: 'rgba(60,60,67,0.6)' }}>Signed in as: {user?.email}</p>
+            <button onClick={signOut} className="btn-glass-destructive h-12 px-6 text-body font-semibold">Sign Out</button></div>
           </div>}
 
         </motion.div>

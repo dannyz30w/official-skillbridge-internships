@@ -4,44 +4,31 @@ import { Link } from "react-router-dom";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const ForBusinesses = () => {
-  return (
-    <section id="businesses" className="py-12 sm:py-20 px-4 sm:px-6">
-      <div className="container mx-auto max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, ease }}
-          className="bg-card rounded-xl border border-border shadow-card p-8 sm:p-12"
-        >
-          <div className="max-w-xl">
-            <span className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
-              For Businesses
-            </span>
-            <h2 className="mt-2 font-display text-3xl font-bold text-foreground tracking-tight">
-              Hire Ambitious Young Talent
-            </h2>
-            <p className="mt-4 text-muted-foreground leading-relaxed">
-              Post internships in minutes, reach motivated candidates aged 16–22, and build your pipeline of future employees. No recruitment fees, no complexity.
-            </p>
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="mt-6 inline-block"
-            >
-              <Link
-                to="/post-internship"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground h-11 px-6 text-sm font-semibold hover:bg-primary/90 transition-smooth will-change-transform"
-              >
-                Post an Internship <ArrowRight className="h-4 w-4" />
-              </Link>
-            </motion.div>
+const ForBusinesses = () => (
+  <section id="businesses" className="py-16 sm:py-24 px-4 sm:px-6">
+    <div className="container mx-auto max-w-4xl">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-48px" }}
+        transition={{ duration: 0.38, ease }}
+        className="glass-card p-8 sm:p-12"
+      >
+        <div className="max-w-xl">
+          <span className="text-caption font-semibold uppercase tracking-wider" style={{ color: 'rgba(60,60,67,0.6)' }}>For Businesses</span>
+          <h2 className="mt-2 font-display text-h2 font-bold">Hire Ambitious Young Talent</h2>
+          <p className="mt-4 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>
+            Post internships in minutes, reach motivated candidates aged 16 to 22, and build your pipeline of future employees. No recruitment fees, no complexity.
+          </p>
+          <div className="mt-8">
+            <Link to="/for-businesses" className="btn-glass-primary inline-flex items-center justify-center gap-2 h-12 px-8">
+              Learn More <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+        </div>
+      </motion.div>
+    </div>
+  </section>
+);
 
 export default ForBusinesses;

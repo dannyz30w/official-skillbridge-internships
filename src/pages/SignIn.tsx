@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Mail, Lock, Loader2 } from "lucide-react";
@@ -6,9 +6,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
+import SEOHead from "@/components/SEOHead";
 
 const ease = [0.16, 1, 0.3, 1] as const;
-const inputCls = "w-full h-[44px] pl-10 pr-4 rounded-xl text-[15px] text-foreground placeholder:text-muted-foreground/50 glass-input";
+const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[15px] text-foreground placeholder:text-muted-foreground/50 glass-input";
+
+const LOCKOUT_SCHEDULE: Record<number, number> = {
+  3: 60, 4: 180, 5: 600, 6: 1800, 7: 3600, 8: 10800, 9: 36000,
+};
+
+const db = supabase as any;
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -17,65 +24,152 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [lockoutEnd, setLockoutEnd] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState("");
+  const timerRef = useRef<ReturnType<typeof setInterval>>();
 
   useEffect(() => {
     if (user && accountType) navigate(`/${accountType}`, { replace: true });
   }, [user, accountType, navigate]);
 
+  useEffect(() => {
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, []);
+
+  const formatTime = (secs: number) => {
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    const s = secs % 60;
+    if (h > 0) return `${h}h ${m}m ${s}s`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  };
+
+  const startCountdown = useCallback((endTime: number) => {
+    setLockoutEnd(endTime);
+    if (timerRef.current) clearInterval(timerRef.current);
+    const update = () => {
+      const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+      if (remaining <= 0) {
+        setLockoutEnd(null);
+        setCountdown("");
+        setError("");
+        if (timerRef.current) clearInterval(timerRef.current);
+      } else {
+        setCountdown(formatTime(remaining));
+      }
+    };
+    update();
+    timerRef.current = setInterval(update, 1000);
+  }, []);
+
+  const checkLockout = async (emailAddr: string) => {
+    const { data } = await db.from('login_attempts').select('*').eq('email', emailAddr).maybeSingle();
+    if (data?.locked_until) {
+      const lockEnd = new Date(data.locked_until).getTime();
+      if (lockEnd > Date.now()) {
+        startCountdown(lockEnd);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const recordFailedAttempt = async (emailAddr: string) => {
+    const { data } = await db.from('login_attempts').select('*').eq('email', emailAddr).maybeSingle();
+    const count = (data?.failed_count || 0) + 1;
+    const lockoutSecs = count >= 10 ? 86400 : LOCKOUT_SCHEDULE[count];
+    const lockedUntil = lockoutSecs ? new Date(Date.now() + lockoutSecs * 1000).toISOString() : null;
+
+    if (data) {
+      await db.from('login_attempts').update({ failed_count: count, locked_until: lockedUntil, last_attempt: new Date().toISOString() }).eq('email', emailAddr);
+    } else {
+      await db.from('login_attempts').insert({ email: emailAddr, failed_count: count, locked_until: lockedUntil });
+    }
+
+    if (lockedUntil) {
+      startCountdown(new Date(lockedUntil).getTime());
+    }
+    return count;
+  };
+
+  const clearAttempts = async (emailAddr: string) => {
+    await db.from('login_attempts').update({ failed_count: 0, locked_until: null }).eq('email', emailAddr);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) { setError("Please fill in all fields."); return; }
+    if (lockoutEnd && lockoutEnd > Date.now()) return;
+
+    const locked = await checkLockout(email);
+    if (locked) return;
+
     setError("");
     setLoading(true);
     const { error: err } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (err) { setError(err.message); return; }
+    if (err) {
+      const count = await recordFailedAttempt(email);
+      if (count >= 3 && LOCKOUT_SCHEDULE[count]) {
+        setError(`Too many failed attempts. Please try again in ${countdown || formatTime(LOCKOUT_SCHEDULE[count])}.`);
+      } else if (count >= 10) {
+        setError(`Too many failed attempts. Please try again in ${countdown || '24h'}.`);
+      } else {
+        setError(err.message);
+      }
+      return;
+    }
+    await clearAttempts(email);
     toast.success("Welcome back!");
   };
 
+  const isLocked = lockoutEnd !== null && lockoutEnd > Date.now();
+
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }} className="p-4 sm:p-6">
-        <Link to="/" className="inline-flex items-center gap-2 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-fast">
+    <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+      <SEOHead title="Sign In to SkillBridge" description="Sign in to your SkillBridge account to browse paid internships, manage your applications, or post internship listings for your business." path="/signin" />
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
+        <Link to="/" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
           <ArrowLeft className="h-4 w-4" /> Back to home
         </Link>
       </motion.div>
       <div className="flex-1 flex items-center justify-center px-4 pb-16">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease }} className="w-full max-w-sm">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease, delay: 0.04 }} className="w-full max-w-sm">
           <div className="text-center mb-8">
-            <img src={skillbridgeLogo} alt="SkillBridge" className="h-10 w-auto mx-auto mb-6" />
-            <h1 className="font-display text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="mt-2 text-[15px] text-muted-foreground">Sign in to your SkillBridge account</p>
+            <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
+            <h1 className="font-display text-h2 font-bold">Welcome back</h1>
+            <p className="mt-2 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>Sign in to your SkillBridge account</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-[13px] font-medium tracking-[0.01em] text-muted-foreground mb-1.5">Email</label>
+              <label htmlFor="signin-email" className="block text-small font-medium mb-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'rgba(60,60,67,0.4)' }} />
+                <input id="signin-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} />
               </div>
             </div>
             <div>
-              <label className="block text-[13px] font-medium tracking-[0.01em] text-muted-foreground mb-1.5">Password</label>
+              <label htmlFor="signin-password" className="block text-small font-medium mb-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className={inputCls} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'rgba(60,60,67,0.4)' }} />
+                <input id="signin-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Your password" className={inputCls} />
               </div>
             </div>
             <AnimatePresence mode="wait">
-              {error && <motion.p key="error" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} className="text-sm text-destructive">{error}</motion.p>}
+              {(error || isLocked) && (
+                <motion.p key="error" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} className="text-small" style={{ color: '#FF3B30' }}>
+                  {isLocked ? `Too many failed attempts. Please try again in ${countdown}.` : error}
+                </motion.p>
+              )}
             </AnimatePresence>
-            <motion.button type="submit" disabled={loading} whileTap={{ scale: 0.97 }}
-              className="w-full h-[44px] rounded-xl bg-primary text-primary-foreground text-[15px] font-semibold hover:opacity-92 disabled:opacity-50 inline-flex items-center justify-center gap-2 btn-press"
-              style={{ transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
+            <button type="submit" disabled={loading || isLocked}
+              className="w-full h-[48px] rounded-xl text-body font-semibold inline-flex items-center justify-center gap-2 btn-glass-primary disabled:opacity-50">
               {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Signing in...</> : "Sign In"}
-            </motion.button>
+            </button>
           </form>
-          <div className="mt-4 text-center">
-            <Link to="/reset-password" className="text-sm text-muted-foreground hover:text-primary transition-fast">Forgot password?</Link>
-          </div>
-          <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account? <Link to="/signup" className="font-medium text-primary hover:text-primary/80 transition-fast">Sign Up</Link>
+          <p className="mt-6 text-center text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>
+            Don't have an account? <Link to="/signup" className="font-semibold transition-fast" style={{ color: '#4F46E5' }}>Sign Up</Link>
           </p>
         </motion.div>
       </div>
