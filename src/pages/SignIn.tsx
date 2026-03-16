@@ -9,7 +9,7 @@ import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 
 const ease = [0.16, 1, 0.3, 1] as const;
-const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[15px] text-foreground placeholder:text-muted-foreground/50 glass-input";
+const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[16px] text-foreground placeholder:text-muted-foreground/50 glass-input";
 
 const LOCKOUT_SCHEDULE: Record<number, number> = {
   3: 60, 4: 180, 5: 600, 6: 1800, 7: 3600, 8: 10800, 9: 36000,
@@ -145,16 +145,19 @@ const SignIn = () => {
             <div>
               <label htmlFor="signin-email" className="block text-small font-medium mb-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Email</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'rgba(60,60,67,0.4)' }} />
-                <input id="signin-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: 'rgba(60,60,67,0.35)' }} />
+                <input id="signin-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} style={{ paddingLeft: 44 }} />
               </div>
             </div>
             <div>
               <label htmlFor="signin-password" className="block text-small font-medium mb-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'rgba(60,60,67,0.4)' }} />
-                <input id="signin-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Your password" className={inputCls} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none" style={{ color: 'rgba(60,60,67,0.35)' }} />
+                <input id="signin-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Your password" className={inputCls} style={{ paddingLeft: 44 }} />
               </div>
+            </div>
+            <div className="flex justify-end">
+              <Link to="/forgot-password" className="text-small font-medium transition-fast" style={{ color: '#4F46E5' }}>Forgot your password?</Link>
             </div>
             <AnimatePresence mode="wait">
               {(error || isLocked) && (
