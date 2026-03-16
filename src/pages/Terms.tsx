@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import skillbridgeLogo from "@/assets/skillbridge-logo.png";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 
 const sections = [
@@ -21,23 +21,14 @@ const sections = [
 const Terms = () => (
   <div className="min-h-screen" style={{ background: '#FFFFFF' }}>
     <SEOHead title="Terms of Service, SkillBridge" description="Read the SkillBridge Terms of Service governing internship listings, user conduct, and data privacy." path="/terms" />
-    <nav className="sticky top-0 z-50 liquid-glass" style={{ height: 64 }} aria-label="Terms page navigation">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-9 w-auto" width={144} height={36} />
-        </Link>
-        <Link to="/" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Link>
-      </div>
-    </nav>
+    <Navbar />
 
-    <main className="py-16 sm:py-24 px-4 sm:px-6">
+    <main className="pt-32 pb-24 px-4 sm:px-6">
       <motion.div
         className="mx-auto max-w-[720px]"
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <h1 className="font-display text-h1 font-bold mb-2">SkillBridge Terms of Service</h1>
         <p className="text-small mb-16" style={{ color: 'rgba(60,60,67,0.6)' }}>Last updated: March 2026</p>
@@ -56,6 +47,7 @@ const Terms = () => (
         </div>
       </motion.div>
     </main>
+    <Footer />
   </div>
 );
 

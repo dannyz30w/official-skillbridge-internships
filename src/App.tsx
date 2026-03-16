@@ -12,12 +12,17 @@ const Index = lazy(() => import("./pages/Index"));
 const SignIn = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const BusinessDashboard = lazy(() => import("./pages/BusinessDashboard"));
 const InternDashboard = lazy(() => import("./pages/InternDashboard"));
 const Mission = lazy(() => import("./pages/Mission"));
 const Terms = lazy(() => import("./pages/Terms"));
 const ForBusinesses = lazy(() => import("./pages/ForBusinessesPage"));
+const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
+const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const TestimonialsPage = lazy(() => import("./pages/TestimonialsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -41,9 +46,14 @@ const App = () => (
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/mission" element={<Mission />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/for-businesses" element={<ForBusinesses />} />
+              <Route path="/how-it-works" element={<HowItWorksPage />} />
+              <Route path="/resources" element={<ResourcesPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/testimonials" element={<TestimonialsPage />} />
               <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
               <Route path="/business" element={<ProtectedRoute role="business"><BusinessDashboard /></ProtectedRoute>} />
               <Route path="/intern" element={<ProtectedRoute role="intern"><InternDashboard /></ProtectedRoute>} />

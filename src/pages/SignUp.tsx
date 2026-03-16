@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Loader2, Building2, GraduationCap } from "lucide-react";
+import { ArrowLeft, Loader2, Building2, GraduationCap, Check, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/analytics";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 
 const BUSINESS_TYPES = ['Retail', 'Food & Beverage', 'Healthcare', 'Tech', 'Creative & Media', 'Trades & Construction', 'Education', 'Nonprofit', 'Finance', 'Other'];
 const TRUSTED_DOMAINS = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'protonmail.com', 'proton.me', 'mail.com', 'zoho.com', 'yandex.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'tutanota.com', 'hey.com', 'pm.me', 'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net', 'charter.net', 'bellsouth.net', 'earthlink.net', 'aim.com'];
 
-const inputCls = "w-full h-[48px] px-4 rounded-xl text-[15px] glass-input";
+const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] glass-input";
 const labelCls = "block text-small font-medium mb-2";
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -41,6 +42,15 @@ const calcAge = (dateStr: string) => {
   return age;
 };
 
+const passwordStrength = (pw: string) => {
+  let score = 0;
+  if (pw.length >= 10) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  return score;
+};
+
 const SignUp = () => {
   const navigate = useNavigate();
   const { user, accountType } = useAuth();
@@ -55,6 +65,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [dob, setDob] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   const [bizName, setBizName] = useState("");
   const [contactName, setContactName] = useState("");
@@ -68,10 +79,19 @@ const SignUp = () => {
     if (user && accountType) navigate(`/${accountType}`, { replace: true });
   }, [user, accountType, navigate]);
 
+  const validatePassword = (pw: string) => {
+    if (pw.length < 10) return "Password must be at least 10 characters.";
+    if (!/[A-Z]/.test(pw)) return "Password must contain an uppercase letter.";
+    if (!/[0-9]/.test(pw)) return "Password must contain a number.";
+    if (!/[^A-Za-z0-9]/.test(pw)) return "Password must contain a special character.";
+    return null;
+  };
+
   const handleInternSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName || !lastName || !email || !password || !confirmPassword || !dob) { setError("Please fill in all fields."); return; }
-    if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    const pwErr = validatePassword(password);
+    if (pwErr) { setError(pwErr); return; }
     if (password !== confirmPassword) { setError("Passwords do not match."); return; }
     const age = calcAge(dob);
     if (age < 16) { setError("You must be at least 16 years old to create an intern account."); return; }
@@ -91,13 +111,15 @@ const SignUp = () => {
     });
     setLoading(false);
     if (err) { setError(err.message); return; }
+    trackEvent('intern_signup');
     toast.success("Account created! Welcome to SkillBridge.");
   };
 
   const handleBusinessSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!bizName || !contactName || !bizEmail || !bizPassword || !bizConfirmPassword || !bizType) { setError("Please fill in all fields."); return; }
-    if (bizPassword.length < 8) { setError("Password must be at least 8 characters."); return; }
+    const pwErr = validatePassword(bizPassword);
+    if (pwErr) { setError(pwErr); return; }
     if (bizPassword !== bizConfirmPassword) { setError("Passwords do not match."); return; }
     if (!bizAgreeTerms) { setError("You must agree to the Terms of Service."); return; }
 
@@ -114,8 +136,13 @@ const SignUp = () => {
     });
     setLoading(false);
     if (err) { setError(err.message); return; }
+    trackEvent('business_signup');
     toast.success("Account created! Welcome to SkillBridge.");
   };
+
+  const pwScore = step === 'intern' ? passwordStrength(password) : passwordStrength(bizPassword);
+  const pwColors = ['#FF3B30', '#F59E0B', '#F59E0B', '#10B981', '#10B981'];
+  const pwLabels = ['Weak', 'Fair', 'Fair', 'Strong', 'Very Strong'];
 
   if (step === 'select') {
     return (
@@ -134,14 +161,14 @@ const SignUp = () => {
               <p className="mt-2 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>Choose how you want to use SkillBridge</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
-              <button onClick={() => setStep('intern')} className="glass-card p-8 text-center card-hover cursor-pointer text-left">
+              <button onClick={() => setStep('intern')} className="glass-card p-8 text-center card-hover cursor-pointer">
                 <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.1)' }}>
                   <GraduationCap className="h-7 w-7" style={{ color: '#4F46E5' }} />
                 </div>
                 <h3 className="font-display font-bold text-h4 text-center">I am looking for an internship</h3>
                 <p className="text-small text-center mt-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Browse and apply to paid internships near you</p>
               </button>
-              <button onClick={() => setStep('business')} className="glass-card p-8 text-center card-hover cursor-pointer text-left">
+              <button onClick={() => setStep('business')} className="glass-card p-8 text-center card-hover cursor-pointer">
                 <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.1)' }}>
                   <Building2 className="h-7 w-7" style={{ color: '#4F46E5' }} />
                 </div>
@@ -159,6 +186,7 @@ const SignUp = () => {
   }
 
   const isIntern = step === 'intern';
+  const activePw = isIntern ? password : bizPassword;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
@@ -183,9 +211,15 @@ const SignUp = () => {
                 </div>
                 <div><label htmlFor="intern-email" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Email</label><input id="intern-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label htmlFor="intern-pw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label><input id="intern-pw" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 8 chars" className={inputCls} /></div>
+                  <div><label htmlFor="intern-pw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label><input id="intern-pw" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 10 chars" className={inputCls} /></div>
                   <div><label htmlFor="intern-cpw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Confirm</label><input id="intern-cpw" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} /></div>
                 </div>
+                {activePw.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 flex gap-1">{[0,1,2,3].map(i => <div key={i} className="flex-1 h-1 rounded-full" style={{ background: i < pwScore ? pwColors[pwScore] : 'rgba(0,0,0,0.06)' }} />)}</div>
+                    <span className="text-caption font-medium" style={{ color: pwColors[pwScore] }}>{pwLabels[pwScore]}</span>
+                  </div>
+                )}
                 <div><label htmlFor="dob" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Date of Birth</label><input id="dob" type="date" value={dob} onChange={e => setDob(e.target.value)} className={inputCls} /></div>
                 <label className="flex items-start gap-2 text-small cursor-pointer" style={{ color: 'rgba(60,60,67,0.6)' }}>
                   <input type="checkbox" checked={agreeTerms} onChange={e => setAgreeTerms(e.target.checked)} className="mt-0.5 rounded" />
@@ -198,9 +232,15 @@ const SignUp = () => {
                 <div><label htmlFor="contact" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Contact Person</label><input id="contact" type="text" value={contactName} onChange={e => setContactName(e.target.value)} placeholder="Full Name" className={inputCls} /></div>
                 <div><label htmlFor="biz-email" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Business Email</label><input id="biz-email" type="email" value={bizEmail} onChange={e => setBizEmail(e.target.value)} placeholder="contact@business.com" className={inputCls} /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label htmlFor="biz-pw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label><input id="biz-pw" type="password" value={bizPassword} onChange={e => setBizPassword(e.target.value)} placeholder="Min. 8 chars" className={inputCls} /></div>
+                  <div><label htmlFor="biz-pw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label><input id="biz-pw" type="password" value={bizPassword} onChange={e => setBizPassword(e.target.value)} placeholder="Min. 10 chars" className={inputCls} /></div>
                   <div><label htmlFor="biz-cpw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Confirm</label><input id="biz-cpw" type="password" value={bizConfirmPassword} onChange={e => setBizConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} /></div>
                 </div>
+                {activePw.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 flex gap-1">{[0,1,2,3].map(i => <div key={i} className="flex-1 h-1 rounded-full" style={{ background: i < pwScore ? pwColors[pwScore] : 'rgba(0,0,0,0.06)' }} />)}</div>
+                    <span className="text-caption font-medium" style={{ color: pwColors[pwScore] }}>{pwLabels[pwScore]}</span>
+                  </div>
+                )}
                 <div>
                   <label htmlFor="biz-type" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Business Type</label>
                   <select id="biz-type" value={bizType} onChange={e => setBizType(e.target.value)} className={inputCls}>

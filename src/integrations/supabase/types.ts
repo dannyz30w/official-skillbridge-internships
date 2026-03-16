@@ -97,6 +97,7 @@ export type Database = {
           school: string | null
           skills: string[] | null
           test_scores: string | null
+          traits: string[] | null
           updated_at: string
           user_id: string
         }
@@ -114,6 +115,7 @@ export type Database = {
           school?: string | null
           skills?: string[] | null
           test_scores?: string | null
+          traits?: string[] | null
           updated_at?: string
           user_id: string
         }
@@ -131,6 +133,7 @@ export type Database = {
           school?: string | null
           skills?: string[] | null
           test_scores?: string | null
+          traits?: string[] | null
           updated_at?: string
           user_id?: string
         }
