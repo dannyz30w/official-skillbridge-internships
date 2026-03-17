@@ -40,10 +40,10 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    const { count } = await db.from('listings').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+    const { count } = await db.from('listings').select('*', { count: 'exact', head: true }).in('status', ['pending','pending_edited']);
     setPendingCount(count || 0);
     if (tab === 'queue') {
-      const { data } = await db.from('listings').select('*').eq('status', 'pending').order('created_at', { ascending: true });
+      const { data } = await db.from('listings').select('*').in('status', ['pending','pending_edited']).order('created_at', { ascending: true });
       if (data) { setPending(data); await loadBizNames(data); }
     } else if (tab === 'listings') {
       const { data } = await db.from('listings').select('*').order('created_at', { ascending: false });
@@ -81,6 +81,7 @@ const AdminDashboard = () => {
   };
 
   const statusBadge = (s: string) => {
+    if (s === 'pending_edited') return <span className='badge-pending' style={{ background: 'rgba(255,159,10,0.16)', color: '#B45309' }}>Pending Review <span className='ml-1'>Edited</span></span>;
     const cls = s === 'live' ? 'badge-live' : s === 'rejected' ? 'badge-rejected' : s === 'pending' ? 'badge-pending' : 'badge-closed';
     return <span className={cls}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>;
   };

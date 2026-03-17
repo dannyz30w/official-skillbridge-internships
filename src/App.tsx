@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import AppBackground from "@/components/AppBackground";
 
 const Index = lazy(() => import("./pages/Index"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -22,6 +23,7 @@ const ForBusinesses = lazy(() => import("./pages/ForBusinessesPage"));
 const HowItWorksPage = lazy(() => import("./pages/HowItWorksPage"));
 const ResourcesPage = lazy(() => import("./pages/ResourcesPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+const BrowseInternships = lazy(() => import("./pages/BrowseInternships"));
 const TestimonialsPage = lazy(() => import("./pages/TestimonialsPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -40,6 +42,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <AppBackground />
+          <div className="relative z-10">
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -57,11 +61,12 @@ const App = () => (
               <Route path="/admin" element={<ProtectedRoute role="admin"><AdminDashboard /></ProtectedRoute>} />
               <Route path="/business" element={<ProtectedRoute role="business"><BusinessDashboard /></ProtectedRoute>} />
               <Route path="/intern" element={<ProtectedRoute role="intern"><InternDashboard /></ProtectedRoute>} />
-              <Route path="/browse" element={<Navigate to="/intern" replace />} />
+              <Route path="/browse" element={<BrowseInternships />} />
               <Route path="/post-internship" element={<Navigate to="/business" replace />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </div>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
