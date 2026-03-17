@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import AppBackground from "@/components/AppBackground";
 
 const Index = lazy(() => import("./pages/Index"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -40,6 +41,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <AppBackground />
+          <div className="relative z-10">
           <Suspense fallback={<Loading />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -62,6 +65,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </div>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
