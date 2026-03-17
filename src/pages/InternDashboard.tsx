@@ -11,7 +11,6 @@ const db = supabase as any;
 const inputCls = "w-full h-[48px] px-4 rounded-xl text-[15px] glass-input";
 const labelCls = "block text-small font-medium mb-2";
 const TRAITS = ['Adaptable','Ambitious','Analytical','Attentive','Collaborative','Communicator','Creative','Curious','Detail-driven','Detail-oriented','Driven','Empathetic','Fast learner','Flexible','Focused','Hardworking','Independent','Initiative-taker','Leadership','Logical','Motivated','Observant','Open-minded','Organized','Passionate','Patient','Proactive','Problem solver','Punctual','Reliable','Resourceful','Responsible','Self-starter','Team player','Tech-savvy','Thorough'];
-const TRAITS = ['Hardworking','Creative','Detail-oriented','Fast learner','Team player','Independent','Communicator','Problem solver','Reliable','Ambitious','Adaptable','Curious','Leadership','Organized','Punctual','Empathetic','Tech-savvy','Initiative-taker'];
 const LANG_OPTIONS = ['English', 'Spanish', 'French', 'Mandarin', 'Cantonese', 'Arabic', 'Portuguese', 'Other'];
 const PROFICIENCY = ['Native', 'Fluent', 'Intermediate', 'Basic'];
 
@@ -125,6 +124,17 @@ const InternDashboard = () => {
     return <span className={cls}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>;
   };
 
+  const toggleTrait = (trait: string) => {
+    setProfile((prev) => {
+      const current = prev.traits || [];
+      if (current.includes(trait)) {
+        return { ...prev, traits: current.filter((item) => item !== trait) };
+      }
+      const next = [...current, trait];
+      return { ...prev, traits: next.length > 3 ? next.slice(1) : next };
+    });
+  };
+
   return (
     <div className="min-h-screen flex" style={{ background: '#F2F2F7' }}>
       <SEOHead title="Intern Dashboard" description="Manage your SkillBridge applications" path="/intern" noIndex />
@@ -233,16 +243,24 @@ const InternDashboard = () => {
                 <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-small font-semibold" style={{ color: '#4F46E5' }}>+ Add language</button>
               </div>
               <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Pick 3 traits that best describe you as a worker</label>
-                <div className="flex flex-wrap gap-2">{TRAITS.map(t => { const selected = (profile.traits || []).includes(t); return (
-                  <motion.button key={t} type="button" onClick={() => setProfile(p => { const current = p.traits || []; if (current.includes(t)) return { ...p, traits: current.filter(x => x !== t) }; const next = [...current, t]; return { ...p, traits: next.length > 3 ? next.slice(1) : next }; })} whileTap={{ scale: 0.94 }} animate={{ scale: selected ? 1.03 : 1 }} transition={{ type: "spring", stiffness: 320, damping: 20 }} className="text-small px-3 py-1.5 rounded-full transition-fast"
-                    style={selected ? { background: 'rgba(79, 70, 229, 0.28)', border: '1px solid rgba(79, 70, 229, 0.5)', color: '#312E81', transform: 'scale(1.02)' } : { background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(60,60,67,0.75)' }}>
-                    {t}
-                  </motion.button>
-                  <button key={t} type="button" onClick={() => setProfile(p => { const current = p.traits || []; if (current.includes(t)) return { ...p, traits: current.filter(x => x !== t) }; const next = [...current, t]; return { ...p, traits: next.length > 3 ? next.slice(1) : next }; })} className="text-small px-3 py-1.5 rounded-full transition-fast"
-                    style={selected ? { background: 'rgba(79, 70, 229, 0.28)', border: '1px solid rgba(79, 70, 229, 0.5)', color: '#312E81', transform: 'scale(1.02)' } : { background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(60,60,67,0.75)' }}>
-                    {t}
-                  </button>
-                ); })}</div>
+                <div className="flex flex-wrap gap-2">
+                  {TRAITS.map((trait) => {
+                    const selected = (profile.traits || []).includes(trait);
+                    return (
+                      <button
+                        key={trait}
+                        type="button"
+                        onClick={() => toggleTrait(trait)}
+                        className="text-small px-3 py-1.5 rounded-full transition-fast"
+                        style={selected
+                          ? { background: 'rgba(79, 70, 229, 0.28)', border: '1px solid rgba(79, 70, 229, 0.5)', color: '#312E81' }
+                          : { background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(60,60,67,0.75)' }}
+                      >
+                        {trait}
+                      </button>
+                    );
+                  })}
+                </div>
                 {(profile.traits || []).length !== 3 && <p className="text-small mt-2" style={{ color: '#FF3B30' }}>Please select exactly 3 traits.</p>}
               </div>
               <button onClick={saveProfile} disabled={savingProfile}
