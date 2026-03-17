@@ -8,7 +8,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const Mission = () => (
   <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
-    <SEOHead title="Our Mission, SkillBridge" description="SkillBridge exists to close the opportunity gap. Every listing is paid. Every business is verified. Every young person deserves a fair shot." path="/mission" />
+    <SEOHead title="Our Mission, SkillBridge" description="SkillBridge was built to close the opportunity gap. Every listing is paid. Every business is verified. Every young person gets a fair shot." path="/mission" jsonLd={{"@context":"https://schema.org","@type":"AboutPage","name":"SkillBridge Mission","description":"SkillBridge exists to close the opportunity gap for young adults through verified paid internships."}} />
     <Navbar />
 
     <main className="pt-32 pb-24 px-4 sm:px-6">
