@@ -67,6 +67,7 @@ const LandingNav = () => {
           </Link>
         ))}
         <div className="relative z-[60]" ref={dropdownRef} onMouseEnter={openResources} onMouseLeave={closeResourcesWithDelay}>
+        <div className="relative z-[60]" ref={dropdownRef} onMouseEnter={() => setResourcesOpen(true)} onMouseLeave={() => setResourcesOpen(false)}>
           <button onClick={() => { setResourcesOpen(!resourcesOpen); trackEvent('resources_opened'); }} className="text-sm text-white/60 hover:text-white transition-colors inline-flex items-center gap-1" style={{ fontFamily: "var(--font-body)" }}>
             Resources <ChevronDown className={`h-3.5 w-3.5 transition-transform ${resourcesOpen ? 'rotate-180' : ''}`} />
           </button>
