@@ -27,6 +27,7 @@ const TABS = [
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
+const mobileTabs = [{id:'home',label:'Home',icon:Home},{id:'listings',label:'Listings',icon:List},{id:'applicants',label:'Applicants',icon:Users},{id:'messages',label:'Messages',icon:MessageSquare},{id:'settings',label:'Settings',icon:Settings}];
 
 const BusinessDashboard = () => {
   const { user, signOut } = useAuth();
@@ -50,6 +51,8 @@ const BusinessDashboard = () => {
   const [confirmClose, setConfirmClose] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [viewIntern, setViewIntern] = useState<InternInfo | null>(null);
+  const [editingListing, setEditingListing] = useState<Listing | null>(null);
+  const [editForm, setEditForm] = useState<any>(null);
 
   useEffect(() => { if (tab === 'home' || tab === 'listings') fetchListings(); if (tab === 'applicants') fetchApps(); if (tab === 'messages') fetchMessages(); }, [tab]);
 
@@ -105,7 +108,29 @@ const BusinessDashboard = () => {
     setMsgContent(''); setMsgIntern(null); setMsgListingId(null);
   };
 
+  const openEditForm = (l: Listing) => {
+    setEditingListing(l);
+    setEditForm({ ...l });
+  };
+
+  const saveListingChanges = async () => {
+    if (!editingListing || !editForm) return;
+    await db.from('listings').update({
+      title: editForm.title,
+      description: editForm.description,
+      pay_rate: editForm.pay_rate,
+      location: editForm.location,
+      hours_per_week: editForm.hours_per_week,
+      status: 'pending_edited',
+    }).eq('id', editingListing.id);
+    toast.success('Changes saved and sent for review.');
+    setEditingListing(null);
+    setEditForm(null);
+    fetchListings();
+  };
+
   const statusBadge = (s: string) => {
+    if (s === 'pending_edited') return <span className="badge-pending" style={{ background: 'rgba(255,159,10,0.16)', color: '#B45309' }}>Pending Review (Edited)</span>;
     const cls = s === 'live' ? 'badge-live' : s === 'rejected' ? 'badge-rejected' : s === 'pending' ? 'badge-pending' : 'badge-closed';
     return <span className={cls}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>;
   };
@@ -129,7 +154,7 @@ const BusinessDashboard = () => {
         <div className="flex gap-1 mt-3 overflow-x-auto pb-1">{TABS.map(t => (<button key={t.id} onClick={() => setTab(t.id)} className="flex-shrink-0 px-3 py-1.5 rounded-lg text-caption font-medium transition-fast" style={tab === t.id ? { background: 'rgba(79, 70, 229, 0.1)', color: '#4F46E5' } : { color: 'rgba(60,60,67,0.6)' }}>{t.label}</button>))}</div>
       </div>
 
-      <main className="flex-1 md:ml-60 p-4 md:p-8 pt-28 md:pt-8">
+      <main className="flex-1 md:ml-60 p-4 md:p-8 pt-28 md:pt-8 pb-24 md:pb-8">
         <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }}>
           {tab === 'home' && <div className="stagger-children">
             <h1 className="font-display text-h2 font-bold mb-8">Dashboard</h1>
@@ -181,7 +206,7 @@ const BusinessDashboard = () => {
                 <div className="flex items-center gap-2">
                   {statusBadge(l.status)}
                   {l.status === 'live' && <button onClick={() => setConfirmClose(l.id)} className="btn-glass-secondary h-8 px-3 text-small" style={{ padding: '4px 12px' }}>Close</button>}
-                  {l.status === 'live' && <button onClick={() => { db.from('listings').update({ status: 'pending' }).eq('id', l.id).then(() => { toast.success("Listing sent back for review."); fetchListings(); }); }} className="btn-glass-secondary h-8 px-3 text-small flex items-center gap-1" style={{ padding: '4px 12px' }}><Edit className="h-3 w-3" />Edit</button>}
+                  {['live','pending_edited'].includes(l.status) && <button onClick={() => openEditForm(l)} className="btn-glass-secondary h-8 px-3 text-small flex items-center gap-1" style={{ padding: '4px 12px' }}><Edit className="h-3 w-3" />Edit</button>}
                 </div>
               </div>
             ))}</div>}
@@ -281,6 +306,26 @@ const BusinessDashboard = () => {
           </div>
         )}
 
+
+        {editingListing && editForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(12px)' }} onClick={() => { setEditingListing(null); setEditForm(null); }}>
+            <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.28, ease }} className="glass-card p-6 max-w-2xl w-full" onClick={e => e.stopPropagation()}>
+              <h2 className="font-display text-h4 font-bold mb-4">Edit Listing</h2>
+              <div className="grid md:grid-cols-2 gap-3">
+                <input value={editForm.title || ''} onChange={e => setEditForm((p:any) => ({...p,title:e.target.value}))} className={inputCls} placeholder="Title" />
+                <input value={editForm.pay_rate || ''} onChange={e => setEditForm((p:any) => ({...p,pay_rate:e.target.value}))} className={inputCls} placeholder="Pay" />
+                <input value={editForm.location || ''} onChange={e => setEditForm((p:any) => ({...p,location:e.target.value}))} className={inputCls} placeholder="Location" />
+                <input value={editForm.hours_per_week || ''} onChange={e => setEditForm((p:any) => ({...p,hours_per_week:e.target.value}))} className={inputCls} placeholder="Hours" />
+              </div>
+              <textarea value={editForm.description || ''} onChange={e => setEditForm((p:any) => ({...p,description:e.target.value}))} className={inputCls + ' !h-auto py-3 mt-3'} rows={4} placeholder="Description" />
+              <div className="mt-4 flex justify-end gap-2">
+                <button onClick={() => { setEditingListing(null); setEditForm(null); }} className="btn-glass-ghost h-10 px-4 text-small">Discard Changes</button>
+                <button onClick={saveListingChanges} className="btn-glass-primary h-10 px-4 text-small font-semibold">Save Changes</button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
         {confirmClose && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.2)', backdropFilter: 'blur(12px)' }} onClick={() => setConfirmClose(null)}>
             <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.28, ease }}
@@ -297,6 +342,9 @@ const BusinessDashboard = () => {
           </div>
         )}
       </main>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-start justify-around pt-1" style={{ background: "rgba(245,245,250,0.85)", backdropFilter: "blur(24px) saturate(200%)", borderTop: "1px solid rgba(255,255,255,0.5)", paddingBottom: "env(safe-area-inset-bottom)", height: "calc(56px + env(safe-area-inset-bottom))" }}>
+        {mobileTabs.map((t: any) => { const Icon=t.icon; const active=tab===t.id; return <button key={t.id} onClick={() => setTab(t.id)} className="flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1" style={{ color: active ? "#4F46E5" : "rgba(28,28,30,0.4)", fontFamily: "var(--font-body)" }}><Icon className="h-4 w-4" /><span className="text-[11px]">{t.label}</span><span className="h-1 w-1.5 rounded-full" style={{ background: active ? "#4F46E5" : "transparent" }} /></button>; })}
+      </div>
     </div>
   );
 };
