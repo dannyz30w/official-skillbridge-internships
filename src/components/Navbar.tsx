@@ -71,7 +71,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 liquid-glass" style={{ height: 64, paddingTop: 'env(safe-area-inset-top)' }} aria-label="Main navigation">
+    <nav className="fixed top-0 left-0 right-0 z-50 liquid-glass overflow-visible" style={{ height: 64, paddingTop: 'env(safe-area-inset-top)' }} aria-label="Main navigation">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2">
           <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-9 w-auto" width={144} height={36} />
