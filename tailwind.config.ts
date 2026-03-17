@@ -12,11 +12,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Instrument Serif'", "serif"],
-        body: ["'Barlow'", "sans-serif"],
-        heading: ["'Bricolage Grotesque'", "system-ui", "sans-serif"],
-        sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
-        ui: ["'Inter'", "system-ui", "sans-serif"],
+        display: ["'Cormorant Garamond'", "serif"],
+        body: ["'DM Sans'", "sans-serif"],
+        heading: ["'Syne'", "system-ui", "sans-serif"],
+        sans: ["'DM Sans'", "system-ui", "-apple-system", "sans-serif"],
+        ui: ["'Syne'", "system-ui", "sans-serif"],
       },
       fontSize: {
         'display': ['56px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],

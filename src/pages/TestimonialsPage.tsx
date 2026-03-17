@@ -6,7 +6,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 
 const TestimonialsPage = () => (
   <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
-    <SEOHead title="Testimonials, SkillBridge" description="Hear from interns and businesses who connected through SkillBridge." path="/testimonials" />
+    <SEOHead title="Testimonials, SkillBridge" description="Real stories from interns and businesses who found each other through SkillBridge and built something that mattered." path="/testimonials" />
     <Navbar />
     <main className="pt-32 pb-24">
       <TestimonialsSection />

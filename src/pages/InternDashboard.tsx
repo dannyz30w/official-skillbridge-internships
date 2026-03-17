@@ -10,13 +10,13 @@ import SEOHead from "@/components/SEOHead";
 const db = supabase as any;
 const inputCls = "w-full h-[48px] px-4 rounded-xl text-[15px] glass-input";
 const labelCls = "block text-small font-medium mb-2";
-const SKILLS_LIST = ['Communication', 'Teamwork', 'Problem Solving', 'Microsoft Office', 'Social Media', 'Customer Service', 'Data Entry', 'Writing', 'Research', 'Organization', 'Time Management', 'Leadership', 'Creativity', 'Public Speaking', 'Coding', 'Design', 'Marketing', 'Sales', 'Photography', 'Video Editing'];
+const TRAITS = ['Adaptable','Ambitious','Analytical','Attentive','Collaborative','Communicator','Creative','Curious','Detail-driven','Detail-oriented','Driven','Empathetic','Fast learner','Flexible','Focused','Hardworking','Independent','Initiative-taker','Leadership','Logical','Motivated','Observant','Open-minded','Organized','Passionate','Patient','Proactive','Problem solver','Punctual','Reliable','Resourceful','Responsible','Self-starter','Team player','Tech-savvy','Thorough'];
 const LANG_OPTIONS = ['English', 'Spanish', 'French', 'Mandarin', 'Cantonese', 'Arabic', 'Portuguese', 'Other'];
 const PROFICIENCY = ['Native', 'Fluent', 'Intermediate', 'Basic'];
 
 interface Listing { id: string; business_id: string; title: string; description: string; work_setting: string; location: string; pay_rate: string; hours_per_week: string; duration: string; preferred_languages: string[]; skills_learned: string[]; created_at: string; }
 interface Application { id: string; listing_id: string; status: string; applied_at: string; }
-interface Profile { first_name: string; last_name: string; date_of_birth: string | null; city: string; school: string; gpa: number | null; test_scores: string; phone: string; languages: any[]; skills: string[]; bio: string; }
+interface Profile { first_name: string; last_name: string; date_of_birth: string | null; city: string; school: string; gpa: number | null; gpa_scale: string; phone: string; languages: any[]; traits: string[]; }
 
 const TABS = [
   { id: 'home', label: 'Dashboard', icon: Home },
@@ -28,6 +28,7 @@ const TABS = [
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
+const mobileTabs = [{ id:'home',label:'Home',icon:Home},{id:'browse',label:'Browse',icon:Search},{id:'applications',label:'Applications',icon:Briefcase},{id:'notifications',label:'Messages',icon:Bell},{id:'portfolio',label:'Profile',icon:FileText}];
 
 const InternDashboard = () => {
   const { user, signOut } = useAuth();
@@ -38,7 +39,7 @@ const InternDashboard = () => {
   const [weeklyCount, setWeeklyCount] = useState(0);
   const [messages, setMessages] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [profile, setProfile] = useState<Profile>({ first_name: '', last_name: '', date_of_birth: null, city: '', school: '', gpa: null, test_scores: '', phone: '', languages: [], skills: [], bio: '' });
+  const [profile, setProfile] = useState<Profile>({ first_name: '', last_name: '', date_of_birth: null, city: '', school: '', gpa: null, gpa_scale: '', phone: '', languages: [], traits: [] });
   const [bizNames, setBizNames] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,11 +96,13 @@ const InternDashboard = () => {
   };
 
   const saveProfile = async () => {
+    if (profile.gpa && !profile.gpa_scale.trim()) { toast.error('Scale is required when GPA is filled.'); return; }
+    if ((profile.traits || []).length !== 3) { toast.error('Please select exactly 3 traits.'); return; }
     setSavingProfile(true);
     const { error } = await db.from('intern_profiles').update({
       first_name: profile.first_name, last_name: profile.last_name, city: profile.city, school: profile.school,
-      gpa: profile.gpa, test_scores: profile.test_scores, phone: profile.phone, languages: profile.languages,
-      skills: profile.skills, bio: profile.bio,
+      gpa: profile.gpa, gpa_scale: profile.gpa_scale || null, phone: profile.phone, languages: profile.languages,
+      traits: profile.traits,
     }).eq('user_id', user?.id);
     setSavingProfile(false);
     if (error) { toast.error(error.message); return; }
@@ -209,10 +212,11 @@ const InternDashboard = () => {
               <div><label htmlFor="pf-city" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>City</label><input id="pf-city" value={profile.city} onChange={e => setProfile(p => ({ ...p, city: e.target.value }))} placeholder="City, State" className={inputCls} /></div>
               <div><label htmlFor="pf-school" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>School</label><input id="pf-school" value={profile.school} onChange={e => setProfile(p => ({ ...p, school: e.target.value }))} placeholder="School name" className={inputCls} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label htmlFor="pf-gpa" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>GPA (Optional)</label><input id="pf-gpa" type="number" step="0.1" min="0" max="4" value={profile.gpa ?? ''} onChange={e => setProfile(p => ({ ...p, gpa: e.target.value ? parseFloat(e.target.value) : null }))} placeholder="3.7" className={inputCls} /></div>
-                <div><label htmlFor="pf-test" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Test Scores (Optional)</label><input id="pf-test" value={profile.test_scores} onChange={e => setProfile(p => ({ ...p, test_scores: e.target.value }))} placeholder="SAT: 1320" className={inputCls} /></div>
+                <div><label htmlFor="pf-gpa" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>GPA (Optional)</label><input id="pf-gpa" type="number" step="0.1" min="0" value={profile.gpa ?? ''} onChange={e => setProfile(p => ({ ...p, gpa: e.target.value ? parseFloat(e.target.value) : null }))} placeholder="3.7" className={inputCls} /></div>
+                <div><label htmlFor="pf-scale" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Scale (e.g. 4.0)</label><input id="pf-scale" value={profile.gpa_scale || ''} onChange={e => setProfile(p => ({ ...p, gpa_scale: e.target.value }))} placeholder="4.0" className={inputCls} /></div>
               </div>
-              <div><label htmlFor="pf-phone" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Phone Number</label><input id="pf-phone" value={profile.phone} onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))} placeholder="(555) 123-4567" className={inputCls} /></div>
+              <p className="text-small -mt-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Please enter your unweighted GPA only.</p>
+              <div><label htmlFor="pf-phone" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Phone Number (Optional)</label><input id="pf-phone" value={profile.phone} onChange={e => setProfile(p => ({ ...p, phone: e.target.value }))} placeholder="(555) 123-4567" className={inputCls} /><p className="text-small mt-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Only shared with businesses who accept your application.</p></div>
               <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Languages and Proficiency</label>
                 {(profile.languages || []).map((lang: any, i: number) => (
                   <div key={i} className="flex gap-2 mb-2">
@@ -227,16 +231,15 @@ const InternDashboard = () => {
                 ))}
                 <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-small font-semibold" style={{ color: '#4F46E5' }}>+ Add language</button>
               </div>
-              <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Skills</label>
-                <div className="flex flex-wrap gap-2">{SKILLS_LIST.map(s => (
-                  <label key={s} className="text-small px-3 py-1.5 rounded-full cursor-pointer transition-fast"
-                    style={(profile.skills || []).includes(s) ? { background: 'rgba(79, 70, 229, 0.1)', border: '1px solid rgba(79, 70, 229, 0.3)', color: '#4F46E5' } : { background: 'rgba(0,0,0,0.03)', color: 'rgba(60,60,67,0.6)' }}>
-                    <input type="checkbox" className="sr-only" checked={(profile.skills || []).includes(s)} onChange={e => setProfile(p => ({ ...p, skills: e.target.checked ? [...(p.skills || []), s] : (p.skills || []).filter(x => x !== s) }))} />{s}
-                  </label>
-                ))}</div>
+              <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Pick 3 traits that best describe you as a worker</label>
+                <div className="flex flex-wrap gap-2">{TRAITS.map(t => { const selected = (profile.traits || []).includes(t); return (
+                  <motion.button key={t} type="button" onClick={() => setProfile(p => { const current = p.traits || []; if (current.includes(t)) return { ...p, traits: current.filter(x => x !== t) }; const next = [...current, t]; return { ...p, traits: next.length > 3 ? next.slice(1) : next }; })} whileTap={{ scale: 0.94 }} animate={{ scale: selected ? 1.03 : 1 }} transition={{ type: "spring", stiffness: 320, damping: 20 }} className="text-small px-3 py-1.5 rounded-full transition-fast"
+                    style={selected ? { background: 'rgba(79, 70, 229, 0.28)', border: '1px solid rgba(79, 70, 229, 0.5)', color: '#312E81', transform: 'scale(1.02)' } : { background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(60,60,67,0.75)' }}>
+                    {t}
+                  </motion.button>
+                ); })}</div>
+                {(profile.traits || []).length !== 3 && <p className="text-small mt-2" style={{ color: '#FF3B30' }}>Please select exactly 3 traits.</p>}
               </div>
-              <div><label htmlFor="pf-bio" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Short Bio ({(profile.bio || '').length}/200)</label>
-                <textarea id="pf-bio" value={profile.bio} onChange={e => { if (e.target.value.length <= 200) setProfile(p => ({ ...p, bio: e.target.value })); }} rows={3} placeholder="Tell us about yourself..." className={inputCls + " !h-auto py-3"} /></div>
               <button onClick={saveProfile} disabled={savingProfile}
                 className="w-full h-[48px] btn-glass-primary inline-flex items-center justify-center gap-2 disabled:opacity-50">
                 {savingProfile ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : "Save Portfolio"}
@@ -270,6 +273,9 @@ const InternDashboard = () => {
 
         </motion.div>
       </main>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-start justify-around pt-1" style={{ background: "rgba(245,245,250,0.85)", backdropFilter: "blur(24px) saturate(200%)", borderTop: "1px solid rgba(255,255,255,0.5)", paddingBottom: "env(safe-area-inset-bottom)", height: "calc(56px + env(safe-area-inset-bottom))" }}>
+        {mobileTabs.map((t: any) => { const Icon=t.icon; const active=tab===t.id; return <button key={t.id} onClick={() => setTab(t.id)} className="flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1" style={{ color: active ? "#4F46E5" : "rgba(28,28,30,0.4)", fontFamily: "var(--font-body)" }}><Icon className="h-4 w-4" /><span className="text-[11px]">{t.label}</span><span className="h-1 w-1.5 rounded-full" style={{ background: active ? "#4F46E5" : "transparent" }} /></button>; })}
+      </div>
     </div>
   );
 };
