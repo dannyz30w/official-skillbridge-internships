@@ -9,6 +9,7 @@ import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import AppBackground from "@/components/AppBackground";
 import CuteCursorBuddy from "@/components/CuteCursorBuddy";
+import { Analytics } from "@vercel/analytics/react";
 
 const Index = lazy(() => import("./pages/Index"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -71,6 +72,7 @@ const App = () => (
           </div>
         </AuthProvider>
       </BrowserRouter>
+      <Analytics />
     </TooltipProvider>
   </QueryClientProvider>
 );
