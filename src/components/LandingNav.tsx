@@ -20,14 +20,6 @@ const RESOURCES = [
   { label: "UW-Madison Professional Email Guide", url: "https://writing.wisc.edu/handbook/assignments/advice-for-students-writing-a-professional-email/" },
 ];
 
-const RESOURCES = [
-  { label: "Microsoft Resume Templates", url: "https://word.cloud.microsoft/create/en/resume-templates/" },
-  { label: "Harvard Resume Template", url: "https://docs.google.com/document/d/1EujuYFWxVXZ2PUaJ2uizvK5raMoMsz1KMys-UYpUSk4/edit?tab=t.0" },
-  { label: "Indeed Interview Preparation", url: "https://www.indeed.com/career-advice/interviewing/how-to-prepare-for-an-interview" },
-  { label: "MIT OpenCourseWare", url: "https://ocw.mit.edu/" },
-  { label: "UW-Madison Professional Email Guide", url: "https://writing.wisc.edu/handbook/assignments/advice-for-students-writing-a-professional-email/" },
-];
-
 const LandingNav = () => {
   const { user, accountType } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
