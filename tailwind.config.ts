@@ -12,8 +12,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Bricolage Grotesque'", "system-ui", "sans-serif"],
+        display: ["'Instrument Serif'", "serif"],
+        body: ["'Barlow'", "sans-serif"],
+        heading: ["'Bricolage Grotesque'", "system-ui", "sans-serif"],
         sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
+        ui: ["'Inter'", "system-ui", "sans-serif"],
       },
       fontSize: {
         'display': ['56px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
@@ -40,10 +43,6 @@ export default {
         card: { DEFAULT: "hsl(var(--card))", foreground: "hsl(var(--card-foreground))" },
         success: { DEFAULT: "hsl(var(--success))", foreground: "hsl(var(--success-foreground))" },
         warning: { DEFAULT: "hsl(var(--warning))", foreground: "hsl(var(--warning-foreground))" },
-      },
-      spacing: {
-        '18': '4.5rem',
-        '22': '5.5rem',
       },
       borderRadius: {
         "2xl": "20px",
