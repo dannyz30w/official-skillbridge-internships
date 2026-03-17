@@ -8,7 +8,7 @@ import LandingFooter from "@/components/LandingFooter";
 import LoadingScreen from "@/components/LoadingScreen";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 
-const VIDEO_URL = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4";
+const VIDEO_URL = "https://drive.google.com/file/d/184m3sX6ijyiUA_KnT8H76cMvI9ule3VJ/view";
 
 const CATEGORIES = ["Tech and Software", "Creative and Design", "Healthcare and Wellness", "Food and Hospitality", "Trades and Construction", "Marketing and Social Media", "Education and Tutoring", "Finance", "Retail", "Nonprofit"];
 
