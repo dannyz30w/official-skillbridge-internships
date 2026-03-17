@@ -22,25 +22,6 @@ const jsonLd = {
   "sameAs": []
 };
 
-/* --- Counter Hook --- */
-const useCountUp = (target: number, duration = 1200) => {
-  const [val, setVal] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-64px" });
-  useEffect(() => {
-    if (!inView) return;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - p, 3);
-      setVal(Math.floor(ease * target));
-      if (p < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [inView, target, duration]);
-  return { val, ref };
-};
-
 /* --- Section Reveal --- */
 const Reveal = ({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -63,22 +44,19 @@ const Index = () => {
   const [howView, setHowView] = useState<"intern" | "business">("intern");
 
   const internSteps = [
-    { num: "01", title: "Create your profile in five minutes", desc: "Fill out your portfolio with your interests and background. No resume needed." },
+    { num: "01", title: "Create your profile quickly", desc: "Fill out your portfolio with your interests and background. No resume needed." },
     { num: "02", title: "Browse paid internships near you or remote", desc: "Search real opportunities from verified businesses. Filter by category, location, and pay." },
     { num: "03", title: "Apply with one click, no resume required", desc: "Your profile does the heavy lifting. Hit apply and you are done." },
     { num: "04", title: "Earn a verified skill certificate", desc: "Build real experience, earn real pay, and grow your professional portfolio." },
   ];
   const businessSteps = [
-    { num: "01", title: "Post your listing in ten minutes", desc: "Simple form with role details, pay rate, and skills learned." },
+    { num: "01", title: "Post your listing quickly", desc: "Simple form with role details, pay rate, and skills learned." },
     { num: "02", title: "Browse matched applicants through admin-verified queue", desc: "Every listing goes through review before going live." },
     { num: "03", title: "Hire through the platform", desc: "Review portfolios, accept candidates, and message them directly." },
     { num: "04", title: "Build your talent pipeline", desc: "Develop relationships with motivated young professionals." },
   ];
   const steps = howView === "intern" ? internSteps : businessSteps;
 
-  const stat1 = useCountUp(2800);
-  const stat2 = useCountUp(80);
-  const stat3 = useCountUp(100);
 
   if (loading) {
     return (
@@ -113,7 +91,7 @@ const Index = () => {
         <div className="relative z-10 flex flex-col items-start px-6 md:px-16 lg:px-24 pt-24 md:pt-32 pb-32 md:pb-40 max-w-[700px]">
           {/* Badge */}
           <div className="liquid-glass rounded-full px-4 py-1.5 text-xs font-medium text-white/80 uppercase tracking-widest animate-fade-rise" style={{ fontFamily: "var(--font-body)" }}>
-            WSI Impact League Finalist · Top 80 of 2,800+
+            WSI Impact League Finalist
           </div>
 
           {/* Headline */}
@@ -164,12 +142,12 @@ const Index = () => {
       <section className="py-16 px-6" style={{ background: "#0a0a0f" }}>
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { val: "2,800+", label: "Global participants recognized", ref: stat1.ref },
-            { val: "16\u201322", label: "Age group we serve", ref: null },
-            { val: "100%", label: "Paid internships only", ref: stat3.ref },
-            { val: "Top " + stat2.val, label: "WSI Impact League ranking", ref: stat2.ref },
+            { val: "2,800+", label: "NFTE participants in the competition" },
+            { val: "16–22", label: "Age group SkillBridge serves" },
+            { val: "Paid", label: "Every internship on SkillBridge is paid" },
+            { val: "Verified", label: "Business listings are admin-reviewed" },
           ].map((s, i) => (
-            <div key={i} ref={s.ref} className="liquid-glass rounded-2xl px-6 py-6 text-center">
+            <div key={i} className="liquid-glass rounded-2xl px-6 py-6 text-center">
               <p className="text-3xl md:text-4xl italic text-white" style={{ fontFamily: "var(--font-display)" }}>{s.val}</p>
               <p className="text-xs text-white/50 uppercase tracking-widest mt-2" style={{ fontFamily: "var(--font-body)" }}>{s.label}</p>
             </div>
@@ -239,21 +217,15 @@ const Index = () => {
           </Reveal>
           <div className="grid md:grid-cols-2 gap-8">
             <Reveal delay={0.1}>
-              <div className="text-center">
-                <p className="text-sm text-white/50 mb-4 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>Without SkillBridge</p>
-                <div className="h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-                  <motion.div className="h-full rounded-full" style={{ background: "rgba(255,59,48,0.4)" }} initial={{ width: 0 }} whileInView={{ width: "15%" }} viewport={{ once: true }} transition={{ duration: 1.2, ease: "easeOut" }} />
-                </div>
-                <p className="mt-3 text-sm text-white/40" style={{ fontFamily: "var(--font-body)" }}>15% of young adults without networks land meaningful first work.</p>
+              <div className="liquid-glass rounded-2xl p-6 text-left">
+                <p className="text-sm text-white/50 mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>Before SkillBridge</p>
+                <p className="text-base text-white/65" style={{ fontFamily: "var(--font-body)" }}>Young people are often filtered out for lacking prior experience, even when they are ready to learn and work.</p>
               </div>
             </Reveal>
             <Reveal delay={0.3}>
-              <div className="text-center">
-                <p className="text-sm text-white/50 mb-4 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>With SkillBridge</p>
-                <div className="h-3 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
-                  <motion.div className="h-full rounded-full" style={{ background: "rgba(79,70,229,0.7)" }} initial={{ width: 0 }} whileInView={{ width: "100%" }} viewport={{ once: true }} transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }} />
-                </div>
-                <p className="mt-3 text-sm text-white/40" style={{ fontFamily: "var(--font-body)" }}>Verified paid opportunities. Open to all.</p>
+              <div className="liquid-glass rounded-2xl p-6 text-left">
+                <p className="text-sm text-white/50 mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>With SkillBridge</p>
+                <p className="text-base text-white/65" style={{ fontFamily: "var(--font-body)" }}>Interns get direct access to verified, paid listings and businesses discover motivated early talent faster.</p>
               </div>
             </Reveal>
           </div>
@@ -282,9 +254,9 @@ const Index = () => {
             <div className="liquid-glass rounded-full px-4 py-1.5 text-xs text-white/70 uppercase tracking-widest w-fit mx-auto mb-6" style={{ fontFamily: "var(--font-body)" }}>Recognition</div>
             <h2 className="text-3xl md:text-5xl italic text-white" style={{ fontFamily: "var(--font-display)" }}>Built to close the opportunity gap.</h2>
             <p className="mt-6 font-light text-white/60 text-base leading-relaxed max-w-lg mx-auto" style={{ fontFamily: "var(--font-body)" }}>
-              SkillBridge was recognized as a Global Finalist in the NFTE World Series of Innovation, placing in the top 2.8% of 2,800 participants worldwide. Built as a solo innovator. Built for every young person who deserves a fair shot.
+              SkillBridge was recognized as a Global Finalist in the NFTE World Series of Innovation, among thousands of global participants worldwide. Built as a solo innovator. Built for every young person who deserves a fair shot.
             </p>
-            <p className="mt-6 text-sm text-white/50" style={{ fontFamily: "var(--font-body)" }}>WSI Impact League Finalist · Top 80 / 2,800+</p>
+            <p className="mt-6 text-sm text-white/50" style={{ fontFamily: "var(--font-body)" }}>WSI Impact League Finalist</p>
           </div>
         </Reveal>
       </section>

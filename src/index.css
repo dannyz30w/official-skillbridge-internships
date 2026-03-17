@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500&family=Syne:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -31,10 +31,10 @@
     --ring: 243 75% 59%;
     --radius: 0.875rem;
 
-    --font-display: 'Cormorant Garamond', serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-ui: 'Syne', sans-serif;
-    --font-heading: 'Syne', sans-serif;
+    --font-display: 'Merriweather', serif;
+    --font-body: 'Manrope', sans-serif;
+    --font-ui: 'Manrope', sans-serif;
+    --font-heading: 'Manrope', sans-serif;
   }
 }
 

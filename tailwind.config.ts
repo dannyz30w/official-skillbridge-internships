@@ -12,11 +12,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Cormorant Garamond'", "serif"],
-        body: ["'DM Sans'", "sans-serif"],
-        heading: ["'Syne'", "system-ui", "sans-serif"],
-        sans: ["'DM Sans'", "system-ui", "-apple-system", "sans-serif"],
-        ui: ["'Syne'", "system-ui", "sans-serif"],
+        display: ["'Merriweather'", "serif"],
+        body: ["'Manrope'", "sans-serif"],
+        heading: ["'Manrope'", "system-ui", "sans-serif"],
+        sans: ["'Manrope'", "system-ui", "-apple-system", "sans-serif"],
+        ui: ["'Manrope'", "system-ui", "sans-serif"],
       },
       fontSize: {
         'display': ['56px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
