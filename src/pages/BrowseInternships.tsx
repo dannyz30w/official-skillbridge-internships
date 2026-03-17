@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
+import SEOHead from "@/components/SEOHead";
 
 interface Internship {
   id: string;
@@ -102,6 +103,34 @@ const BrowseInternships = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEOHead
+        title="Browse Paid Internships, SkillBridge"
+        description="Browse hundreds of paid internships for teens and young adults. Filter by location, industry, and pay. Apply instantly on SkillBridge."
+        path="/browse"
+        jsonLd={internships.map((internship) => ({
+          "@context": "https://schema.org",
+          "@type": "JobPosting",
+          title: internship.title,
+          description: internship.description,
+          hiringOrganization: {
+            "@type": "Organization",
+            name: internship.company_name,
+            sameAs: "https://skillbridgeintern.org",
+          },
+          employmentType: "INTERN",
+          datePosted: internship.created_at,
+          applicantLocationRequirements: internship.location?.toLowerCase().includes("remote") ? { "@type": "Country", name: "US" } : undefined,
+          jobLocation: internship.location?.toLowerCase().includes("remote") ? undefined : {
+            "@type": "Place",
+            address: { "@type": "PostalAddress", addressLocality: internship.location }
+          },
+          baseSalary: {
+            "@type": "MonetaryAmount",
+            currency: "USD",
+            value: { "@type": "QuantitativeValue", unitText: "HOUR", value: internship.pay?.replace(/[^\d.]/g, "") || undefined }
+          }
+        }))}
+      />
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2">

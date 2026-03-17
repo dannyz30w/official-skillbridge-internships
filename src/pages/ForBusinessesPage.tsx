@@ -16,7 +16,7 @@ const features = [
 
 const ForBusinessesPage = () => (
   <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
-    <SEOHead title="Post a Paid Internship, SkillBridge for Businesses" description="Find motivated young talent for your business. Post a paid internship listing on SkillBridge and reach thousands of qualified applicants aged 16 to 22." path="/for-businesses" />
+    <SEOHead title="Post a Paid Internship, SkillBridge for Businesses" description="Post a paid internship on SkillBridge and reach thousands of motivated young adults aged 16-22. Admin-verified platform. Start free." path="/for-businesses" />
     <Navbar />
 
     <main className="pt-32 pb-24 px-4 sm:px-6">

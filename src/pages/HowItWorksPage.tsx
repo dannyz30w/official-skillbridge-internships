@@ -6,7 +6,7 @@ import SEOHead from "@/components/SEOHead";
 
 const HowItWorksPage = () => (
   <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
-    <SEOHead title="How SkillBridge Works" description="Learn how SkillBridge connects young adults aged 16 to 22 with businesses offering paid internships." path="/how-it-works" />
+    <SEOHead title="How SkillBridge Works" description="See how SkillBridge works. Create a profile, browse paid internships, apply in one click, earn a skill certificate. Simple and free." path="/how-it-works" />
     <Navbar />
     <main className="pt-16">
       <HowItWorks />
