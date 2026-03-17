@@ -99,7 +99,7 @@ const Index = () => {
       />
 
       {/* === HERO === */}
-      <section className="relative min-h-screen overflow-hidden">
+      <section className="relative min-h-screen overflow-visible">
         {/* Video BG */}
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0" aria-hidden="true">
           <source src={VIDEO_URL} type="video/mp4" />
