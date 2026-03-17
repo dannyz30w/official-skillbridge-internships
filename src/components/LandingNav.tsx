@@ -9,6 +9,15 @@ import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 const NAV_LINKS = [
   { label: "How It Works", to: "/how-it-works" },
   { label: "Mission", to: "/mission" },
+  { label: "For Businesses", to: "/for-businesses" },
+];
+
+const RESOURCES = [
+  { label: "Microsoft Resume Templates", url: "https://word.cloud.microsoft/create/en/resume-templates/" },
+  { label: "Harvard Resume Template", url: "https://docs.google.com/document/d/1EujuYFWxVXZ2PUaJ2uizvK5raMoMsz1KMys-UYpUSk4/edit?tab=t.0" },
+  { label: "Indeed Interview Preparation", url: "https://www.indeed.com/career-advice/interviewing/how-to-prepare-for-an-interview" },
+  { label: "MIT OpenCourseWare", url: "https://ocw.mit.edu/" },
+  { label: "UW-Madison Professional Email Guide", url: "https://writing.wisc.edu/handbook/assignments/advice-for-students-writing-a-professional-email/" },
 ];
 
 const RESOURCES = [
@@ -24,6 +33,7 @@ const LandingNav = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const closeTimeoutRef = useRef<number | null>(null);
   const location = useLocation();
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
@@ -34,6 +44,21 @@ const LandingNav = () => {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  useEffect(() => () => { if (closeTimeoutRef.current) window.clearTimeout(closeTimeoutRef.current); }, []);
+
+  const openResources = () => {
+    if (closeTimeoutRef.current) {
+      window.clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setResourcesOpen(true);
+  };
+
+  const closeResourcesWithDelay = () => {
+    if (closeTimeoutRef.current) window.clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = window.setTimeout(() => setResourcesOpen(false), 180);
+  };
 
   return (
     <nav className="relative z-10 flex items-center justify-between px-6 md:px-8 py-6 max-w-7xl mx-auto" aria-label="Main navigation">
@@ -49,6 +74,7 @@ const LandingNav = () => {
             {l.label}
           </Link>
         ))}
+        <div className="relative z-[60]" ref={dropdownRef} onMouseEnter={openResources} onMouseLeave={closeResourcesWithDelay}>
         <div className="relative z-[60]" ref={dropdownRef} onMouseEnter={() => setResourcesOpen(true)} onMouseLeave={() => setResourcesOpen(false)}>
           <button onClick={() => { setResourcesOpen(!resourcesOpen); trackEvent('resources_opened'); }} className="text-sm text-white/60 hover:text-white transition-colors inline-flex items-center gap-1" style={{ fontFamily: "var(--font-body)" }}>
             Resources <ChevronDown className={`h-3.5 w-3.5 transition-transform ${resourcesOpen ? 'rotate-180' : ''}`} />

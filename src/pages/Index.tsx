@@ -92,7 +92,7 @@ const Index = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} style={{ background: "#0a0a0f" }} className="min-h-screen">
       <SEOHead
         title="SkillBridge, Paid Internships for Young Adults Aged 16 to 22"
-        description="SkillBridge connects motivated young adults aged 16 to 22 with local and remote businesses offering real paid internships. No experience required. Apply in minutes."
+        description="Find paid internships near you. SkillBridge connects young adults 16-22 with verified businesses. No resume needed. Apply in one click."
         path="/"
         keywords="paid internships for teens, internships for high school students, paid internships no experience, internships for 16 year olds, entry level internships, local internships for students"
         jsonLd={jsonLd}
@@ -164,9 +164,9 @@ const Index = () => {
       <section className="py-16 px-6" style={{ background: "#0a0a0f" }}>
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { val: stat1.val.toLocaleString() + "+", label: "Global participants recognized", ref: stat1.ref },
+            { val: "2,800+", label: "Global participants recognized", ref: stat1.ref },
             { val: "16\u201322", label: "Age group we serve", ref: null },
-            { val: stat3.val + "%", label: "Paid internships only", ref: stat3.ref },
+            { val: "100%", label: "Paid internships only", ref: stat3.ref },
             { val: "Top " + stat2.val, label: "WSI Impact League ranking", ref: stat2.ref },
           ].map((s, i) => (
             <div key={i} ref={s.ref} className="liquid-glass rounded-2xl px-6 py-6 text-center">

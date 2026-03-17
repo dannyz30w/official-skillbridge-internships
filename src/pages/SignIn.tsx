@@ -128,7 +128,7 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
-      <SEOHead title="Sign In to SkillBridge" description="Sign in to your SkillBridge account to browse paid internships, manage your applications, or post internship listings for your business." path="/signin" />
+      <SEOHead title="Sign In to SkillBridge" description="Sign in to SkillBridge to browse paid internships, manage applications, and connect with verified businesses." path="/signin" />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
         <Link to="/" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
           <ArrowLeft className="h-4 w-4" /> Back to home
