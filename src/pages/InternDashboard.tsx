@@ -233,6 +233,29 @@ const InternDashboard = () => {
                 <button onClick={() => setProfile(p => ({ ...p, languages: [...(p.languages || []), { language: '', proficiency: '' }] }))} className="text-small font-semibold" style={{ color: '#4F46E5' }}>+ Add language</button>
               </div>
               <div><label className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Pick 3 traits that best describe you as a worker</label>
+                <div className="flex flex-wrap gap-2">
+                  {TRAITS.map((t) => {
+                    const selected = (profile.traits || []).includes(t);
+                    return (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setProfile((p) => {
+                          const current = p.traits || [];
+                          if (current.includes(t)) return { ...p, traits: current.filter((x) => x !== t) };
+                          const next = [...current, t];
+                          return { ...p, traits: next.length > 3 ? next.slice(1) : next };
+                        })}
+                        className="text-small px-3 py-1.5 rounded-full transition-fast"
+                        style={selected
+                          ? { background: 'rgba(79, 70, 229, 0.28)', border: '1px solid rgba(79, 70, 229, 0.5)', color: '#312E81' }
+                          : { background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(60,60,67,0.75)' }}
+                      >
+                        {t}
+                      </button>
+                    );
+                  })}
+                </div>
                 <div className="flex flex-wrap gap-2">{TRAITS.map(t => { const selected = (profile.traits || []).includes(t); return (
                   <motion.button key={t} type="button" onClick={() => setProfile(p => { const current = p.traits || []; if (current.includes(t)) return { ...p, traits: current.filter(x => x !== t) }; const next = [...current, t]; return { ...p, traits: next.length > 3 ? next.slice(1) : next }; })} whileTap={{ scale: 0.94 }} animate={{ scale: selected ? 1.03 : 1 }} transition={{ type: "spring", stiffness: 320, damping: 20 }} className="text-small px-3 py-1.5 rounded-full transition-fast"
                     style={selected ? { background: 'rgba(79, 70, 229, 0.28)', border: '1px solid rgba(79, 70, 229, 0.5)', color: '#312E81', transform: 'scale(1.02)' } : { background: 'transparent', border: '1px solid rgba(255,255,255,0.4)', color: 'rgba(60,60,67,0.75)' }}>
