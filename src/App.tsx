@@ -10,7 +10,6 @@ import { Loader2 } from "lucide-react";
 import { Analytics } from "@vercel/analytics/react";
 import AppBackground from "@/components/AppBackground";
 import CuteCursorBuddy from "@/components/CuteCursorBuddy";
-import CursorBuddyBot from "@/components/CursorBuddyBot";
 
 const Index = lazy(() => import("./pages/Index"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -47,7 +46,6 @@ const App = () => (
         <AuthProvider>
           <AppBackground />
           <CuteCursorBuddy />
-          <CursorBuddyBot />
           <div className="relative z-10">
           <Suspense fallback={<Loading />}>
             <Routes>

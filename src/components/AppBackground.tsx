@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { Boxes } from "@/components/ui/background-boxes";
 
 const AppBackground = () => {
   const { pathname } = useLocation();
@@ -6,11 +7,11 @@ const AppBackground = () => {
   if (pathname === "/") return null;
 
   return (
-    <div className="app-bg-root app-bg-ocean" aria-hidden="true">
-      <div className="app-bg-layer app-bg-ocean-base" />
-      <div className="app-bg-layer app-bg-ocean-glow" />
-      <div className="app-bg-layer app-bg-ocean-waves" />
-      <div className="app-bg-layer app-bg-ocean-foam" />
+    <div className="app-bg-root" aria-hidden="true">
+      <div className="app-bg-layer bg-[#020617]" />
+      <Boxes className="app-bg-boxes" />
+      <div className="app-bg-layer app-bg-boxes-glow" />
+      <div className="app-bg-layer app-bg-boxes-vignette" />
     </div>
   );
 };

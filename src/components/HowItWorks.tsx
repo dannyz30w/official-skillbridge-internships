@@ -50,7 +50,7 @@ const HowItWorks = () => {
               className="px-6 py-2 rounded-full text-small font-semibold transition-all"
               style={view === 'intern'
                 ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
-                : { color: 'rgba(8,47,73,0.58)' }
+                : { color: 'rgba(226,232,240,0.62)' }
               }
             >
               For Interns
@@ -60,7 +60,7 @@ const HowItWorks = () => {
               className="px-6 py-2 rounded-full text-small font-semibold transition-all"
               style={view === 'business'
                 ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
-                : { color: 'rgba(8,47,73,0.58)' }
+                : { color: 'rgba(226,232,240,0.62)' }
               }
             >
               For Businesses
@@ -85,7 +85,7 @@ const HowItWorks = () => {
                 </div>
                 <div className="pt-4">
                   <h3 className="text-h4 font-bold ocean-title" style={{ fontFamily: "var(--font-body)" }}>{step.title}</h3>
-                  <p className="mt-3 text-body ocean-title/50" style={{ fontFamily: "var(--font-body)" }}>{step.description}</p>
+                  <p className="mt-3 text-body" style={{ color: "rgba(226,232,240,0.72)", fontFamily: "var(--font-body)" }} >{step.description}</p>
                 </div>
               </motion.div>
             );

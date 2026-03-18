@@ -36,21 +36,21 @@ const ContactPage = () => {
           <motion.h1 className="text-h1 font-bold ocean-title" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
             Contact Us
           </motion.h1>
-          <motion.p className="mt-4 text-body mb-12 text-slate-700/80" style={{ fontFamily: "var(--font-body)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
+          <motion.p className="mt-4 text-body mb-12 text-slate-200/80" style={{ fontFamily: "var(--font-body)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
             Questions, partnerships, or feedback. We would love to hear from you.
           </motion.p>
 
           <motion.form onSubmit={handleSubmit} className="ocean-panel rounded-2xl p-8 space-y-6" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5, ease }}>
             <div>
-              <label htmlFor="contact-name" className="block text-small font-medium mb-2 text-slate-700/80">Name</label>
+              <label htmlFor="contact-name" className="block text-small font-medium mb-2 text-slate-200/80">Name</label>
               <input id="contact-name" type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name" className={inputCls} />
             </div>
             <div>
-              <label htmlFor="contact-email" className="block text-small font-medium mb-2 text-slate-700/80">Email</label>
+              <label htmlFor="contact-email" className="block text-small font-medium mb-2 text-slate-200/80">Email</label>
               <input id="contact-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} />
             </div>
             <div>
-              <label htmlFor="contact-msg" className="block text-small font-medium mb-2 text-slate-700/80">Message</label>
+              <label htmlFor="contact-msg" className="block text-small font-medium mb-2 text-slate-200/80">Message</label>
               <textarea id="contact-msg" value={message} onChange={e => setMessage(e.target.value)} rows={5} placeholder="Your message..." className={inputCls + " !h-auto py-3"} />
             </div>
             <button type="submit" disabled={loading} className="w-full h-[48px] btn-glass-primary rounded-xl text-white font-semibold inline-flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform disabled:opacity-50">
@@ -58,7 +58,7 @@ const ContactPage = () => {
             </button>
           </motion.form>
 
-          <motion.p className="mt-8 text-small text-center text-slate-700/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+          <motion.p className="mt-8 text-small text-center text-slate-300/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             You can also reach us at <a href="mailto:skillbridgeintern@gmail.com" style={{ color: '#818CF8' }} className="font-semibold">skillbridgeintern@gmail.com</a>
           </motion.p>
         </div>

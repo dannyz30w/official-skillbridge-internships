@@ -18,7 +18,7 @@ const TestimonialsPage = () => (
           Testimonials
         </motion.h1>
         <motion.p
-          className="mt-4 text-lg text-slate-700/80"
+          className="mt-4 text-lg text-slate-200/80"
           style={{ fontFamily: "var(--font-body)" }}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -32,7 +32,7 @@ const TestimonialsPage = () => (
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p className="text-slate-700/80 text-body" style={{ fontFamily: "var(--font-body)" }}>
+          <p className="text-slate-200/80 text-body" style={{ fontFamily: "var(--font-body)" }}>
             Testimonials from our first cohort of interns and businesses are coming soon. SkillBridge is actively building partnerships with verified businesses to create real paid opportunities.
           </p>
         </motion.div>
