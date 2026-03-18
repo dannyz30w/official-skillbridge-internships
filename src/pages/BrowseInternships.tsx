@@ -166,7 +166,7 @@ const BrowseInternships = () => {
               Browse Internships
             </h1>
             <p className="mt-2 text-muted-foreground">
-              Real roles, real pay — from vetted companies.
+              Real roles, real pay, from vetted companies.
             </p>
 
             <div className="mt-8 relative">
