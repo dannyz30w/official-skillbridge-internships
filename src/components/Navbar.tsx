@@ -2,7 +2,14 @@ import { Link } from "react-router-dom";
 import { Menu } from "lucide-react";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import { useAuth } from "@/contexts/AuthContext";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -37,7 +44,7 @@ const RESOURCES = [
   },
 ];
 
-const navLinkClass = "text-sm text-white/80 hover:text-white transition-colors";
+const navLinkClass = "text-sm text-white/80 hover:text-white transition-colors px-3 py-2";
 
 const Navbar = () => {
   const { user, accountType } = useAuth();
@@ -53,19 +60,40 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-2">
           <NavigationMenu>
             <NavigationMenuList className="gap-1">
-              <NavigationMenuItem><Link to="/" className={navLinkClass + " px-3 py-2"}>Home</Link></NavigationMenuItem>
-              <NavigationMenuItem><Link to="/browse" className={navLinkClass + " px-3 py-2"}>Browse</Link></NavigationMenuItem>
-              <NavigationMenuItem><Link to="/how-it-works" className={navLinkClass + " px-3 py-2"}>How It Works</Link></NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-white/80 hover:text-white hover:bg-transparent data-[state=open]:bg-transparent">Resources</NavigationMenuTrigger>
-                <NavigationMenuContent className="p-4 rounded-xl border border-white/10 bg-[#14141e]/95 backdrop-blur-xl w-[460px]">
-                  <div className="grid grid-cols-2 gap-3">
+                <NavigationMenuLink asChild>
+                  <Link to="/" className={navLinkClass}>Home</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/browse" className={navLinkClass}>Browse</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/how-it-works" className={navLinkClass}>How It Works</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-white/80 hover:text-white hover:bg-transparent data-[state=open]:bg-transparent">
+                  Resources
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="rounded-xl border border-white/10 bg-[#14141e]/95 backdrop-blur-xl w-[520px] p-4">
+                  <div className="grid grid-cols-2 gap-4">
                     {RESOURCES.map((group) => (
                       <div key={group.category}>
                         <p className="text-xs text-white/70 font-semibold mb-2">{group.category}</p>
                         <div className="space-y-1">
                           {group.links.map((link) => (
-                            <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer" className="block text-xs text-indigo-300 hover:text-indigo-200">
+                            <a
+                              key={link.url}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block text-xs text-indigo-300 hover:text-indigo-200"
+                            >
                               {link.label}
                             </a>
                           ))}
@@ -75,8 +103,17 @@ const Navbar = () => {
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem><Link to="/mission" className={navLinkClass + " px-3 py-2"}>Mission</Link></NavigationMenuItem>
-              <NavigationMenuItem><Link to="/for-businesses" className={navLinkClass + " px-3 py-2"}>For Businesses</Link></NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/mission" className={navLinkClass}>Mission</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/for-businesses" className={navLinkClass}>For Businesses</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -86,7 +123,7 @@ const Navbar = () => {
             <Link to={`/${accountType}`} className="liquid-glass rounded-full px-5 py-2 text-sm text-white">Dashboard</Link>
           ) : (
             <>
-              <Link to="/signin" className={navLinkClass}>Sign In</Link>
+              <Link to="/signin" className="text-sm text-white/80 hover:text-white transition-colors">Sign In</Link>
               <Link to="/signup" className="liquid-glass-strong rounded-full px-5 py-2 text-sm text-white">Get Started</Link>
             </>
           )}
