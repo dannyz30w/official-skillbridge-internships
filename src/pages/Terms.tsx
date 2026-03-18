@@ -19,7 +19,7 @@ const sections = [
 ];
 
 const Terms = () => (
-  <div className="min-h-screen" style={{ background: '#FFFFFF' }}>
+  <div className="min-h-screen ocean-page">
     <SEOHead title="Terms of Service, SkillBridge" description="SkillBridge Terms of Service. All internships are paid. All businesses are verified. Read our full platform policies." path="/terms" />
     <Navbar />
 
@@ -30,20 +30,20 @@ const Terms = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h1 className="text-h1 font-bold mb-2 text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>SkillBridge Terms of Service</h1>
-        <p className="text-small mb-16 text-white/50" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
+        <h1 className="text-h1 font-bold mb-2 ocean-title" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>SkillBridge Terms of Service</h1>
+        <p className="text-small mb-16 text-slate-700/80" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
 
         <div className="space-y-12">
           {sections.map((s, i) => (
             <section key={i}>
-              <h2 className="text-h4 font-bold mb-4 text-white/90" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(255,255,255,0.6)', fontFamily: "var(--font-body)" }}>{s.body}</p>
+              <h2 className="text-h4 font-bold mb-4 text-slate-900" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(8,47,73,0.74)', fontFamily: "var(--font-body)" }}>{s.body}</p>
             </section>
           ))}
         </div>
 
-        <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <Link to="/signup" className="text-small font-semibold transition-fast" style={{ color: '#818CF8' }}>Back to Sign Up</Link>
+        <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(8,47,73,0.08)' }}>
+          <Link to="/signup" className="text-small font-semibold transition-fast" style={{ color: '#0f766e' }}>Back to Sign Up</Link>
         </div>
       </motion.div>
     </main>

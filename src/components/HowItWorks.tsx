@@ -27,7 +27,7 @@ const HowItWorks = () => {
     <section id="how-it-works" className="py-16 sm:py-24 px-4 sm:px-6 relative z-10">
       <div className="container mx-auto max-w-3xl">
         <motion.h2
-          className="text-h2 font-bold text-center text-white"
+          className="text-h2 font-bold text-center ocean-title"
           style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -44,13 +44,13 @@ const HowItWorks = () => {
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.38, ease, delay: 0.04 }}
         >
-          <div className="liquid-glass inline-flex p-1 gap-1 rounded-full">
+          <div className="ocean-panel inline-flex p-1 gap-1 rounded-full">
             <button
               onClick={() => setView('intern')}
               className="px-6 py-2 rounded-full text-small font-semibold transition-all"
               style={view === 'intern'
                 ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
-                : { color: 'rgba(255,255,255,0.5)' }
+                : { color: 'rgba(8,47,73,0.58)' }
               }
             >
               For Interns
@@ -60,7 +60,7 @@ const HowItWorks = () => {
               className="px-6 py-2 rounded-full text-small font-semibold transition-all"
               style={view === 'business'
                 ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
-                : { color: 'rgba(255,255,255,0.5)' }
+                : { color: 'rgba(8,47,73,0.58)' }
               }
             >
               For Businesses
@@ -84,8 +84,8 @@ const HowItWorks = () => {
                   <span style={{ fontSize: 80, lineHeight: 1, color: 'rgba(79, 70, 229, 0.2)', fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700 }}>{step.num}</span>
                 </div>
                 <div className="pt-4">
-                  <h3 className="text-h4 font-bold text-white" style={{ fontFamily: "var(--font-body)" }}>{step.title}</h3>
-                  <p className="mt-3 text-body text-white/50" style={{ fontFamily: "var(--font-body)" }}>{step.description}</p>
+                  <h3 className="text-h4 font-bold ocean-title" style={{ fontFamily: "var(--font-body)" }}>{step.title}</h3>
+                  <p className="mt-3 text-body ocean-title/50" style={{ fontFamily: "var(--font-body)" }}>{step.description}</p>
                 </div>
               </motion.div>
             );
