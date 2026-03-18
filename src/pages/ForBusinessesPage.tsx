@@ -15,24 +15,24 @@ const features = [
 ];
 
 const ForBusinessesPage = () => (
-  <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+  <div className="min-h-screen ocean-page">
     <SEOHead title="Post a Paid Internship, SkillBridge for Businesses" description="Post a paid internship on SkillBridge and reach thousands of motivated young adults aged 16-22. Admin-verified platform. Start free." path="/for-businesses" />
     <Navbar />
 
     <main className="pt-32 pb-24 px-4 sm:px-6">
       <div className="mx-auto max-w-3xl">
-        <motion.h1 className="font-display text-h1 font-bold" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+        <motion.h1 className="font-display text-h1 font-bold ocean-title" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
           Hire ambitious young talent for your business.
         </motion.h1>
-        <motion.p className="mt-6 text-body max-w-xl" style={{ color: 'rgba(60,60,67,0.6)', fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
+        <motion.p className="mt-6 text-body max-w-xl ocean-copy" style={{ fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
           Post paid internships, review verified applicants, and build your pipeline of future employees. All at no cost to you.
         </motion.p>
 
         <div className="mt-16 grid sm:grid-cols-2 gap-6">
           {features.map((f, i) => (
-            <motion.div key={f.title} className="glass-card p-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
-              <h3 className="font-display text-h4 font-bold">{f.title}</h3>
-              <p className="mt-3 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>{f.desc}</p>
+            <motion.div key={f.title} className="ocean-panel rounded-[24px] p-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
+              <h3 className="font-display text-h4 font-bold ocean-title">{f.title}</h3>
+              <p className="mt-3 text-body ocean-copy">{f.desc}</p>
             </motion.div>
           ))}
         </div>

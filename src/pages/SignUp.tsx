@@ -12,8 +12,8 @@ import SEOHead from "@/components/SEOHead";
 const BUSINESS_TYPES = ['Retail', 'Food & Beverage', 'Healthcare', 'Tech', 'Creative & Media', 'Trades & Construction', 'Education', 'Nonprofit', 'Finance', 'Other'];
 const TRUSTED_DOMAINS = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'protonmail.com', 'proton.me', 'mail.com', 'zoho.com', 'yandex.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'tutanota.com', 'hey.com', 'pm.me', 'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net', 'charter.net', 'bellsouth.net', 'earthlink.net', 'aim.com'];
 
-const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
-const labelCls = "block text-small font-medium mb-2 text-white/50";
+const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-slate-300/45 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
+const labelCls = "block text-small font-medium mb-2 auth-copy-muted";
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const checkDomainAge = async (email: string): Promise<{ allowed: boolean; flagged: boolean }> => {
@@ -123,10 +123,10 @@ const SignUp = () => {
 
   if (step === 'select') {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+      <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
         <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required. For ages 16-22." path="/signup" />
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
+          <Link to="/" className="inline-flex items-center gap-2 text-small font-medium auth-copy-muted hover:text-white transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to home
           </Link>
         </motion.div>
@@ -135,7 +135,7 @@ const SignUp = () => {
             <div className="text-center mb-8">
               <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
               <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>Create your account</h1>
-              <p className="mt-2 text-body text-white/50">Choose how you want to use SkillBridge</p>
+              <p className="mt-2 text-body auth-copy-muted">Choose how you want to use SkillBridge</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <button onClick={() => setStep('intern')} className="liquid-glass-strong rounded-2xl p-8 text-center hover:scale-[1.02] transition-transform cursor-pointer">
@@ -143,17 +143,17 @@ const SignUp = () => {
                   <GraduationCap className="h-7 w-7 text-indigo-400" />
                 </div>
                 <h3 className="font-bold text-h4 text-white text-center" style={{ fontFamily: "var(--font-body)" }}>I am looking for an internship</h3>
-                <p className="text-small text-center mt-2 text-white/40">Browse and apply to paid internships near you</p>
+                <p className="text-small text-center mt-2 auth-copy-muted">Browse and apply to paid internships near you</p>
               </button>
               <button onClick={() => setStep('business')} className="liquid-glass-strong rounded-2xl p-8 text-center hover:scale-[1.02] transition-transform cursor-pointer">
                 <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.15)' }}>
                   <Building2 className="h-7 w-7 text-indigo-400" />
                 </div>
                 <h3 className="font-bold text-h4 text-white text-center" style={{ fontFamily: "var(--font-body)" }}>I am a business looking to hire</h3>
-                <p className="text-small text-center mt-2 text-white/40">Post internship listings and find talented interns</p>
+                <p className="text-small text-center mt-2 auth-copy-muted">Post internship listings and find talented interns</p>
               </button>
             </div>
-            <p className="mt-8 text-center text-small text-white/40">
+            <p className="mt-8 text-center text-small auth-copy-muted">
               Already have an account? <Link to="/signin" className="font-semibold text-indigo-400">Sign In</Link>
             </p>
           </motion.div>
@@ -163,10 +163,10 @@ const SignUp = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
       <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required. For ages 16-22." path="/signup" />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
-        <button onClick={() => { setStep('select'); setError(''); }} className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
+        <button onClick={() => { setStep('select'); setError(''); }} className="inline-flex items-center gap-2 text-small font-medium auth-copy-muted hover:text-white transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
       </motion.div>
@@ -195,7 +195,7 @@ const SignUp = () => {
                   </div>
                 )}
                 <div><label htmlFor="dob" className={labelCls}>Date of Birth</label><input id="dob" type="date" value={dob} onChange={e => setDob(e.target.value)} className={inputCls} /></div>
-                <label className="flex items-start gap-2 text-small cursor-pointer text-white/50">
+                <label className="flex items-start gap-2 text-small cursor-pointer auth-copy-muted">
                   <input type="checkbox" checked={agreeTerms} onChange={e => setAgreeTerms(e.target.checked)} className="mt-0.5 rounded" />
                   <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-indigo-400">Terms of Service</a></span>
                 </label>
@@ -222,7 +222,7 @@ const SignUp = () => {
                     {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
-                <label className="flex items-start gap-2 text-small cursor-pointer text-white/50">
+                <label className="flex items-start gap-2 text-small cursor-pointer auth-copy-muted">
                   <input type="checkbox" checked={bizAgreeTerms} onChange={e => setBizAgreeTerms(e.target.checked)} className="mt-0.5 rounded" />
                   <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-indigo-400">Terms of Service</a></span>
                 </label>
@@ -236,7 +236,7 @@ const SignUp = () => {
               {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating account...</> : "Create Account"}
             </button>
           </form>
-          <p className="mt-6 text-center text-small text-white/40">
+          <p className="mt-6 text-center text-small auth-copy-muted">
             Already have an account? <Link to="/signin" className="font-semibold text-indigo-400">Sign In</Link>
           </p>
         </motion.div>
