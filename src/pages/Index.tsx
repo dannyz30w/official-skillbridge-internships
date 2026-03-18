@@ -142,8 +142,7 @@ const Index = () => {
       <section className="py-16 px-6" style={{ background: "#0a0a0f" }}>
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { val: "2,800+", label: "NFTE participants in the competition" },
-            { val: "16–22", label: "Age group SkillBridge serves" },
+            { val: "16\u201322", label: "Age group SkillBridge serves" },
             { val: "Paid", label: "Every internship on SkillBridge is paid" },
             { val: "Verified", label: "Business listings are admin-reviewed" },
           ].map((s, i) => (
