@@ -32,7 +32,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
-      <SEOHead title="Contact SkillBridge" description="Reach out to the SkillBridge team. Questions, partnerships, or feedback — we respond to every message." path="/contact" jsonLd={{"@context":"https://schema.org","@type":"ContactPage","name":"Contact SkillBridge"}} />
+      <SEOHead title="Contact SkillBridge" description="Reach out to the SkillBridge team. Questions, partnerships, or feedback. We respond to every message." path="/contact" jsonLd={{"@context":"https://schema.org","@type":"ContactPage","name":"Contact SkillBridge"}} />
       <Navbar />
       <main className="pt-32 pb-24 px-4 sm:px-6">
         <div className="mx-auto max-w-lg">
