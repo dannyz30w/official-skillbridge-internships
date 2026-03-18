@@ -5,8 +5,9 @@ import { Search, Briefcase, MapPin, DollarSign, Clock, Loader2, Send, CheckCircl
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
+import Navbar from "@/components/Navbar";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 interface Internship {
   id: string;
@@ -131,31 +132,9 @@ const BrowseInternships = () => {
           }
         }))}
       />
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2">
-            <img src={skillbridgeLogo} alt="SkillBridge" className="h-9 w-auto" />
-          </Link>
-          <div className="flex items-center gap-3">
-            {user ? (
-              <Link to="/post-internship" className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground h-9 px-4 text-sm font-medium hover:bg-primary/90 transition-smooth">
-                Post Internship
-              </Link>
-            ) : (
-              <>
-                <Link to="/signin" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-smooth">
-                  Sign In
-                </Link>
-                <Link to="/signup" className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground h-9 px-4 text-sm font-medium hover:bg-primary/90 transition-smooth">
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
-      <div className="flex-1 py-12 px-4 sm:px-6">
+      <div className="flex-1 py-24 px-4 sm:px-6">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -226,8 +205,9 @@ const BrowseInternships = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: i * 0.03 }}
-                        className="bg-card rounded-xl border border-border shadow-card hover:shadow-card-hover hover:border-ring/40 transition-card p-5 sm:p-6"
+                        className="relative bg-card rounded-xl border border-border shadow-card hover:shadow-card-hover hover:border-ring/40 transition-card p-5 sm:p-6"
                       >
+                        <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0 flex-1">
                             <p className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
