@@ -30,9 +30,9 @@ const ForBusinessesPage = () => (
 
         <div className="mt-16 grid sm:grid-cols-2 gap-6">
           {features.map((f, i) => (
-            <motion.div key={f.title} className="glass-card p-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
-              <h3 className="font-display text-h4 font-bold">{f.title}</h3>
-              <p className="mt-3 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>{f.desc}</p>
+            <motion.div key={f.title} className="ocean-panel rounded-[24px] p-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
+              <h3 className="font-display text-h4 font-bold ocean-title">{f.title}</h3>
+              <p className="mt-3 text-body ocean-copy">{f.desc}</p>
             </motion.div>
           ))}
         </div>
