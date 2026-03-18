@@ -51,10 +51,10 @@ const Navbar = () => {
   const closeTimeoutRef = useRef<number | null>(null);
   const location = useLocation();
 
-  const isLight = LIGHT_ROUTES.some(r => location.pathname.startsWith(r));
-  const textColor = isLight ? 'rgba(60,60,67,0.6)' : 'rgba(255,255,255,0.6)';
-  const textHover = isLight ? '#1C1C1E' : '#ffffff';
-  const accentColor = isLight ? '#4F46E5' : '#818CF8';
+  const isDashboardRoute = LIGHT_ROUTES.some(r => location.pathname.startsWith(r));
+  const isOceanRoute = location.pathname !== "/" && !isDashboardRoute;
+  const textColor = isDashboardRoute || isOceanRoute ? 'rgba(8,47,73,0.72)' : 'rgba(255,255,255,0.6)';
+  const accentColor = isDashboardRoute || isOceanRoute ? '#0f766e' : '#818CF8';
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
   useEffect(() => {
@@ -75,16 +75,16 @@ const Navbar = () => {
     closeTimeoutRef.current = window.setTimeout(() => setResourcesOpen(false), 180);
   };
 
-  const navBg = isLight
-    ? { background: 'rgba(245,245,250,0.75)', backdropFilter: 'blur(32px) saturate(240%)', WebkitBackdropFilter: 'blur(32px) saturate(240%)', borderBottom: '1px solid rgba(255,255,255,0.55)' }
+  const navBg = isDashboardRoute || isOceanRoute
+    ? { background: 'rgba(236,253,255,0.72)', backdropFilter: 'blur(32px) saturate(240%)', WebkitBackdropFilter: 'blur(32px) saturate(240%)', borderBottom: '1px solid rgba(255,255,255,0.55)' }
     : { background: 'rgba(10,10,15,0.6)', backdropFilter: 'blur(32px) saturate(200%)', WebkitBackdropFilter: 'blur(32px) saturate(200%)', borderBottom: '1px solid rgba(255,255,255,0.06)' };
 
-  const dropdownBg = isLight
-    ? { background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(24px) saturate(200%)', border: '1px solid rgba(255,255,255,0.6)', borderRadius: 16, boxShadow: '0 16px 48px rgba(0,0,0,0.1)' }
+  const dropdownBg = isDashboardRoute || isOceanRoute
+    ? { background: 'rgba(240,253,250,0.9)', backdropFilter: 'blur(24px) saturate(200%)', border: '1px solid rgba(255,255,255,0.6)', borderRadius: 16, boxShadow: '0 16px 48px rgba(0,0,0,0.1)' }
     : { background: 'rgba(20,20,30,0.92)', backdropFilter: 'blur(24px) saturate(200%)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, boxShadow: '0 16px 48px rgba(0,0,0,0.3)' };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 liquid-glass overflow-visible" style={{ height: 64, paddingTop: 'env(safe-area-inset-top)' }} aria-label="Main navigation">
+    <nav className="fixed top-0 left-0 right-0 z-50 liquid-glass overflow-visible" style={{ ...navBg, height: 64, paddingTop: 'env(safe-area-inset-top)' }} aria-label="Main navigation">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2">
           <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-9 w-auto" width={144} height={36} />
@@ -118,9 +118,9 @@ const Navbar = () => {
                   onMouseLeave={closeResourcesWithDelay}
                 >
                   {RESOURCES.map(cat => (
-                    <ResourceCategory key={cat.category} category={cat.category} links={cat.links} accentColor={accentColor} textColor={isLight ? '#1C1C1E' : 'rgba(255,255,255,0.85)'} />
+                    <ResourceCategory key={cat.category} category={cat.category} links={cat.links} accentColor={accentColor} textColor={isDashboardRoute || isOceanRoute ? '#082f49' : 'rgba(255,255,255,0.85)'} />
                   ))}
-                  <div className="pt-2" style={{ borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}` }}>
+                  <div className="pt-2" style={{ borderTop: `1px solid ${isDashboardRoute || isOceanRoute ? 'rgba(8,47,73,0.1)' : 'rgba(255,255,255,0.06)'}` }}>
                     <Link to="/resources" onClick={() => setResourcesOpen(false)} className="text-small font-semibold" style={{ color: accentColor }}>View All Resources</Link>
                   </div>
                 </motion.div>
@@ -133,19 +133,19 @@ const Navbar = () => {
           {user && accountType ? (
             <>
               <Link to={`/${accountType}`} className="text-small font-medium transition-colors" style={{ color: textColor }}>Dashboard</Link>
-              <button onClick={signOut} className={isLight ? "btn-glass-secondary" : "liquid-glass"} style={{ padding: '8px 16px', borderRadius: 12, fontSize: 14, color: isLight ? '#1C1C1E' : 'white' }}>
+              <button onClick={signOut} className={isDashboardRoute || isOceanRoute ? "btn-glass-secondary" : "liquid-glass"} style={{ padding: '8px 16px', borderRadius: 12, fontSize: 14, color: isDashboardRoute || isOceanRoute ? '#082f49' : 'white' }}>
                 <span className="inline-flex items-center gap-1.5"><LogOut className="h-3.5 w-3.5" /> Sign Out</span>
               </button>
             </>
           ) : (
             <>
               <Link to="/signin" className="text-small font-medium transition-colors" style={{ color: textColor }}>Sign In</Link>
-              <Link to="/signup" className={isLight ? "btn-glass-primary" : "liquid-glass-strong rounded-full"} style={{ padding: '8px 20px', borderRadius: isLight ? 12 : 100, fontSize: 14, color: 'white' }}>Sign Up</Link>
+              <Link to="/signup" className={isDashboardRoute || isOceanRoute ? "btn-glass-primary" : "liquid-glass-strong rounded-full"} style={{ padding: '8px 20px', borderRadius: isDashboardRoute || isOceanRoute ? 12 : 100, fontSize: 14, color: 'white' }}>Sign Up</Link>
             </>
           )}
         </div>
 
-        <button className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-xl" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu" style={{ color: isLight ? '#1C1C1E' : 'white' }}>
+        <button className="md:hidden inline-flex items-center justify-center h-11 w-11 rounded-xl" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu" style={{ color: isDashboardRoute || isOceanRoute ? '#082f49' : 'white' }}>
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
@@ -158,20 +158,20 @@ const Navbar = () => {
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
             className="md:hidden fixed top-0 right-0 h-full z-50 px-6 py-6 space-y-4"
-            style={{ width: '85%', background: isLight ? 'rgba(245,245,250,0.95)' : 'rgba(10,10,15,0.95)', backdropFilter: 'blur(32px) saturate(200%)' }}
+            style={{ width: '85%', background: isDashboardRoute || isOceanRoute ? 'rgba(236,253,255,0.96)' : 'rgba(10,10,15,0.95)', backdropFilter: 'blur(32px) saturate(200%)' }}
           >
             <div className="flex justify-end mb-4">
-              <button onClick={() => setMobileOpen(false)} className="h-11 w-11 flex items-center justify-center rounded-xl" aria-label="Close menu" style={{ color: isLight ? '#1C1C1E' : 'white' }}><X className="h-5 w-5" /></button>
+              <button onClick={() => setMobileOpen(false)} className="h-11 w-11 flex items-center justify-center rounded-xl" aria-label="Close menu" style={{ color: isDashboardRoute || isOceanRoute ? '#082f49' : 'white' }}><X className="h-5 w-5" /></button>
             </div>
             {[
               { to: "/how-it-works", label: "How It Works" },
               { to: "/mission", label: "Mission" },
               { to: "/for-businesses", label: "For Businesses" },
             ].map(l => (
-              <Link key={l.to} to={l.to} className="block text-body font-medium py-3" style={{ color: isLight ? '#1C1C1E' : 'rgba(255,255,255,0.8)' }}>{l.label}</Link>
+              <Link key={l.to} to={l.to} className="block text-body font-medium py-3" style={{ color: isDashboardRoute || isOceanRoute ? '#082f49' : 'rgba(255,255,255,0.8)' }}>{l.label}</Link>
             ))}
             <div>
-              <button onClick={() => { setMobileResourcesOpen(!mobileResourcesOpen); trackEvent('resources_opened'); }} className="w-full flex items-center justify-between py-3 text-body font-medium" style={{ color: isLight ? '#1C1C1E' : 'rgba(255,255,255,0.8)' }}>
+              <button onClick={() => { setMobileResourcesOpen(!mobileResourcesOpen); trackEvent('resources_opened'); }} className="w-full flex items-center justify-between py-3 text-body font-medium" style={{ color: isDashboardRoute || isOceanRoute ? '#082f49' : 'rgba(255,255,255,0.8)' }}>
                 Resources <ChevronDown className={`h-4 w-4 transition-transform ${mobileResourcesOpen ? 'rotate-180' : ''}`} />
               </button>
               {mobileResourcesOpen && (
@@ -188,16 +188,16 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-            <Link to="/contact" className="block text-body font-medium py-3" style={{ color: isLight ? '#1C1C1E' : 'rgba(255,255,255,0.8)' }}>Contact</Link>
-            <div className="pt-4" style={{ borderTop: `1px solid ${isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)'}` }}>
+            <Link to="/contact" className="block text-body font-medium py-3" style={{ color: isDashboardRoute || isOceanRoute ? '#082f49' : 'rgba(255,255,255,0.8)' }}>Contact</Link>
+            <div className="pt-4" style={{ borderTop: `1px solid ${isDashboardRoute || isOceanRoute ? 'rgba(8,47,73,0.1)' : 'rgba(255,255,255,0.06)'}` }}>
               {user && accountType ? (
                 <div className="space-y-3">
-                  <Link to={`/${accountType}`} className="block w-full text-center py-3 rounded-xl text-body font-medium" style={{ background: isLight ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.05)', color: isLight ? '#1C1C1E' : 'white' }}>Dashboard</Link>
-                  <button onClick={() => { signOut(); setMobileOpen(false); }} className="block w-full text-center py-3 rounded-xl text-body font-medium" style={{ background: isLight ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.05)', color: isLight ? '#1C1C1E' : 'white' }}>Sign Out</button>
+                  <Link to={`/${accountType}`} className="block w-full text-center py-3 rounded-xl text-body font-medium" style={{ background: isDashboardRoute || isOceanRoute ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.05)', color: isDashboardRoute || isOceanRoute ? '#082f49' : 'white' }}>Dashboard</Link>
+                  <button onClick={() => { signOut(); setMobileOpen(false); }} className="block w-full text-center py-3 rounded-xl text-body font-medium" style={{ background: isDashboardRoute || isOceanRoute ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.05)', color: isDashboardRoute || isOceanRoute ? '#082f49' : 'white' }}>Sign Out</button>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <Link to="/signin" className="block w-full text-center py-3 rounded-xl text-body font-medium" style={{ background: isLight ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.05)', color: isLight ? '#1C1C1E' : 'white' }}>Sign In</Link>
+                  <Link to="/signin" className="block w-full text-center py-3 rounded-xl text-body font-medium" style={{ background: isDashboardRoute || isOceanRoute ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.05)', color: isDashboardRoute || isOceanRoute ? '#082f49' : 'white' }}>Sign In</Link>
                   <Link to="/signup" className="block w-full text-center py-3 rounded-xl text-body font-semibold" style={{ background: 'rgba(79,70,229,0.9)', color: 'white' }}>Sign Up</Link>
                 </div>
               )}
