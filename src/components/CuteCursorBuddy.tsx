@@ -1,32 +1,143 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+
+const CLICKABLE = "a, button, [role=button], label, input[type=submit], input[type=button]";
+const TEXT_ELS = "p, h1, h2, h3, h4, h5, h6, span, blockquote, li";
 
 const CuteCursorBuddy = () => {
-  const [pos, setPos] = useState({ x: 24, y: 24 });
-  const [target, setTarget] = useState({ x: 24, y: 24 });
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const target = useRef({ x: -100, y: -100 });
+  const ringPos = useRef({ x: -100, y: -100 });
+  const [visible, setVisible] = useState(false);
+  const [hoverState, setHoverState] = useState<"default" | "clickable" | "text">("default");
+  const [pressed, setPressed] = useState(false);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => setTarget({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", onMove, { passive: true });
-    const t = setInterval(() => {
-      setPos((p) => ({ x: p.x + (target.x - p.x) * 0.12, y: p.y + (target.y - p.y) * 0.12 }));
-    }, 16);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      clearInterval(t);
-    };
-  }, [target.x, target.y]);
+    // Hide on touch devices
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
+    if (isTouchDevice) return;
 
-  const eyeDx = Math.max(-2, Math.min(2, (target.x - pos.x) / 40));
-  const eyeDy = Math.max(-2, Math.min(2, (target.y - pos.y) / 40));
+    setVisible(true);
+    document.body.style.cursor = "none";
+
+    const onMove = (e: MouseEvent) => {
+      target.current = { x: e.clientX, y: e.clientY };
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+      }
+
+      // Check hover state
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      if (el) {
+        if (el.closest(CLICKABLE)) {
+          setHoverState("clickable");
+        } else if (el.closest(TEXT_ELS)) {
+          setHoverState("text");
+        } else {
+          setHoverState("default");
+        }
+      }
+    };
+
+    const onDown = () => setPressed(true);
+    const onUp = () => setPressed(false);
+
+    const animate = () => {
+      const spring = 0.12;
+      ringPos.current.x += (target.current.x - ringPos.current.x) * spring;
+      ringPos.current.y += (target.current.y - ringPos.current.y) * spring;
+
+      if (ringRef.current) {
+        const size = hoverState === "clickable" ? 56 : hoverState === "text" ? 40 : 32;
+        const h = hoverState === "text" ? 2 : size;
+        ringRef.current.style.transform = `translate(${ringPos.current.x - size / 2}px, ${ringPos.current.y - h / 2}px)`;
+        ringRef.current.style.width = `${size}px`;
+        ringRef.current.style.height = `${h}px`;
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
+
+    // Restore cursor on inputs/textareas
+    const style = document.createElement("style");
+    style.textContent = `
+      input, textarea, select, [contenteditable="true"] { cursor: text !important; }
+      a, button, [role="button"], label { cursor: none !important; }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
+      document.body.style.cursor = "";
+      style.remove();
+    };
+  }, [hoverState]);
+
+  if (!visible) return null;
+
+  const ringBorder = hoverState === "clickable"
+    ? "1px solid rgba(79,70,229,0.8)"
+    : "1px solid rgba(255,255,255,0.35)";
+  const ringBg = hoverState === "clickable"
+    ? "rgba(79,70,229,0.08)"
+    : hoverState === "text"
+    ? "rgba(255,255,255,0.06)"
+    : "transparent";
+  const ringRadius = hoverState === "text" ? "1px" : "50%";
+  const dotSize = hoverState === "clickable" ? 3 : pressed ? 10 : 6;
+  const ringScale = pressed ? "scale(0.8)" : "";
 
   return (
-    <div style={{ position: "fixed", right: 18, bottom: 18, zIndex: 20, pointerEvents: "none" }} aria-hidden="true">
-      <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(255,255,255,0.88)", border: "1px solid rgba(79,70,229,0.2)", position: "relative" }}>
-        <div style={{ position: "absolute", top: 14, left: 12, width: 8, height: 8, borderRadius: "50%", background: "#111", transform: `translate(${eyeDx}px, ${eyeDy}px)` }} />
-        <div style={{ position: "absolute", top: 14, right: 12, width: 8, height: 8, borderRadius: "50%", background: "#111", transform: `translate(${eyeDx}px, ${eyeDy}px)` }} />
-      </div>
-      <div style={{ width: 30, height: 26, margin: "-2px auto 0", borderRadius: "14px 14px 10px 10px", background: "rgba(79,70,229,0.9)" }} />
-    </div>
+    <>
+      {/* Dot */}
+      <div
+        ref={dotRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: dotSize,
+          height: dotSize,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.9)",
+          pointerEvents: "none",
+          zIndex: 9999,
+          transition: "width 0.2s, height 0.2s",
+          willChange: "transform",
+        }}
+      />
+      {/* Ring */}
+      <div
+        ref={ringRef}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: 32,
+          height: 32,
+          borderRadius: ringRadius,
+          border: ringBorder,
+          background: ringBg,
+          backdropFilter: "blur(2px)",
+          WebkitBackdropFilter: "blur(2px)",
+          pointerEvents: "none",
+          zIndex: 9998,
+          transition: `width 0.2s cubic-bezier(0.34,1.56,0.64,1), height 0.2s cubic-bezier(0.34,1.56,0.64,1), border 0.2s, background 0.2s, border-radius 0.2s${ringScale ? ", transform 0.1s" : ""}`,
+          willChange: "transform",
+          ...(ringScale ? { transform: ringScale } : {}),
+        }}
+      />
+    </>
   );
 };
 

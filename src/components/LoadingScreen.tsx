@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WORDS = ["Discover", "Connect", "Bridge"];
+const VIDEO_URL = "https://ussszdsedbqjgktsxxpx.supabase.co/storage/v1/object/public/vidd/12231468-uhd_3840_2160_30fps.mp4";
 
 const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [wordIndex, setWordIndex] = useState(0);
@@ -9,28 +10,52 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const startRef = useRef(0);
   const rafRef = useRef<number>(0);
   const doneRef = useRef(false);
-  const loadCompleteRef = useRef<number | null>(null);
+  const videoReadyRef = useRef(false);
+  const fontsReadyRef = useRef(false);
 
   useEffect(() => {
+    // Preload video
+    const video = document.createElement("video");
+    video.preload = "auto";
+    video.muted = true;
+    video.playsInline = true;
+    video.src = VIDEO_URL;
+    video.addEventListener("canplaythrough", () => { videoReadyRef.current = true; }, { once: true });
+    video.load();
+
+    // Preload fonts
+    document.fonts.ready.then(() => { fontsReadyRef.current = true; });
+
+    // Force complete after 6s
+    const forceTimeout = setTimeout(() => {
+      if (!doneRef.current) {
+        doneRef.current = true;
+        setProgress(100);
+        setTimeout(onComplete, 150);
+      }
+    }, 6000);
+
     const animate = (ts: number) => {
       if (!startRef.current) startRef.current = ts;
       const elapsed = ts - startRef.current;
-      const minDurationDone = elapsed >= 800;
+      const minDone = elapsed >= 800;
+      const allReady = videoReadyRef.current && fontsReadyRef.current;
 
-      if (!loadCompleteRef.current && document.readyState === "complete") {
-        loadCompleteRef.current = ts;
+      // Compute progress based on real loading milestones
+      let p = 0;
+      if (elapsed < 400) {
+        p = (elapsed / 400) * 30; // 0-30%: HTML/CSS
+      } else if (!fontsReadyRef.current) {
+        p = 30 + Math.min((elapsed - 400) / 1000, 1) * 30; // 30-60%: waiting for fonts
+      } else if (!videoReadyRef.current) {
+        p = 60 + Math.min((elapsed - 400) / 2000, 1) * 35; // 60-95%: waiting for video
+      } else {
+        p = 95 + Math.min((elapsed - 400) / 200, 1) * 5; // 95-100%: settle
       }
 
-      setProgress((prev) => {
-        if (loadCompleteRef.current) {
-          const accelElapsed = ts - loadCompleteRef.current;
-          const accelP = Math.min(accelElapsed / 400, 1);
-          return Math.min(100, prev + (100 - prev) * Math.max(0.2, accelP));
-        }
-        return Math.min(99, (elapsed / 2700) * 100);
-      });
+      setProgress(Math.min(100, p));
 
-      const shouldFinish = minDurationDone && ((loadCompleteRef.current !== null && elapsed >= 800) || elapsed >= 3200);
+      const shouldFinish = minDone && allReady && p >= 95;
       if (!doneRef.current && shouldFinish) {
         doneRef.current = true;
         setProgress(100);
@@ -42,7 +67,10 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
     };
 
     rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      clearTimeout(forceTimeout);
+    };
   }, [onComplete]);
 
   useEffect(() => {
