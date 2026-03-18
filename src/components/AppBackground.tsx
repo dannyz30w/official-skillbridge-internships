@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { Component as EtheralShadow } from "@/components/ui/etheral-shadow";
 
 const AppBackground = () => {
   const { pathname } = useLocation();
@@ -11,7 +12,7 @@ const AppBackground = () => {
         className="app-bg-layer"
         style={{
           background:
-            "linear-gradient(180deg, #020617 0%, #030712 48%, #000000 100%)",
+            "linear-gradient(180deg, #020617 0%, #030712 45%, #000000 100%)",
         }}
       />
       <div
@@ -20,6 +21,19 @@ const AppBackground = () => {
           background:
             "radial-gradient(circle at 18% 18%, rgba(56,189,248,0.18), transparent 24%), radial-gradient(circle at 82% 16%, rgba(99,102,241,0.16), transparent 22%), radial-gradient(circle at 50% 78%, rgba(14,165,233,0.14), transparent 28%)",
           opacity: 0.9,
+        }}
+      />
+      <EtheralShadow
+        className="app-bg-layer"
+        color="rgba(15, 23, 42, 0.88)"
+        animation={{ scale: 22, speed: 26 }}
+        noise={{ opacity: 0.06, scale: 0.7 }}
+        sizing="fill"
+        showTitle={false}
+        style={{
+          transform: 'scale(1.02)',
+          opacity: 0.42,
+          mixBlendMode: 'screen',
         }}
       />
       <div
