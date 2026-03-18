@@ -76,7 +76,7 @@ const ResourceCategory = ({ category, links }: { category: string; links: { labe
 };
 
 const ResourcesPage = () => (
-  <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+  <div className="min-h-screen" style={{ background: 'transparent' }}>
     <SEOHead title="Resources, SkillBridge" description="Free resume templates, interview guides, skill-building courses, and professional communication resources for young adults starting their careers." path="/resources" jsonLd={{"@context":"https://schema.org","@type":"CollectionPage","name":"SkillBridge Resources","hasPart": RESOURCES.map((r) => ({"@type":"CreativeWork","name": r.category}))}} />
     <Navbar />
     <main className="pt-32 pb-24 px-4 sm:px-6">

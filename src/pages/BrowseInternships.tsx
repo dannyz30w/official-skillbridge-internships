@@ -102,7 +102,7 @@ const BrowseInternships = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <SEOHead
         title="Browse Paid Internships, SkillBridge"
         description="Browse hundreds of paid internships for teens and young adults. Filter by location, industry, and pay. Apply instantly on SkillBridge."
