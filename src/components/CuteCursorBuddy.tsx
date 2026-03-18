@@ -69,6 +69,7 @@ const CuteCursorBuddy = () => {
         document.head.appendChild(style);
         state.styleEl = style;
       }
+    };
 
       if (!hide && state.styleEl) {
         state.styleEl.remove();
