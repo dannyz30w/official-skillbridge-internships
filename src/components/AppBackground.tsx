@@ -1,17 +1,20 @@
-import { useLocation } from "react-router-dom";
-import { Boxes } from "@/components/ui/background-boxes";
+import { useLocation } from 'react-router-dom';
+import EtheralShadow from '@/components/ui/etheral-shadow';
 
 const AppBackground = () => {
   const { pathname } = useLocation();
 
-  if (pathname === "/") return null;
+  if (pathname === '/') return null;
 
   return (
     <div className="app-bg-root" aria-hidden="true">
-      <div className="app-bg-layer bg-[#020617]" />
-      <Boxes className="app-bg-boxes" />
-      <div className="app-bg-layer app-bg-boxes-glow" />
-      <div className="app-bg-layer app-bg-boxes-vignette" />
+      <EtheralShadow
+        className="app-ethereal-bg"
+        color="rgba(8, 15, 31, 0.98)"
+        animation={{ scale: 58, speed: 58 }}
+        noise={{ opacity: 0.22, scale: 0.9 }}
+        sizing="fill"
+      />
     </div>
   );
 };
