@@ -136,7 +136,7 @@ const InternDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#F2F2F7' }}>
+    <div className="min-h-screen flex" style={{ background: 'transparent' }}>
       <SEOHead title="Intern Dashboard" description="Manage your SkillBridge applications" path="/intern" noIndex />
       <aside className="hidden md:flex flex-col w-60 h-screen fixed left-0 top-0 glass-sidebar p-4 z-40">
         <div className="flex items-center gap-2 px-3 py-4"><img src={skillbridgeLogo} alt="SkillBridge" className="h-8 w-auto" width={128} height={32} /><span className="font-display font-bold text-small">Intern</span></div>
@@ -159,7 +159,7 @@ const InternDashboard = () => {
         <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }}>
 
           {tab === 'home' && <div className="stagger-children">
-            <h1 className="font-display text-h2 font-bold mb-8">Dashboard</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 text-white">Dashboard</h1>
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#4F46E5' }}>{weeklyCount}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Applications this week</p><p className="text-caption" style={{ color: 'rgba(60,60,67,0.4)' }}>{weeklyCount}/5 limit</p></div>
               <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold">{myApps.length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Total Applications</p></div>
@@ -168,7 +168,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'browse' && <div>
-            <h1 className="font-display text-h2 font-bold mb-2">Browse Internships</h1>
+            <h1 className="font-display text-h2 font-bold mb-2 text-white">Browse Internships</h1>
             <p className="text-body mb-8" style={{ color: 'rgba(60,60,67,0.6)' }}>Real roles, real pay, from vetted companies.</p>
             <div className="relative mb-8"><Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: 'rgba(60,60,67,0.4)' }} />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search by role, company, or location..." className="w-full h-[48px] pl-12 pr-4 rounded-xl text-[15px] glass-input" aria-label="Search internships" /></div>
@@ -202,7 +202,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'applications' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8">My Applications</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 text-white">My Applications</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : myApps.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No applications yet.</p> :
             <div className="space-y-3">{myApps.map(a => (
               <div key={a.id} className="glass-card p-4 flex items-center justify-between card-hover">
@@ -213,7 +213,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'portfolio' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8">My Portfolio</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 text-white">My Portfolio</h1>
             <div className="glass-card p-8 max-w-2xl space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div><label htmlFor="pf-fn" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>First Name</label><input id="pf-fn" value={profile.first_name} onChange={e => setProfile(p => ({ ...p, first_name: e.target.value }))} className={inputCls} /></div>
@@ -271,7 +271,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'notifications' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8">Notifications</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 text-white">Notifications</h1>
             {messages.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No notifications yet.</p> :
             <div className="space-y-3">{messages.map(m => (
               <div key={m.id} className={`glass-card p-4 card-hover cursor-pointer`} onClick={() => !m.read && markRead(m.id)}
@@ -289,7 +289,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'settings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8">Settings</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 text-white">Settings</h1>
             <div className="glass-card p-8"><p className="text-small mb-4" style={{ color: 'rgba(60,60,67,0.6)' }}>Signed in as: {user?.email}</p>
             <button onClick={signOut} className="btn-glass-destructive h-12 px-6 text-body font-semibold">Sign Out</button></div>
           </div>}

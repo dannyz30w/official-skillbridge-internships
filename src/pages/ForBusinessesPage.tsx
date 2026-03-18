@@ -15,16 +15,16 @@ const features = [
 ];
 
 const ForBusinessesPage = () => (
-  <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+  <div className="min-h-screen" style={{ background: 'transparent' }}>
     <SEOHead title="Post a Paid Internship, SkillBridge for Businesses" description="Post a paid internship on SkillBridge and reach thousands of motivated young adults aged 16-22. Admin-verified platform. Start free." path="/for-businesses" />
     <Navbar />
 
     <main className="pt-32 pb-24 px-4 sm:px-6">
       <div className="mx-auto max-w-3xl">
-        <motion.h1 className="font-display text-h1 font-bold" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+        <motion.h1 className="font-display text-h1 font-bold text-white" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
           Hire ambitious young talent for your business.
         </motion.h1>
-        <motion.p className="mt-6 text-body max-w-xl" style={{ color: 'rgba(60,60,67,0.6)', fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
+        <motion.p className="mt-6 text-body max-w-xl" style={{ color: 'rgba(255,255,255,0.72)', fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
           Post paid internships, review verified applicants, and build your pipeline of future employees. All at no cost to you.
         </motion.p>
 

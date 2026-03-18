@@ -1,9 +1,14 @@
-import { useLocation } from "react-router-dom";
+import { useEffect, useLocation, useState } from "react";
+import { Component as EtheralShadow } from "@/components/ui/etheral-shadow";
 
 const AppBackground = () => {
   const { pathname } = useLocation();
+  const [mounted, setMounted] = useState(false);
 
-  // Keep landing page visuals untouched (video hero owns the background there).
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (pathname === "/") return null;
 
   return (
@@ -11,22 +16,33 @@ const AppBackground = () => {
       <div
         className="app-bg-layer"
         style={{
-          background: "#000000",
-        }}
-      />
-      <div
-        className="app-bg-layer"
-        style={{
-          opacity: 0.4,
-          backgroundImage:
-            "radial-gradient(circle at 20% 18%, rgba(255,255,255,0.08) 0 1px, transparent 2px), radial-gradient(circle at 68% 30%, rgba(255,255,255,0.06) 0 1px, transparent 2px), radial-gradient(circle at 45% 72%, rgba(255,255,255,0.05) 0 1px, transparent 2px)",
+          background: "linear-gradient(180deg, #020617 0%, #030712 48%, #000000 100%)",
         }}
       />
       <div
         className="app-bg-layer"
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.7) 100%)",
+            "radial-gradient(circle at 18% 18%, rgba(56,189,248,0.18), transparent 24%), radial-gradient(circle at 82% 16%, rgba(99,102,241,0.16), transparent 22%), radial-gradient(circle at 50% 78%, rgba(14,165,233,0.14), transparent 28%)",
+          opacity: 0.9,
+        }}
+      />
+      {mounted ? (
+        <EtheralShadow
+          className="app-bg-layer"
+          color="rgba(15, 23, 42, 0.88)"
+          animation={{ scale: 14, speed: 18 }}
+          noise={{ opacity: 0.04, scale: 0.65 }}
+          sizing="fill"
+          showTitle={false}
+          style={{ opacity: 0.22, transform: 'scale(1.01)' }}
+        />
+      ) : null}
+      <div
+        className="app-bg-layer"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(2,6,23,0.08) 0%, rgba(2,6,23,0.24) 42%, rgba(0,0,0,0.54) 100%)",
         }}
       />
     </div>
