@@ -425,12 +425,25 @@
 
 
 @layer utilities {
-  .app-ethereal-bg {
-    position: absolute;
-    inset: -6%;
-    transform: scale(1.08);
+  .app-bg-boxes {
+    inset: -12% -18% auto auto;
     transform-origin: center;
-    opacity: 0.96;
+    filter: saturate(1.05);
+  }
+
+  .app-bg-boxes-glow {
+    background:
+      radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.16), transparent 26%),
+      radial-gradient(circle at 80% 18%, rgba(168, 85, 247, 0.14), transparent 24%),
+      radial-gradient(circle at 50% 78%, rgba(14, 165, 233, 0.18), transparent 30%);
+    filter: blur(36px);
+    opacity: 0.9;
+  }
+
+  .app-bg-boxes-vignette {
+    background:
+      linear-gradient(180deg, rgba(2, 6, 23, 0.2) 0%, rgba(2, 6, 23, 0.62) 100%),
+      radial-gradient(circle at center, rgba(2, 6, 23, 0) 28%, rgba(2, 6, 23, 0.55) 100%);
   }
 
   .ocean-page {
@@ -467,6 +480,58 @@
 
   .ocean-input::placeholder {
     color: rgba(203, 213, 225, 0.42);
+  }
+}
+
+
+
+
+@layer utilities {
+  .app-bg-box-grid {
+    --cursor-x: 50%;
+    --cursor-y: 50%;
+    --cursor-opacity: 0;
+  }
+
+  .app-bg-box-grid::before,
+  .app-bg-box-grid::after {
+    content: "";
+    position: absolute;
+    inset: -14%;
+    pointer-events: none;
+    opacity: var(--cursor-opacity);
+    transition: opacity 180ms ease;
+    will-change: transform, opacity;
+  }
+
+  .app-bg-box-grid::before {
+    background:
+      radial-gradient(260px circle at var(--cursor-x) var(--cursor-y), rgba(56, 189, 248, 0.22), transparent 62%),
+      radial-gradient(120px circle at var(--cursor-x) var(--cursor-y), rgba(255, 255, 255, 0.12), transparent 52%);
+    mix-blend-mode: screen;
+    filter: blur(10px);
+  }
+
+  .app-bg-box-grid::after {
+    background:
+      radial-gradient(34px circle at var(--cursor-x) var(--cursor-y), rgba(255,255,255,0.95), rgba(125,211,252,0.36) 38%, transparent 72%),
+      radial-gradient(420px circle at var(--cursor-x) var(--cursor-y), rgba(59,130,246,0.08), transparent 60%);
+    mix-blend-mode: screen;
+    filter: blur(2px);
+  }
+
+  .app-bg-boxes-glow {
+    background:
+      radial-gradient(circle at 18% 18%, rgba(56, 189, 248, 0.1), transparent 24%),
+      radial-gradient(circle at 78% 18%, rgba(168, 85, 247, 0.09), transparent 22%),
+      radial-gradient(circle at 50% 80%, rgba(45, 212, 191, 0.08), transparent 26%);
+    filter: blur(36px);
+  }
+
+  .app-bg-boxes-vignette {
+    background:
+      linear-gradient(180deg, rgba(2, 6, 23, 0.24) 0%, rgba(2, 6, 23, 0.72) 100%),
+      radial-gradient(circle at center, rgba(2, 6, 23, 0) 24%, rgba(2, 6, 23, 0.58) 100%);
   }
 
   .auth-copy-strong {

@@ -87,8 +87,8 @@ const LoadingScreen = ({ onComplete, readyPromise }: { onComplete: () => void; r
       </motion.p>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(34,211,238,0.18),transparent_24%),radial-gradient(circle_at_80%_20%,rgba(129,140,248,0.14),transparent_24%),radial-gradient(circle_at_50%_80%,rgba(45,212,191,0.14),transparent_28%)] blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.12)_0%,rgba(2,6,23,0.58)_100%),radial-gradient(circle_at_center,rgba(2,6,23,0)_24%,rgba(2,6,23,0.52)_100%)]" style={{ opacity: 0.45 }} />
+        <div className="app-bg-layer app-bg-boxes-glow" />
+        <div className="app-bg-layer app-bg-boxes-vignette" style={{ opacity: 0.45 }} />
       </div>
 
       <div className="relative flex-1 flex items-center justify-center">

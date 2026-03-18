@@ -87,7 +87,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background: 'transparent' }}>
+    <div className="min-h-screen flex" style={{ background: '#F2F2F7' }}>
       <SEOHead title="Admin Dashboard" description="SkillBridge admin dashboard" path="/admin" noIndex />
       <aside className="hidden md:flex flex-col w-60 h-screen fixed left-0 top-0 glass-sidebar p-4 z-40">
         <div className="flex items-center gap-2 px-3 py-4"><img src={skillbridgeLogo} alt="SkillBridge" className="h-8 w-auto" width={128} height={32} /><span className="font-display font-bold text-small" style={{ color: '#4F46E5' }}>Admin</span></div>
