@@ -21,10 +21,10 @@ const ForBusinessesPage = () => (
 
     <main className="pt-32 pb-24 px-4 sm:px-6">
       <div className="mx-auto max-w-3xl">
-        <motion.h1 className="font-display text-h1 font-bold ocean-title" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+        <motion.h1 className="font-display text-h1 font-bold text-white" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
           Hire ambitious young talent for your business.
         </motion.h1>
-        <motion.p className="mt-6 text-body max-w-xl ocean-copy" style={{ fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
+        <motion.p className="mt-6 text-body max-w-xl" style={{ color: 'rgba(255,255,255,0.72)', fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
           Post paid internships, review verified applicants, and build your pipeline of future employees. All at no cost to you.
         </motion.p>
 

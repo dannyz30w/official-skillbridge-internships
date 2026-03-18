@@ -33,13 +33,7 @@ interface ShadowOverlayProps {
   showTitle?: boolean;
 }
 
-function mapRange(
-  value: number,
-  fromLow: number,
-  fromHigh: number,
-  toLow: number,
-  toHigh: number,
-): number {
+function mapRange(value: number, fromLow: number, fromHigh: number, toLow: number, toHigh: number): number {
   if (fromLow === fromHigh) {
     return toLow;
   }
@@ -50,8 +44,7 @@ function mapRange(
 const useInstanceId = (): string => {
   const id = useId();
   const cleanId = id.replace(/:/g, '');
-  const instanceId = `shadowoverlay-${cleanId}`;
-  return instanceId;
+  return `shadowoverlay-${cleanId}`;
 };
 
 export function Component({
@@ -64,7 +57,7 @@ export function Component({
   showTitle = true,
 }: ShadowOverlayProps) {
   const id = useInstanceId();
-  const animationEnabled = animation && animation.scale > 0;
+  const animationEnabled = Boolean(animation && animation.scale > 0);
   const feColorMatrixRef = useRef<SVGFEColorMatrixElement>(null);
   const hueRotateMotionValue = useMotionValue(180);
   const hueRotateAnimation = useRef<AnimationPlaybackControls | null>(null);
@@ -73,31 +66,31 @@ export function Component({
   const animationDuration = animation ? mapRange(animation.speed, 1, 100, 1000, 50) : 1;
 
   useEffect(() => {
-    if (feColorMatrixRef.current && animationEnabled) {
+    if (!feColorMatrixRef.current || !animationEnabled) return;
+
+    if (hueRotateAnimation.current) {
+      hueRotateAnimation.current.stop();
+    }
+    hueRotateMotionValue.set(0);
+    hueRotateAnimation.current = animate(hueRotateMotionValue, 360, {
+      duration: animationDuration / 25,
+      repeat: Infinity,
+      repeatType: 'loop',
+      repeatDelay: 0,
+      ease: 'linear',
+      delay: 0,
+      onUpdate: (value: number) => {
+        if (feColorMatrixRef.current) {
+          feColorMatrixRef.current.setAttribute('values', String(value));
+        }
+      },
+    });
+
+    return () => {
       if (hueRotateAnimation.current) {
         hueRotateAnimation.current.stop();
       }
-      hueRotateMotionValue.set(0);
-      hueRotateAnimation.current = animate(hueRotateMotionValue, 360, {
-        duration: animationDuration / 25,
-        repeat: Infinity,
-        repeatType: 'loop',
-        repeatDelay: 0,
-        ease: 'linear',
-        delay: 0,
-        onUpdate: (value: number) => {
-          if (feColorMatrixRef.current) {
-            feColorMatrixRef.current.setAttribute('values', String(value));
-          }
-        },
-      });
-
-      return () => {
-        if (hueRotateAnimation.current) {
-          hueRotateAnimation.current.stop();
-        }
-      };
-    }
+    };
   }, [animationEnabled, animationDuration, hueRotateMotionValue]);
 
   return (

@@ -1,8 +1,13 @@
-import { useLocation } from "react-router-dom";
+import { useEffect, useLocation, useState } from "react";
 import { Component as EtheralShadow } from "@/components/ui/etheral-shadow";
 
 const AppBackground = () => {
   const { pathname } = useLocation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (pathname === "/") return null;
 
@@ -11,8 +16,7 @@ const AppBackground = () => {
       <div
         className="app-bg-layer"
         style={{
-          background:
-            "linear-gradient(180deg, #020617 0%, #030712 45%, #000000 100%)",
+          background: "linear-gradient(180deg, #020617 0%, #030712 48%, #000000 100%)",
         }}
       />
       <div
@@ -23,19 +27,17 @@ const AppBackground = () => {
           opacity: 0.9,
         }}
       />
-      <EtheralShadow
-        className="app-bg-layer"
-        color="rgba(15, 23, 42, 0.88)"
-        animation={{ scale: 22, speed: 26 }}
-        noise={{ opacity: 0.06, scale: 0.7 }}
-        sizing="fill"
-        showTitle={false}
-        style={{
-          transform: 'scale(1.02)',
-          opacity: 0.42,
-          mixBlendMode: 'screen',
-        }}
-      />
+      {mounted ? (
+        <EtheralShadow
+          className="app-bg-layer"
+          color="rgba(15, 23, 42, 0.88)"
+          animation={{ scale: 14, speed: 18 }}
+          noise={{ opacity: 0.04, scale: 0.65 }}
+          sizing="fill"
+          showTitle={false}
+          style={{ opacity: 0.22, transform: 'scale(1.01)' }}
+        />
+      ) : null}
       <div
         className="app-bg-layer"
         style={{

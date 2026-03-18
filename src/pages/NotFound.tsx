@@ -10,9 +10,9 @@ const NotFound = () => {
       <Navbar />
       <div className="flex min-h-[80vh] items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="font-display text-display font-bold mb-4" style={{ color: 'rgba(60,60,67,0.2)' }}>404</h1>
+          <h1 className="font-display text-display font-bold mb-4" style={{ color: 'rgba(255,255,255,0.2)' }}>404</h1>
           <p className="text-h3 font-display font-bold mb-2">Page not found</p>
-          <p className="text-body mb-8" style={{ color: 'rgba(60,60,67,0.6)' }}>The page you are looking for does not exist or has been moved.</p>
+          <p className="text-body mb-8" style={{ color: 'rgba(255,255,255,0.68)' }}>The page you are looking for does not exist or has been moved.</p>
           <Link to="/" className="btn-glass-primary inline-flex items-center justify-center h-12 px-8">
             Return to Home
           </Link>
