@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 const NotFound = () => {
   const location = useLocation();
   return (
-    <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       <SEOHead title="Page Not Found, SkillBridge" description="The page you are looking for does not exist." path={location.pathname} noIndex />
       <Navbar />
       <div className="flex min-h-[80vh] items-center justify-center px-4">

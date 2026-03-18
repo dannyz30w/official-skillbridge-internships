@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import SEOHead from "@/components/SEOHead";
 
 const TestimonialsPage = () => (
-  <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+  <div className="min-h-screen" style={{ background: 'transparent' }}>
     <SEOHead title="Testimonials, SkillBridge" description="Real stories from interns and businesses who found each other through SkillBridge and built something that mattered." path="/testimonials" />
     <Navbar />
     <main className="pt-32 pb-24 px-4 sm:px-6">
