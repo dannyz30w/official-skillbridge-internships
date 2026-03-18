@@ -7,6 +7,7 @@ const CURSOR_EVENT = "skillbridge:cursor";
 const CuteCursorBuddy = () => {
   const dotRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
+  const styleRef = useRef<HTMLStyleElement | null>(null);
   const target = useRef({ x: -100, y: -100 });
   const current = useRef({ x: -100, y: -100 });
   const [visible, setVisible] = useState(false);
@@ -15,11 +16,33 @@ const CuteCursorBuddy = () => {
   useEffect(() => {
     const coarsePointer = window.matchMedia("(pointer: coarse)");
 
+    const ensureCursorHidden = (hide: boolean) => {
+      document.documentElement.style.cursor = hide ? "none" : "";
+      document.body.style.cursor = hide ? "none" : "";
+
+      if (hide && !styleRef.current) {
+        const style = document.createElement("style");
+        style.dataset.skillbridgeCursor = "true";
+        style.textContent = `
+          html, body, a, button, input, textarea, select, summary, [role="button"], [role="link"], label, * {
+            cursor: none !important;
+          }
+        `;
+        document.head.appendChild(style);
+        styleRef.current = style;
+      }
+
+      if (!hide && styleRef.current) {
+        styleRef.current.remove();
+        styleRef.current = null;
+      }
+    };
+
     const syncEnabled = () => {
       const loadingActive = document.body.dataset.loadingScreen === "true";
       const nextEnabled = !coarsePointer.matches && !loadingActive;
       setEnabled(nextEnabled);
-      document.body.style.cursor = nextEnabled ? "none" : "";
+      ensureCursorHidden(nextEnabled);
       if (!nextEnabled) {
         setVisible(false);
         window.dispatchEvent(new CustomEvent<CursorDetail>(CURSOR_EVENT, { detail: { x: current.current.x, y: current.current.y, visible: false } }));
@@ -35,9 +58,7 @@ const CuteCursorBuddy = () => {
     const onMove = (event: MouseEvent) => {
       if (!enabled) return;
       target.current = { x: event.clientX, y: event.clientY };
-      current.current = { x: event.clientX, y: event.clientY };
       setVisible(true);
-      window.dispatchEvent(new CustomEvent<CursorDetail>(CURSOR_EVENT, { detail: { x: event.clientX, y: event.clientY, visible: true } }));
     };
 
     const onLeave = () => {
@@ -46,11 +67,15 @@ const CuteCursorBuddy = () => {
     };
 
     const animate = () => {
-      current.current.x += (target.current.x - current.current.x) * 0.35;
-      current.current.y += (target.current.y - current.current.y) * 0.35;
+      current.current.x += (target.current.x - current.current.x) * 0.22;
+      current.current.y += (target.current.y - current.current.y) * 0.22;
 
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${current.current.x - 7}px, ${current.current.y - 7}px)`;
+      }
+
+      if (enabled) {
+        window.dispatchEvent(new CustomEvent<CursorDetail>(CURSOR_EVENT, { detail: { x: current.current.x, y: current.current.y, visible } }));
       }
 
       rafRef.current = window.requestAnimationFrame(animate);
@@ -66,9 +91,9 @@ const CuteCursorBuddy = () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseout", onLeave);
       window.cancelAnimationFrame(rafRef.current);
-      document.body.style.cursor = "";
+      ensureCursorHidden(false);
     };
-  }, [enabled]);
+  }, [enabled, visible]);
 
   if (!enabled) return null;
 

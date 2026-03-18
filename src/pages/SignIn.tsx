@@ -9,7 +9,7 @@ import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 
 const ease = [0.16, 1, 0.3, 1] as const;
-const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
+const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-slate-300/45 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
 
 const LOCKOUT_SCHEDULE: Record<number, number> = {
   3: 60, 4: 180, 5: 600, 6: 1800, 7: 3600, 8: 10800, 9: 36000,
@@ -114,7 +114,7 @@ const SignIn = () => {
     <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
       <SEOHead title="Sign In to SkillBridge" description="Sign in to SkillBridge to browse paid internships, manage applications, and connect with verified businesses." path="/signin" />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
-        <Link to="/" className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 text-small font-medium auth-copy-muted hover:text-white transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back to home
         </Link>
       </motion.div>
@@ -123,18 +123,18 @@ const SignIn = () => {
           <div className="text-center mb-8">
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
             <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>Welcome back</h1>
-            <p className="mt-2 text-body text-white/50" style={{ fontFamily: "var(--font-body)" }}>Sign in to your SkillBridge account</p>
+            <p className="mt-2 text-body auth-copy-muted" style={{ fontFamily: "var(--font-body)" }}>Sign in to your SkillBridge account</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="signin-email" className="block text-small font-medium mb-2 text-white/50">Email</label>
+              <label htmlFor="signin-email" className="block text-small font-medium mb-2 auth-copy-muted">Email</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none text-white/30" />
                 <input id="signin-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} />
               </div>
             </div>
             <div>
-              <label htmlFor="signin-password" className="block text-small font-medium mb-2 text-white/50">Password</label>
+              <label htmlFor="signin-password" className="block text-small font-medium mb-2 auth-copy-muted">Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 pointer-events-none text-white/30" />
                 <input id="signin-password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Your password" className={inputCls} />
@@ -155,7 +155,7 @@ const SignIn = () => {
               {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Signing in...</> : "Sign In"}
             </button>
           </form>
-          <p className="mt-6 text-center text-small text-white/40">
+          <p className="mt-6 text-center text-small auth-copy-muted">
             Don't have an account? <Link to="/signup" className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">Sign Up</Link>
           </p>
         </motion.div>

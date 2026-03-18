@@ -87,8 +87,8 @@ const LoadingScreen = ({ onComplete, readyPromise }: { onComplete: () => void; r
       </motion.p>
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="app-bg-layer app-bg-ocean-glow" />
-        <div className="app-bg-layer app-bg-ocean-waves" />
+        <div className="app-bg-layer app-bg-boxes-glow" />
+        <div className="app-bg-layer app-bg-boxes-vignette" style={{ opacity: 0.45 }} />
       </div>
 
       <div className="relative flex-1 flex items-center justify-center">

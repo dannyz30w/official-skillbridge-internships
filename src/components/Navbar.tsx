@@ -53,8 +53,8 @@ const Navbar = () => {
 
   const isDashboardRoute = LIGHT_ROUTES.some(r => location.pathname.startsWith(r));
   const isOceanRoute = location.pathname !== "/" && !isDashboardRoute;
-  const textColor = isDashboardRoute ? 'rgba(8,47,73,0.72)' : 'rgba(226,232,240,0.78)';
-  const accentColor = isDashboardRoute ? '#0f766e' : '#a78bfa';
+  const textColor = isDashboardRoute ? 'rgba(8,47,73,0.72)' : 'rgba(248,250,252,0.9)';
+  const accentColor = isDashboardRoute ? '#0f766e' : '#c4b5fd';
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
   useEffect(() => {
