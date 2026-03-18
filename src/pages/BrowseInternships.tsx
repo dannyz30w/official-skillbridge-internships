@@ -102,7 +102,7 @@ const BrowseInternships = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col ocean-page">
+    <div className="min-h-screen bg-background flex flex-col">
       <SEOHead
         title="Browse Paid Internships, SkillBridge"
         description="Browse hundreds of paid internships for teens and young adults. Filter by location, industry, and pay. Apply instantly on SkillBridge."
@@ -162,29 +162,29 @@ const BrowseInternships = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="font-display text-3xl font-bold text-white tracking-tight">
+            <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">
               Browse Internships
             </h1>
-            <p className="mt-2 text-slate-200/80">
+            <p className="mt-2 text-muted-foreground">
               Real roles, real pay, from vetted companies.
             </p>
 
             <div className="mt-8 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by role, company, or location..."
-                className="w-full h-11 pl-10 pr-4 rounded-lg border border-white/15 bg-slate-950/45 text-sm text-white placeholder:text-slate-400/70 focus:outline-none focus:ring-2 focus:ring-cyan-300/30 focus:border-transparent transition-smooth backdrop-blur-md"
+                className="w-full h-11 pl-10 pr-4 rounded-lg border border-input bg-background text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-smooth"
               />
             </div>
 
             <div className="mt-8 space-y-4">
               {loading ? (
                 <div className="py-16 flex flex-col items-center justify-center">
-                  <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
-                  <p className="mt-3 text-sm text-slate-300">Loading internships...</p>
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  <p className="mt-3 text-sm text-muted-foreground">Loading internships...</p>
                 </div>
               ) : filtered.length === 0 ? (
                 <motion.div

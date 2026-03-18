@@ -1,188 +1,120 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-type CursorDetail = {
-  x: number;
-  y: number;
-  visible: boolean;
-};
+type CursorDetail = { x: number; y: number; visible: boolean };
 
-type CursorState = {
-  enabled: boolean;
-  visible: boolean;
-  currentX: number;
-  currentY: number;
-  targetX: number;
-  targetY: number;
-  rafId: number;
-  styleEl: HTMLStyleElement | null;
-};
-
-type MediaQueryWithLegacyApi = MediaQueryList & {
-  addListener?: (listener: () => void) => void;
-  removeListener?: (listener: () => void) => void;
-};
-
-const CURSOR_EVENT = 'skillbridge:cursor';
-
-function addMediaQueryChangeListener(query: MediaQueryWithLegacyApi, listener: () => void) {
-  if ('addEventListener' in query) {
-    query.addEventListener('change', listener);
-    return () => {
-      query.removeEventListener('change', listener);
-    };
-  }
-
-  if (query.addListener) {
-    query.addListener(listener);
-  }
-
-  return () => {
-    if (query.removeListener) {
-      query.removeListener(listener);
-    }
-  };
-}
-
-function readLoadingState() {
-  if (!document.body) return false;
-  return document.body.dataset.loadingScreen === 'true';
-}
+const CURSOR_EVENT = "skillbridge:cursor";
 
 const CuteCursorBuddy = () => {
   const dotRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
+  const styleRef = useRef<HTMLStyleElement | null>(null);
+  const target = useRef({ x: -100, y: -100 });
+  const current = useRef({ x: -100, y: -100 });
+  const [visible, setVisible] = useState(false);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-    const dot = dotRef.current;
-    if (!dot) return;
-
-    const finePointer = window.matchMedia('(pointer: fine)') as MediaQueryWithLegacyApi;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)') as MediaQueryWithLegacyApi;
-
-    const state: CursorState = {
-      enabled: false,
-      visible: false,
-      currentX: -100,
-      currentY: -100,
-      targetX: -100,
-      targetY: -100,
-      rafId: 0,
-      styleEl: null,
-    };
-
-    const dispatchCursor = () => {
-      const detail: CursorDetail = {
-        x: state.currentX,
-        y: state.currentY,
-        visible: state.visible && state.enabled,
-      };
-
-      window.dispatchEvent(new CustomEvent(CURSOR_EVENT, { detail }));
-    };
+    const coarsePointer = window.matchMedia("(pointer: coarse)");
 
     const ensureCursorHidden = (hide: boolean) => {
-      if (hide && !state.styleEl) {
-        const style = document.createElement('style');
-        style.dataset.skillbridgeCursor = 'true';
-        style.textContent = 'html, body, a, button, input, textarea, select, summary, [role="button"], [role="link"], label { cursor: none !important; }';
-        document.head.appendChild(style);
-        state.styleEl = style;
-      }
-    };
+      document.documentElement.style.cursor = hide ? "none" : "";
+      document.body.style.cursor = hide ? "none" : "";
 
-      if (!hide && state.styleEl) {
-        state.styleEl.remove();
-        state.styleEl = null;
+      if (hide && !styleRef.current) {
+        const style = document.createElement("style");
+        style.dataset.skillbridgeCursor = "true";
+        style.textContent = `
+          html, body, a, button, input, textarea, select, summary, [role="button"], [role="link"], label, * {
+            cursor: none !important;
+          }
+        `;
+        document.head.appendChild(style);
+        styleRef.current = style;
+      }
+
+      if (!hide && styleRef.current) {
+        styleRef.current.remove();
+        styleRef.current = null;
       }
     };
 
     const syncEnabled = () => {
-      const loadingActive = readLoadingState();
-      state.enabled = finePointer.matches && !reducedMotion.matches && !loadingActive;
-      ensureCursorHidden(state.enabled);
-
-      if (!state.enabled) {
-        state.visible = false;
-        dot.style.opacity = '0';
-        dispatchCursor();
+      const loadingActive = document.body.dataset.loadingScreen === "true";
+      const nextEnabled = !coarsePointer.matches && !loadingActive;
+      setEnabled(nextEnabled);
+      ensureCursorHidden(nextEnabled);
+      if (!nextEnabled) {
+        setVisible(false);
+        window.dispatchEvent(new CustomEvent<CursorDetail>(CURSOR_EVENT, { detail: { x: current.current.x, y: current.current.y, visible: false } }));
       }
-    };
-
-    const animate = () => {
-      const smoothing = state.visible ? 0.24 : 0.16;
-      state.currentX += (state.targetX - state.currentX) * smoothing;
-      state.currentY += (state.targetY - state.currentY) * smoothing;
-      dot.style.transform = `translate3d(${state.currentX - 8}px, ${state.currentY - 8}px, 0)`;
-      dispatchCursor();
-      state.rafId = window.requestAnimationFrame(animate);
-    };
-
-    const onMove = (event: MouseEvent) => {
-      if (!state.enabled) return;
-      state.targetX = event.clientX;
-      state.targetY = event.clientY;
-      state.visible = true;
-      dot.style.opacity = '1';
-    };
-
-    const onLeave = () => {
-      state.visible = false;
-      dot.style.opacity = '0';
-      dispatchCursor();
     };
 
     syncEnabled();
 
     const observer = new MutationObserver(syncEnabled);
-    if (document.body) {
-      observer.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['data-loading-screen'],
-      });
-    }
+    observer.observe(document.body, { attributes: true, attributeFilter: ["data-loading-screen"] });
+    coarsePointer.addEventListener("change", syncEnabled);
 
-    const removeFinePointerListener = addMediaQueryChangeListener(finePointer, syncEnabled);
-    const removeReducedMotionListener = addMediaQueryChangeListener(reducedMotion, syncEnabled);
+    const onMove = (event: MouseEvent) => {
+      if (!enabled) return;
+      target.current = { x: event.clientX, y: event.clientY };
+      setVisible(true);
+    };
 
-    window.addEventListener('mousemove', onMove, { passive: true });
-    window.addEventListener('mouseout', onLeave);
-    window.addEventListener('blur', onLeave);
+    const onLeave = () => {
+      setVisible(false);
+      window.dispatchEvent(new CustomEvent<CursorDetail>(CURSOR_EVENT, { detail: { x: current.current.x, y: current.current.y, visible: false } }));
+    };
 
-    state.rafId = window.requestAnimationFrame(animate);
+    const animate = () => {
+      current.current.x += (target.current.x - current.current.x) * 0.22;
+      current.current.y += (target.current.y - current.current.y) * 0.22;
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate(${current.current.x - 7}px, ${current.current.y - 7}px)`;
+      }
+
+      if (enabled) {
+        window.dispatchEvent(new CustomEvent<CursorDetail>(CURSOR_EVENT, { detail: { x: current.current.x, y: current.current.y, visible } }));
+      }
+
+      rafRef.current = window.requestAnimationFrame(animate);
+    };
+
+    rafRef.current = window.requestAnimationFrame(animate);
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("mouseout", onLeave);
 
     return () => {
       observer.disconnect();
-      removeFinePointerListener();
-      removeReducedMotionListener();
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseout', onLeave);
-      window.removeEventListener('blur', onLeave);
-      window.cancelAnimationFrame(state.rafId);
+      coarsePointer.removeEventListener("change", syncEnabled);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseout", onLeave);
+      window.cancelAnimationFrame(rafRef.current);
       ensureCursorHidden(false);
     };
-  }, []);
+  }, [enabled, visible]);
+
+  if (!enabled) return null;
 
   return (
     <div
       ref={dotRef}
       aria-hidden="true"
       style={{
-        position: 'fixed',
+        position: "fixed",
         left: 0,
         top: 0,
-        width: 16,
-        height: 16,
-        borderRadius: '9999px',
-        background:
-          'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.98) 0%, rgba(191,219,254,0.95) 28%, rgba(34,211,238,0.55) 56%, rgba(15,23,42,0.92) 100%)',
-        boxShadow:
-          '0 0 0 1px rgba(255,255,255,0.55), 0 0 22px rgba(34,211,238,0.28), 0 0 40px rgba(129,140,248,0.16)',
-        pointerEvents: 'none',
+        width: 14,
+        height: 14,
+        borderRadius: "9999px",
+        background: "radial-gradient(circle at 30% 30%, #ffffff 0%, #9ff6ff 38%, #0f172a 100%)",
+        boxShadow: "0 0 0 2px rgba(255,255,255,0.45), 0 0 24px rgba(34,211,238,0.4)",
+        pointerEvents: "none",
         zIndex: 9999,
-        opacity: 0,
-        transition: 'opacity 140ms ease-out',
-        willChange: 'transform, opacity',
+        opacity: visible ? 1 : 0,
+        transition: "opacity 0.18s ease",
+        willChange: "transform",
       }}
     />
   );
