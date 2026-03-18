@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
+import { Typewriter } from "@/components/ui/typewriter-text";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-slate-300/45 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
@@ -122,7 +123,7 @@ const SignIn = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease, delay: 0.04 }} className="w-full max-w-sm">
           <div className="text-center mb-8">
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
-            <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>Welcome back</h1>
+            <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}><Typewriter text="Welcome back" speed={70} className="text-white" /></h1>
             <p className="mt-2 text-body auth-copy-muted" style={{ fontFamily: "var(--font-body)" }}>Sign in to your SkillBridge account</p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
