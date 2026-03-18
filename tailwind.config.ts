@@ -12,11 +12,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Instrument Serif'", "serif"],
-        body: ["'Barlow'", "sans-serif"],
-        heading: ["'Bricolage Grotesque'", "system-ui", "sans-serif"],
-        sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
-        ui: ["'Inter'", "system-ui", "sans-serif"],
+        display: ["'Merriweather'", "serif"],
+        body: ["'Manrope'", "sans-serif"],
+        heading: ["'Manrope'", "system-ui", "sans-serif"],
+        sans: ["'Manrope'", "system-ui", "-apple-system", "sans-serif"],
+        ui: ["'Manrope'", "system-ui", "sans-serif"],
       },
       fontSize: {
         'display': ['56px', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
