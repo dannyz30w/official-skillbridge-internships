@@ -203,7 +203,7 @@ const BrowseInternships = () => {
                       ? "Try adjusting your search terms."
                       : (
                         <>
-                          Be the first to post —{" "}
+                          Be the first to post.{" "}
                           <Link to="/post-internship" className="font-medium text-primary hover:text-primary/80 transition-smooth">
                             list an internship
                           </Link>.

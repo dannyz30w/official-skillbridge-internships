@@ -48,7 +48,7 @@ const ResetPassword = () => {
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} />
             <h1 className="font-display text-h2 font-bold mb-4">Password Reset</h1>
             <p className="text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>
-              Use the link from your email to reset your password, or contact support at legal@skillbridge.app.
+              Use the link from your email to reset your password, or contact support at skillbridgeintern@gmail.com.
             </p>
             <Link to="/signin" className="btn-glass-primary inline-flex items-center justify-center h-12 px-8 mt-8">Back to Sign In</Link>
           </div>

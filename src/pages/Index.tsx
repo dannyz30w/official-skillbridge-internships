@@ -195,7 +195,7 @@ const Index = () => {
               return (
                 <Reveal key={`${howView}-${step.num}`} delay={i * 0.08}>
                   <div className={`flex items-start gap-8 md:gap-16 ${isEven ? "" : "flex-row-reverse text-right"}`}>
-                    <span className="flex-shrink-0 text-[120px] md:text-[180px] leading-none italic text-white/[0.04]" style={{ fontFamily: "var(--font-display)" }}>{step.num}</span>
+                    <span className="flex-shrink-0 text-[120px] md:text-[180px] leading-none italic" style={{ fontFamily: "var(--font-display)", color: "rgba(79, 70, 229, 0.2)" }}>{step.num}</span>
                     <div className="pt-8">
                       <h3 className="text-xl md:text-2xl font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>{step.title}</h3>
                       <p className="mt-3 font-light text-white/50 text-base" style={{ fontFamily: "var(--font-body)" }}>{step.desc}</p>
