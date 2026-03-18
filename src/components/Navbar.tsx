@@ -51,10 +51,10 @@ const Navbar = () => {
   const closeTimeoutRef = useRef<number | null>(null);
   const location = useLocation();
 
-  const isDashboardRoute = LIGHT_ROUTES.some(r => location.pathname.startsWith(r));
-  const isOceanRoute = location.pathname !== "/" && !isDashboardRoute;
-  const textColor = isDashboardRoute ? 'rgba(8,47,73,0.72)' : 'rgba(248,250,252,0.9)';
-  const accentColor = isDashboardRoute ? '#0f766e' : '#c4b5fd';
+  const isLight = LIGHT_ROUTES.some(r => location.pathname.startsWith(r));
+  const textColor = isLight ? 'rgba(60,60,67,0.72)' : 'rgba(255,255,255,0.72)';
+  const textHover = isLight ? '#1C1C1E' : '#ffffff';
+  const accentColor = isLight ? '#4F46E5' : '#818CF8';
 
   useEffect(() => { setMobileOpen(false); }, [location.pathname]);
   useEffect(() => {
@@ -98,7 +98,7 @@ const Navbar = () => {
             <button
               onClick={() => { setResourcesOpen(!resourcesOpen); trackEvent('resources_opened'); }}
               className="text-small font-medium transition-colors inline-flex items-center gap-1"
-              style={{ color: textColor }}
+              style={{ color: isLight ? '#111827' : '#f8fafc', textShadow: isLight ? 'none' : '0 1px 10px rgba(15,23,42,0.32)' }}
             >
               Resources <ChevronDown className={`h-3.5 w-3.5 transition-transform ${resourcesOpen ? 'rotate-180' : ''}`} />
             </button>
@@ -118,7 +118,7 @@ const Navbar = () => {
                   onMouseLeave={closeResourcesWithDelay}
                 >
                   {RESOURCES.map(cat => (
-                    <ResourceCategory key={cat.category} category={cat.category} links={cat.links} accentColor={accentColor} textColor={isDashboardRoute || isOceanRoute ? '#f8fafc' : 'rgba(255,255,255,0.85)'} />
+                    <ResourceCategory key={cat.category} category={cat.category} links={cat.links} accentColor={accentColor} textColor={isLight ? '#111827' : '#f8fafc'} />
                   ))}
                   <div className="pt-2" style={{ borderTop: `1px solid ${isDashboardRoute || isOceanRoute ? 'rgba(148,163,184,0.16)' : 'rgba(255,255,255,0.06)'}` }}>
                     <Link to="/resources" onClick={() => setResourcesOpen(false)} className="text-small font-semibold" style={{ color: accentColor }}>View All Resources</Link>
@@ -178,7 +178,7 @@ const Navbar = () => {
                 <div className="pl-4 space-y-2 pb-2">
                   {RESOURCES.map(cat => (
                     <div key={cat.category}>
-                      <p className="text-small font-semibold py-1" style={{ color: textColor }}>{cat.category}</p>
+                      <p className="text-small font-semibold py-1" style={{ color: isLight ? '#111827' : '#f8fafc' }}>{cat.category}</p>
                       {cat.links.map(l => (
                         <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('resource_link_clicked')} className="block text-small py-1" style={{ color: accentColor }}>{l.label}</a>
                       ))}
