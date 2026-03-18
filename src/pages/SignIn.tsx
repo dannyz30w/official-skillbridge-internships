@@ -111,7 +111,7 @@ const SignIn = () => {
   const isLocked = lockoutEnd !== null && lockoutEnd > Date.now();
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
       <SEOHead title="Sign In to SkillBridge" description="Sign in to SkillBridge to browse paid internships, manage applications, and connect with verified businesses." path="/signin" />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
         <Link to="/" className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
