@@ -28,7 +28,7 @@ const ContactPage = () => {
   const inputCls = "ocean-input w-full h-[48px] px-4 rounded-xl text-[16px] focus:border-cyan-600/40 focus:outline-none focus:ring-1 focus:ring-cyan-700/10 transition-all";
 
   return (
-    <div className="min-h-screen ocean-page">
+    <div className="min-h-screen" style={{ background: 'transparent' }}>
       <SEOHead title="Contact SkillBridge" description="Reach out to the SkillBridge team. Questions, partnerships, or feedback — we respond to every message." path="/contact" jsonLd={{"@context":"https://schema.org","@type":"ContactPage","name":"Contact SkillBridge"}} />
       <Navbar />
       <main className="pt-32 pb-24 px-4 sm:px-6">

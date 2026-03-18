@@ -19,7 +19,7 @@ const sections = [
 ];
 
 const Terms = () => (
-  <div className="min-h-screen ocean-page">
+  <div className="min-h-screen" style={{ background: 'transparent' }}>
     <SEOHead title="Terms of Service, SkillBridge" description="SkillBridge Terms of Service. All internships are paid. All businesses are verified. Read our full platform policies." path="/terms" />
     <Navbar />
 

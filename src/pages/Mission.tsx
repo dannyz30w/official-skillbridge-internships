@@ -6,7 +6,7 @@ import SEOHead from "@/components/SEOHead";
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const Mission = () => (
-  <div className="min-h-screen ocean-page">
+  <div className="min-h-screen" style={{ background: 'transparent' }}>
     <SEOHead title="Our Mission, SkillBridge" description="SkillBridge was built to close the opportunity gap. Every listing is paid. Every business is verified. Every young person gets a fair shot." path="/mission" jsonLd={{"@context":"https://schema.org","@type":"AboutPage","name":"SkillBridge Mission","description":"SkillBridge exists to close the opportunity gap for young adults through verified paid internships."}} />
     <Navbar />
 

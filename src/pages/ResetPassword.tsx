@@ -36,7 +36,7 @@ const ResetPassword = () => {
 
   if (!isRecovery) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+      <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
         <SEOHead title="Reset Password" description="Reset your SkillBridge password." path="/reset-password" noIndex />
         <div className="p-6">
           <Link to="/signin" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
@@ -58,7 +58,7 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
       <SEOHead title="Set New Password" description="Set your new SkillBridge password." path="/reset-password" noIndex />
       <div className="p-6">
         <Link to="/signin" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
