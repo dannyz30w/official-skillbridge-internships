@@ -30,20 +30,20 @@ const Terms = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h1 className="text-h1 font-bold mb-2 text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>SkillBridge Terms of Service</h1>
-        <p className="text-small mb-16 text-white/50" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
+        <h1 className="text-h1 font-bold mb-2 ocean-title" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>SkillBridge Terms of Service</h1>
+        <p className="text-small mb-16 text-slate-200/80" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
 
         <div className="space-y-12">
           {sections.map((s, i) => (
             <section key={i}>
-              <h2 className="text-h4 font-bold mb-4 text-white/90" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(255,255,255,0.6)', fontFamily: "var(--font-body)" }}>{s.body}</p>
+              <h2 className="text-h4 font-bold mb-4 text-white" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(226,232,240,0.82)', fontFamily: "var(--font-body)" }}>{s.body}</p>
             </section>
           ))}
         </div>
 
-        <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <Link to="/signup" className="text-small font-semibold transition-fast" style={{ color: '#818CF8' }}>Back to Sign Up</Link>
+        <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(148,163,184,0.14)' }}>
+          <Link to="/signup" className="text-small font-semibold transition-fast" style={{ color: '#c084fc' }}>Back to Sign Up</Link>
         </div>
       </motion.div>
     </main>
