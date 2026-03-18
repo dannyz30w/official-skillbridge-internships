@@ -1,143 +1,163 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef } from 'react';
 
-const CLICKABLE = "a, button, [role=button], label, input[type=submit], input[type=button]";
-const TEXT_ELS = "p, h1, h2, h3, h4, h5, h6, span, blockquote, li";
+type CursorDetail = { x: number; y: number; visible: boolean };
+
+type CursorState = {
+  enabled: boolean;
+  visible: boolean;
+  currentX: number;
+  currentY: number;
+  targetX: number;
+  targetY: number;
+  rafId: number;
+  styleEl: HTMLStyleElement | null;
+};
+
+type MediaListener = (event?: MediaQueryListEvent) => void;
+
+type LegacyMediaQueryList = MediaQueryList & {
+  addListener?: (listener: MediaListener) => void;
+  removeListener?: (listener: MediaListener) => void;
+};
+
+const CURSOR_EVENT = 'skillbridge:cursor';
+
+const addMediaListener = (query: LegacyMediaQueryList, listener: MediaListener) => {
+  if (typeof query.addEventListener === 'function') {
+    query.addEventListener('change', listener);
+    return () => query.removeEventListener('change', listener);
+  }
+
+  query.addListener?.(listener);
+  return () => query.removeListener?.(listener);
+};
 
 const CuteCursorBuddy = () => {
   const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const target = useRef({ x: -100, y: -100 });
-  const ringPos = useRef({ x: -100, y: -100 });
-  const [visible, setVisible] = useState(false);
-  const [hoverState, setHoverState] = useState<"default" | "clickable" | "text">("default");
-  const [pressed, setPressed] = useState(false);
-  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    // Hide on touch devices
-    const isTouchDevice = window.matchMedia("(hover: none)").matches;
-    if (isTouchDevice) return;
+    const dot = dotRef.current;
+    if (!dot || typeof window === 'undefined' || typeof document === 'undefined') return;
 
-    setVisible(true);
-    document.body.style.cursor = "none";
+    const finePointer = window.matchMedia('(pointer: fine)') as LegacyMediaQueryList;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)') as LegacyMediaQueryList;
+    const state: CursorState = {
+      enabled: false,
+      visible: false,
+      currentX: -100,
+      currentY: -100,
+      targetX: -100,
+      targetY: -100,
+      rafId: 0,
+      styleEl: null,
+    };
 
-    const onMove = (e: MouseEvent) => {
-      target.current = { x: e.clientX, y: e.clientY };
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate(${e.clientX - 3}px, ${e.clientY - 3}px)`;
+    const dispatchCursor = () => {
+      const detail: CursorDetail = {
+        x: state.currentX,
+        y: state.currentY,
+        visible: state.visible && state.enabled,
+      };
+      window.dispatchEvent(new CustomEvent(CURSOR_EVENT, { detail }));
+    };
+
+    const ensureCursorHidden = (hide: boolean) => {
+      if (hide && !state.styleEl) {
+        const style = document.createElement('style');
+        style.dataset.skillbridgeCursor = 'true';
+        style.textContent = 'html, body, a, button, input, textarea, select, summary, [role="button"], [role="link"], label { cursor: none !important; }';
+        document.head.appendChild(style);
+        state.styleEl = style;
       }
 
-      // Check hover state
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      if (el) {
-        if (el.closest(CLICKABLE)) {
-          setHoverState("clickable");
-        } else if (el.closest(TEXT_ELS)) {
-          setHoverState("text");
-        } else {
-          setHoverState("default");
-        }
+      if (!hide && state.styleEl) {
+        state.styleEl.remove();
+        state.styleEl = null;
       }
     };
 
-    const onDown = () => setPressed(true);
-    const onUp = () => setPressed(false);
+    const syncEnabled = () => {
+      const loadingActive = document.body?.dataset.loadingScreen === 'true';
+      state.enabled = finePointer.matches && !reducedMotion.matches && !loadingActive;
+      ensureCursorHidden(state.enabled);
+
+      if (!state.enabled) {
+        state.visible = false;
+        dot.style.opacity = '0';
+        dispatchCursor();
+      }
+    };
 
     const animate = () => {
-      const spring = 0.12;
-      ringPos.current.x += (target.current.x - ringPos.current.x) * spring;
-      ringPos.current.y += (target.current.y - ringPos.current.y) * spring;
-
-      if (ringRef.current) {
-        const size = hoverState === "clickable" ? 56 : hoverState === "text" ? 40 : 32;
-        const h = hoverState === "text" ? 2 : size;
-        ringRef.current.style.transform = `translate(${ringPos.current.x - size / 2}px, ${ringPos.current.y - h / 2}px)`;
-        ringRef.current.style.width = `${size}px`;
-        ringRef.current.style.height = `${h}px`;
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
+      const smoothing = state.visible ? 0.24 : 0.16;
+      state.currentX += (state.targetX - state.currentX) * smoothing;
+      state.currentY += (state.targetY - state.currentY) * smoothing;
+      dot.style.transform = `translate3d(${state.currentX - 8}px, ${state.currentY - 8}px, 0)`;
+      dispatchCursor();
+      state.rafId = window.requestAnimationFrame(animate);
     };
 
-    rafRef.current = requestAnimationFrame(animate);
+    const onMove = (event: MouseEvent) => {
+      if (!state.enabled) return;
+      state.targetX = event.clientX;
+      state.targetY = event.clientY;
+      state.visible = true;
+      dot.style.opacity = '1';
+    };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mousedown", onDown);
-    window.addEventListener("mouseup", onUp);
+    const onLeave = () => {
+      state.visible = false;
+      dot.style.opacity = '0';
+      dispatchCursor();
+    };
 
-    // Restore cursor on inputs/textareas
-    const style = document.createElement("style");
-    style.textContent = `
-      input, textarea, select, [contenteditable="true"] { cursor: text !important; }
-      a, button, [role="button"], label { cursor: none !important; }
-    `;
-    document.head.appendChild(style);
+    syncEnabled();
+
+    const observer = new MutationObserver(syncEnabled);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-loading-screen'] });
+
+    const removeFinePointerListener = addMediaListener(finePointer, syncEnabled);
+    const removeReducedMotionListener = addMediaListener(reducedMotion, syncEnabled);
+
+    window.addEventListener('mousemove', onMove, { passive: true });
+    window.addEventListener('mouseout', onLeave);
+    window.addEventListener('blur', onLeave);
+    state.rafId = window.requestAnimationFrame(animate);
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mousedown", onDown);
-      window.removeEventListener("mouseup", onUp);
-      document.body.style.cursor = "";
-      style.remove();
+      observer.disconnect();
+      removeFinePointerListener();
+      removeReducedMotionListener();
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseout', onLeave);
+      window.removeEventListener('blur', onLeave);
+      window.cancelAnimationFrame(state.rafId);
+      ensureCursorHidden(false);
     };
-  }, [hoverState]);
-
-  if (!visible) return null;
-
-  const ringBorder = hoverState === "clickable"
-    ? "1px solid rgba(79,70,229,0.8)"
-    : "1px solid rgba(255,255,255,0.35)";
-  const ringBg = hoverState === "clickable"
-    ? "rgba(79,70,229,0.08)"
-    : hoverState === "text"
-    ? "rgba(255,255,255,0.06)"
-    : "transparent";
-  const ringRadius = hoverState === "text" ? "1px" : "50%";
-  const dotSize = hoverState === "clickable" ? 3 : pressed ? 10 : 6;
-  const ringScale = pressed ? "scale(0.8)" : "";
+  }, []);
 
   return (
-    <>
-      {/* Dot */}
-      <div
-        ref={dotRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: dotSize,
-          height: dotSize,
-          borderRadius: "50%",
-          background: "rgba(255,255,255,0.9)",
-          pointerEvents: "none",
-          zIndex: 9999,
-          transition: "width 0.2s, height 0.2s",
-          willChange: "transform",
-        }}
-      />
-      {/* Ring */}
-      <div
-        ref={ringRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: 32,
-          height: 32,
-          borderRadius: ringRadius,
-          border: ringBorder,
-          background: ringBg,
-          backdropFilter: "blur(2px)",
-          WebkitBackdropFilter: "blur(2px)",
-          pointerEvents: "none",
-          zIndex: 9998,
-          transition: `width 0.2s cubic-bezier(0.34,1.56,0.64,1), height 0.2s cubic-bezier(0.34,1.56,0.64,1), border 0.2s, background 0.2s, border-radius 0.2s${ringScale ? ", transform 0.1s" : ""}`,
-          willChange: "transform",
-          ...(ringScale ? { transform: ringScale } : {}),
-        }}
-      />
-    </>
+    <div
+      ref={dotRef}
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        width: 16,
+        height: 16,
+        borderRadius: '9999px',
+        background:
+          'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.98) 0%, rgba(191,219,254,0.95) 28%, rgba(34,211,238,0.55) 56%, rgba(15,23,42,0.92) 100%)',
+        boxShadow:
+          '0 0 0 1px rgba(255,255,255,0.55), 0 0 22px rgba(34,211,238,0.28), 0 0 40px rgba(129,140,248,0.16)',
+        pointerEvents: 'none',
+        zIndex: 9999,
+        opacity: 0,
+        transition: 'opacity 140ms ease-out',
+        willChange: 'transform, opacity',
+      }}
+    />
   );
 };
 

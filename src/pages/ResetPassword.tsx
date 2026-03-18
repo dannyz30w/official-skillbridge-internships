@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 
-const inputCls = "w-full h-[48px] pl-4 pr-4 rounded-xl text-[16px] glass-input";
+const inputCls = "w-full h-[48px] pl-4 pr-4 rounded-xl text-[16px] ocean-input";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -36,18 +36,18 @@ const ResetPassword = () => {
 
   if (!isRecovery) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+      <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
         <SEOHead title="Reset Password" description="Reset your SkillBridge password." path="/reset-password" noIndex />
         <div className="p-6">
-          <Link to="/signin" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
+          <Link to="/signin" className="inline-flex items-center gap-2 text-small font-medium transition-fast auth-copy-muted">
             <ArrowLeft className="h-4 w-4" /> Back to sign in
           </Link>
         </div>
         <div className="flex-1 flex items-center justify-center px-4 pb-16">
           <div className="w-full max-w-sm text-center">
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} />
-            <h1 className="font-display text-h2 font-bold mb-4">Password Reset</h1>
-            <p className="text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>
+            <h1 className="font-display text-h2 font-bold mb-4 text-white">Password Reset</h1>
+            <p className="text-body auth-copy-muted">
               Use the link from your email to reset your password, or contact support at skillbridgeintern@gmail.com.
             </p>
             <Link to="/signin" className="btn-glass-primary inline-flex items-center justify-center h-12 px-8 mt-8">Back to Sign In</Link>
@@ -58,10 +58,10 @@ const ResetPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'transparent' }}>
       <SEOHead title="Set New Password" description="Set your new SkillBridge password." path="/reset-password" noIndex />
       <div className="p-6">
-        <Link to="/signin" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
+        <Link to="/signin" className="inline-flex items-center gap-2 text-small font-medium transition-fast auth-copy-muted">
           <ArrowLeft className="h-4 w-4" /> Back to sign in
         </Link>
       </div>
@@ -69,15 +69,15 @@ const ResetPassword = () => {
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} />
-            <h1 className="font-display text-h2 font-bold">Set New Password</h1>
+            <h1 className="font-display text-h2 font-bold text-white">Set New Password</h1>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="rp-pw" className="block text-small font-medium mb-2" style={{ color: 'rgba(60,60,67,0.6)' }}>New Password</label>
+              <label htmlFor="rp-pw" className="block text-small font-medium mb-2 auth-copy-muted">New Password</label>
               <input id="rp-pw" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 10 characters" className={inputCls} />
             </div>
             <div>
-              <label htmlFor="rp-cpw" className="block text-small font-medium mb-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Confirm Password</label>
+              <label htmlFor="rp-cpw" className="block text-small font-medium mb-2 auth-copy-muted">Confirm Password</label>
               <input id="rp-cpw" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} />
             </div>
             <button type="submit" disabled={loading} className="w-full h-[48px] btn-glass-primary inline-flex items-center justify-center gap-2 disabled:opacity-50">
