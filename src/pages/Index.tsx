@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
@@ -6,7 +6,6 @@ import SEOHead from "@/components/SEOHead";
 import LandingNav from "@/components/LandingNav";
 import LandingFooter from "@/components/LandingFooter";
 import LoadingScreen from "@/components/LoadingScreen";
-import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 
 const VIDEO_URL = "https://ussszdsedbqjgktsxxpx.supabase.co/storage/v1/object/public/vidd/12231468-uhd_3840_2160_30fps.mp4";
 
@@ -42,6 +41,17 @@ const Reveal = ({ children, className = "", delay = 0 }: { children: React.React
 const Index = () => {
   const [loading, setLoading] = useState(true);
   const [howView, setHowView] = useState<"intern" | "business">("intern");
+  const readyPromise = useMemo(() => Promise.all([
+    new Promise<void>((resolve) => {
+      const video = document.createElement("video");
+      video.src = VIDEO_URL;
+      video.preload = "auto";
+      video.muted = true;
+      const done = () => resolve();
+      video.addEventListener("loadeddata", done, { once: true });
+      video.addEventListener("error", done, { once: true });
+    }),
+  ]).then(() => undefined), []);
 
   const internSteps = [
     { num: "01", title: "Create your profile quickly", desc: "Fill out your portfolio with your interests and background. No resume needed." },
@@ -61,7 +71,7 @@ const Index = () => {
   if (loading) {
     return (
       <AnimatePresence mode="wait">
-        <LoadingScreen onComplete={() => setLoading(false)} />
+        <LoadingScreen readyPromise={readyPromise} onComplete={() => setLoading(false)} />
       </AnimatePresence>
     );
   }
@@ -142,7 +152,7 @@ const Index = () => {
       <section className="py-16 px-6" style={{ background: "#0a0a0f" }}>
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { val: "2,800+", label: "NFTE participants in the competition" },
+            { val: "1 Click", label: "Apply without a resume" },
             { val: "16–22", label: "Age group SkillBridge serves" },
             { val: "Paid", label: "Every internship on SkillBridge is paid" },
             { val: "Verified", label: "Business listings are admin-reviewed" },

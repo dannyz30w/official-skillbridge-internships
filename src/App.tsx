@@ -7,8 +7,9 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 import AppBackground from "@/components/AppBackground";
-import InvertedCursor from "@/components/InvertedCursor";
+import CuteCursorBuddy from "@/components/CuteCursorBuddy";
 
 const Index = lazy(() => import("./pages/Index"));
 const SignIn = lazy(() => import("./pages/SignIn"));
@@ -44,7 +45,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <AppBackground />
-          <InvertedCursor />
+          <CuteCursorBuddy />
           <div className="relative z-10">
           <Suspense fallback={<Loading />}>
             <Routes>
