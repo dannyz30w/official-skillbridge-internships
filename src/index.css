@@ -220,7 +220,7 @@
   /* === BUTTON SYSTEM === */
   /* Tier 1 - Primary */
   .btn-glass-primary {
-    background: linear-gradient(160deg, rgba(99, 89, 240, 0.92) 0%, rgba(79, 70, 229, 0.82) 50%, rgba(67, 56, 202, 0.88) 100%);
+    background: rgba(79, 70, 229, 0.92);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     border-top: 1px solid rgba(255, 255, 255, 0.45);
@@ -289,7 +289,7 @@
 
   /* Destructive */
   .btn-glass-destructive {
-    background: linear-gradient(135deg, rgba(255, 59, 48, 0.85) 0%, rgba(255, 59, 48, 0.7) 100%);
+    background: rgba(255, 59, 48, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.2);

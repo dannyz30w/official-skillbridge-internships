@@ -140,7 +140,7 @@ const Index = () => {
 
       {/* === STATS BAR === */}
       <section className="py-16 px-6" style={{ background: "#0a0a0f" }}>
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             { val: "2,800+", label: "NFTE participants in the competition" },
             { val: "16–22", label: "Age group SkillBridge serves" },
@@ -196,7 +196,7 @@ const Index = () => {
               return (
                 <Reveal key={`${howView}-${step.num}`} delay={i * 0.08}>
                   <div className={`flex items-start gap-8 md:gap-16 ${isEven ? "" : "flex-row-reverse text-right"}`}>
-                    <span className="flex-shrink-0 text-[120px] md:text-[180px] leading-none italic text-white/[0.04]" style={{ fontFamily: "var(--font-display)" }}>{step.num}</span>
+                    <span className="flex-shrink-0 text-[120px] md:text-[180px] leading-none italic" style={{ fontFamily: "var(--font-display)", color: "rgba(79, 70, 229, 0.2)" }}>{step.num}</span>
                     <div className="pt-8">
                       <h3 className="text-xl md:text-2xl font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>{step.title}</h3>
                       <p className="mt-3 font-light text-white/50 text-base" style={{ fontFamily: "var(--font-body)" }}>{step.desc}</p>

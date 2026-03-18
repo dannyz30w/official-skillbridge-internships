@@ -15,7 +15,7 @@ const sections = [
   { title: "8. Limitation of Liability", body: "SkillBridge is not responsible for the conduct of any user, the quality or safety of any internship, or any outcome resulting from connections made through the platform. Use of the platform is at the user's own risk." },
   { title: "9. Account Termination", body: "SkillBridge reserves the right to suspend or permanently terminate any account that violates these terms at any time without prior notice." },
   { title: "10. Modifications to Terms", body: "SkillBridge may update these Terms of Service at any time. Continued use of the platform after changes are posted constitutes acceptance of the updated terms." },
-  { title: "11. Contact", body: "For questions about these terms contact us at legal@skillbridge.app" },
+  { title: "11. Contact", body: "For questions about these terms contact us at skillbridgeintern@gmail.com" },
 ];
 
 const Terms = () => (
@@ -30,24 +30,23 @@ const Terms = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        <h1 className="font-display text-h1 font-bold mb-2">SkillBridge Terms of Service</h1>
-        <p className="text-small mb-16" style={{ color: 'rgba(60,60,67,0.6)' }}>Last updated: March 2026</p>
+        <h1 className="text-h1 font-bold mb-2 text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>SkillBridge Terms of Service</h1>
+        <p className="text-small mb-16 text-white/50" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
 
         <div className="space-y-12">
           {sections.map((s, i) => (
             <section key={i}>
-              <h2 className="font-display text-h4 font-bold mb-4">{s.title}</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(28,28,30,0.8)' }}>{s.body}</p>
+              <h2 className="text-h4 font-bold mb-4 text-white/90" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(255,255,255,0.6)', fontFamily: "var(--font-body)" }}>{s.body}</p>
             </section>
           ))}
         </div>
 
-        <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-          <Link to="/signup" className="text-small font-semibold transition-fast" style={{ color: '#4F46E5' }}>Back to Sign Up</Link>
+        <div className="mt-16 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <Link to="/signup" className="text-small font-semibold transition-fast" style={{ color: '#818CF8' }}>Back to Sign Up</Link>
         </div>
       </motion.div>
     </main>
-    <Footer />
   </div>
 );
 

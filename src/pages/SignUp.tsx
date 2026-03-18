@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Loader2, Building2, GraduationCap, Check, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Loader2, Building2, GraduationCap } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -12,25 +12,21 @@ import SEOHead from "@/components/SEOHead";
 const BUSINESS_TYPES = ['Retail', 'Food & Beverage', 'Healthcare', 'Tech', 'Creative & Media', 'Trades & Construction', 'Education', 'Nonprofit', 'Finance', 'Other'];
 const TRUSTED_DOMAINS = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'protonmail.com', 'proton.me', 'mail.com', 'zoho.com', 'yandex.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'tutanota.com', 'hey.com', 'pm.me', 'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net', 'charter.net', 'bellsouth.net', 'earthlink.net', 'aim.com'];
 
-const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] glass-input";
-const labelCls = "block text-small font-medium mb-2";
+const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
+const labelCls = "block text-small font-medium mb-2 text-white/50";
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const checkDomainAge = async (email: string): Promise<{ allowed: boolean; flagged: boolean }> => {
   const domain = email.split('@')[1]?.toLowerCase();
   if (!domain) return { allowed: false, flagged: false };
-  if (TRUSTED_DOMAINS.some(d => domain === d || domain.endsWith('.' + d)) || domain.endsWith('.edu')) {
-    return { allowed: true, flagged: false };
-  }
+  if (TRUSTED_DOMAINS.some(d => domain === d || domain.endsWith('.' + d)) || domain.endsWith('.edu')) return { allowed: true, flagged: false };
   try {
     const { data, error } = await supabase.functions.invoke('check-domain-age', { body: { domain } });
     if (error || !data) return { allowed: true, flagged: true };
     if (data.age_days !== undefined && data.age_days < 30) return { allowed: false, flagged: false };
     if (data.age_days === null) return { allowed: true, flagged: true };
     return { allowed: true, flagged: false };
-  } catch {
-    return { allowed: true, flagged: true };
-  }
+  } catch { return { allowed: true, flagged: true }; }
 };
 
 const calcAge = (dateStr: string) => {
@@ -57,7 +53,6 @@ const SignUp = () => {
   const [step, setStep] = useState<'select' | 'intern' | 'business'>('select');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,8 +60,6 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [dob, setDob] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [showPw, setShowPw] = useState(false);
-
   const [bizName, setBizName] = useState("");
   const [contactName, setContactName] = useState("");
   const [bizEmail, setBizEmail] = useState("");
@@ -75,9 +68,7 @@ const SignUp = () => {
   const [bizType, setBizType] = useState("");
   const [bizAgreeTerms, setBizAgreeTerms] = useState(false);
 
-  useEffect(() => {
-    if (user && accountType) navigate(`/${accountType}`, { replace: true });
-  }, [user, accountType, navigate]);
+  useEffect(() => { if (user && accountType) navigate(`/${accountType}`, { replace: true }); }, [user, accountType, navigate]);
 
   const validatePassword = (pw: string) => {
     if (pw.length < 10) return "Password must be at least 10 characters.";
@@ -97,18 +88,10 @@ const SignUp = () => {
     if (age < 16) { setError("You must be at least 16 years old to create an intern account."); return; }
     if (age > 22) { setError("Intern accounts are for users aged 16 to 22."); return; }
     if (!agreeTerms) { setError("You must agree to the Terms of Service."); return; }
-
     setError(""); setLoading(true);
     const domainResult = await checkDomainAge(email);
-    if (!domainResult.allowed) {
-      setError("Please use an established email address to sign up.");
-      setLoading(false); return;
-    }
-
-    const { error: err } = await supabase.auth.signUp({
-      email, password,
-      options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } },
-    });
+    if (!domainResult.allowed) { setError("Please use an established email address to sign up."); setLoading(false); return; }
+    const { error: err } = await supabase.auth.signUp({ email, password, options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } } });
     setLoading(false);
     if (err) { setError(err.message); return; }
     trackEvent('intern_signup');
@@ -122,26 +105,20 @@ const SignUp = () => {
     if (pwErr) { setError(pwErr); return; }
     if (bizPassword !== bizConfirmPassword) { setError("Passwords do not match."); return; }
     if (!bizAgreeTerms) { setError("You must agree to the Terms of Service."); return; }
-
     setError(""); setLoading(true);
     const domainResult = await checkDomainAge(bizEmail);
-    if (!domainResult.allowed) {
-      setError("Please use an established email address to sign up.");
-      setLoading(false); return;
-    }
-
-    const { error: err } = await supabase.auth.signUp({
-      email: bizEmail, password: bizPassword,
-      options: { data: { full_name: contactName, account_type: 'business', business_name: bizName, contact_name: contactName, business_type: bizType } },
-    });
+    if (!domainResult.allowed) { setError("Please use an established email address to sign up."); setLoading(false); return; }
+    const { error: err } = await supabase.auth.signUp({ email: bizEmail, password: bizPassword, options: { data: { full_name: contactName, account_type: 'business', business_name: bizName, contact_name: contactName, business_type: bizType } } });
     setLoading(false);
     if (err) { setError(err.message); return; }
     trackEvent('business_signup');
     toast.success("Account created! Welcome to SkillBridge.");
   };
 
-  const pwScore = step === 'intern' ? passwordStrength(password) : passwordStrength(bizPassword);
-  const pwColors = ['#FF3B30', '#F59E0B', '#F59E0B', '#10B981', '#10B981'];
+  const isIntern = step === 'intern';
+  const activePw = isIntern ? password : bizPassword;
+  const pwScore = passwordStrength(activePw);
+  const pwColors = ['#FF6B6B', '#F59E0B', '#F59E0B', '#10B981', '#10B981'];
   const pwLabels = ['Weak', 'Fair', 'Fair', 'Strong', 'Very Strong'];
 
   if (step === 'select') {
@@ -149,7 +126,7 @@ const SignUp = () => {
       <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
         <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required. For ages 16-22." path="/signup" />
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
+          <Link to="/" className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to home
           </Link>
         </motion.div>
@@ -157,27 +134,27 @@ const SignUp = () => {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease, delay: 0.04 }} className="w-full max-w-lg">
             <div className="text-center mb-8">
               <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
-              <h1 className="font-display text-h2 font-bold">Create your account</h1>
-              <p className="mt-2 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>Choose how you want to use SkillBridge</p>
+              <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>Create your account</h1>
+              <p className="mt-2 text-body text-white/50">Choose how you want to use SkillBridge</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
-              <button onClick={() => setStep('intern')} className="glass-card p-8 text-center card-hover cursor-pointer">
-                <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.1)' }}>
-                  <GraduationCap className="h-7 w-7" style={{ color: '#4F46E5' }} />
+              <button onClick={() => setStep('intern')} className="liquid-glass-strong rounded-2xl p-8 text-center hover:scale-[1.02] transition-transform cursor-pointer">
+                <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.15)' }}>
+                  <GraduationCap className="h-7 w-7 text-indigo-400" />
                 </div>
-                <h3 className="font-display font-bold text-h4 text-center">I am looking for an internship</h3>
-                <p className="text-small text-center mt-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Browse and apply to paid internships near you</p>
+                <h3 className="font-bold text-h4 text-white text-center" style={{ fontFamily: "var(--font-body)" }}>I am looking for an internship</h3>
+                <p className="text-small text-center mt-2 text-white/40">Browse and apply to paid internships near you</p>
               </button>
-              <button onClick={() => setStep('business')} className="glass-card p-8 text-center card-hover cursor-pointer">
-                <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.1)' }}>
-                  <Building2 className="h-7 w-7" style={{ color: '#4F46E5' }} />
+              <button onClick={() => setStep('business')} className="liquid-glass-strong rounded-2xl p-8 text-center hover:scale-[1.02] transition-transform cursor-pointer">
+                <div className="h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(79, 70, 229, 0.15)' }}>
+                  <Building2 className="h-7 w-7 text-indigo-400" />
                 </div>
-                <h3 className="font-display font-bold text-h4 text-center">I am a business looking to hire</h3>
-                <p className="text-small text-center mt-2" style={{ color: 'rgba(60,60,67,0.6)' }}>Post internship listings and find talented interns</p>
+                <h3 className="font-bold text-h4 text-white text-center" style={{ fontFamily: "var(--font-body)" }}>I am a business looking to hire</h3>
+                <p className="text-small text-center mt-2 text-white/40">Post internship listings and find talented interns</p>
               </button>
             </div>
-            <p className="mt-8 text-center text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>
-              Already have an account? <Link to="/signin" className="font-semibold transition-fast" style={{ color: '#4F46E5' }}>Sign In</Link>
+            <p className="mt-8 text-center text-small text-white/40">
+              Already have an account? <Link to="/signin" className="font-semibold text-indigo-400">Sign In</Link>
             </p>
           </motion.div>
         </div>
@@ -185,14 +162,11 @@ const SignUp = () => {
     );
   }
 
-  const isIntern = step === 'intern';
-  const activePw = isIntern ? password : bizPassword;
-
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
       <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required. For ages 16-22." path="/signup" />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
-        <button onClick={() => { setStep('select'); setError(''); }} className="inline-flex items-center gap-2 text-small font-medium transition-fast" style={{ color: 'rgba(60,60,67,0.6)' }}>
+        <button onClick={() => { setStep('select'); setError(''); }} className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
       </motion.div>
@@ -200,70 +174,70 @@ const SignUp = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease, delay: 0.04 }} className="w-full max-w-sm">
           <div className="text-center mb-8">
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
-            <h1 className="font-display text-h3 font-bold">{isIntern ? 'Intern Sign Up' : 'Business Sign Up'}</h1>
+            <h1 className="text-h3 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>{isIntern ? 'Intern Sign Up' : 'Business Sign Up'}</h1>
           </div>
           <form onSubmit={isIntern ? handleInternSubmit : handleBusinessSubmit} className="space-y-4">
             {isIntern ? (
               <>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label htmlFor="fn" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>First Name</label><input id="fn" type="text" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First" className={inputCls} /></div>
-                  <div><label htmlFor="ln" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Last Name</label><input id="ln" type="text" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last" className={inputCls} /></div>
+                  <div><label htmlFor="fn" className={labelCls}>First Name</label><input id="fn" type="text" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First" className={inputCls} /></div>
+                  <div><label htmlFor="ln" className={labelCls}>Last Name</label><input id="ln" type="text" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last" className={inputCls} /></div>
                 </div>
-                <div><label htmlFor="intern-email" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Email</label><input id="intern-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} /></div>
+                <div><label htmlFor="intern-email" className={labelCls}>Email</label><input id="intern-email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" className={inputCls} /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label htmlFor="intern-pw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label><input id="intern-pw" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 10 chars" className={inputCls} /></div>
-                  <div><label htmlFor="intern-cpw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Confirm</label><input id="intern-cpw" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} /></div>
+                  <div><label htmlFor="intern-pw" className={labelCls}>Password</label><input id="intern-pw" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 10 chars" className={inputCls} /></div>
+                  <div><label htmlFor="intern-cpw" className={labelCls}>Confirm</label><input id="intern-cpw" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} /></div>
                 </div>
                 {activePw.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 flex gap-1">{[0,1,2,3].map(i => <div key={i} className="flex-1 h-1 rounded-full" style={{ background: i < pwScore ? pwColors[pwScore] : 'rgba(0,0,0,0.06)' }} />)}</div>
+                    <div className="flex-1 flex gap-1">{[0,1,2,3].map(i => <div key={i} className="flex-1 h-1 rounded-full" style={{ background: i < pwScore ? pwColors[pwScore] : 'rgba(255,255,255,0.06)' }} />)}</div>
                     <span className="text-caption font-medium" style={{ color: pwColors[pwScore] }}>{pwLabels[pwScore]}</span>
                   </div>
                 )}
-                <div><label htmlFor="dob" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Date of Birth</label><input id="dob" type="date" value={dob} onChange={e => setDob(e.target.value)} className={inputCls} /></div>
-                <label className="flex items-start gap-2 text-small cursor-pointer" style={{ color: 'rgba(60,60,67,0.6)' }}>
+                <div><label htmlFor="dob" className={labelCls}>Date of Birth</label><input id="dob" type="date" value={dob} onChange={e => setDob(e.target.value)} className={inputCls} /></div>
+                <label className="flex items-start gap-2 text-small cursor-pointer text-white/50">
                   <input type="checkbox" checked={agreeTerms} onChange={e => setAgreeTerms(e.target.checked)} className="mt-0.5 rounded" />
-                  <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#4F46E5' }} className="font-semibold">Terms of Service</a></span>
+                  <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-indigo-400">Terms of Service</a></span>
                 </label>
               </>
             ) : (
               <>
-                <div><label htmlFor="biz-name" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Business Name</label><input id="biz-name" type="text" value={bizName} onChange={e => setBizName(e.target.value)} placeholder="Your Business" className={inputCls} /></div>
-                <div><label htmlFor="contact" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Contact Person</label><input id="contact" type="text" value={contactName} onChange={e => setContactName(e.target.value)} placeholder="Full Name" className={inputCls} /></div>
-                <div><label htmlFor="biz-email" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Business Email</label><input id="biz-email" type="email" value={bizEmail} onChange={e => setBizEmail(e.target.value)} placeholder="contact@business.com" className={inputCls} /></div>
+                <div><label htmlFor="biz-name" className={labelCls}>Business Name</label><input id="biz-name" type="text" value={bizName} onChange={e => setBizName(e.target.value)} placeholder="Your Business" className={inputCls} /></div>
+                <div><label htmlFor="contact" className={labelCls}>Contact Person</label><input id="contact" type="text" value={contactName} onChange={e => setContactName(e.target.value)} placeholder="Full Name" className={inputCls} /></div>
+                <div><label htmlFor="biz-email" className={labelCls}>Business Email</label><input id="biz-email" type="email" value={bizEmail} onChange={e => setBizEmail(e.target.value)} placeholder="contact@business.com" className={inputCls} /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label htmlFor="biz-pw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Password</label><input id="biz-pw" type="password" value={bizPassword} onChange={e => setBizPassword(e.target.value)} placeholder="Min. 10 chars" className={inputCls} /></div>
-                  <div><label htmlFor="biz-cpw" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Confirm</label><input id="biz-cpw" type="password" value={bizConfirmPassword} onChange={e => setBizConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} /></div>
+                  <div><label htmlFor="biz-pw" className={labelCls}>Password</label><input id="biz-pw" type="password" value={bizPassword} onChange={e => setBizPassword(e.target.value)} placeholder="Min. 10 chars" className={inputCls} /></div>
+                  <div><label htmlFor="biz-cpw" className={labelCls}>Confirm</label><input id="biz-cpw" type="password" value={bizConfirmPassword} onChange={e => setBizConfirmPassword(e.target.value)} placeholder="Confirm" className={inputCls} /></div>
                 </div>
                 {activePw.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 flex gap-1">{[0,1,2,3].map(i => <div key={i} className="flex-1 h-1 rounded-full" style={{ background: i < pwScore ? pwColors[pwScore] : 'rgba(0,0,0,0.06)' }} />)}</div>
+                    <div className="flex-1 flex gap-1">{[0,1,2,3].map(i => <div key={i} className="flex-1 h-1 rounded-full" style={{ background: i < pwScore ? pwColors[pwScore] : 'rgba(255,255,255,0.06)' }} />)}</div>
                     <span className="text-caption font-medium" style={{ color: pwColors[pwScore] }}>{pwLabels[pwScore]}</span>
                   </div>
                 )}
                 <div>
-                  <label htmlFor="biz-type" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Business Type</label>
+                  <label htmlFor="biz-type" className={labelCls}>Business Type</label>
                   <select id="biz-type" value={bizType} onChange={e => setBizType(e.target.value)} className={inputCls}>
                     <option value="">Select type...</option>
                     {BUSINESS_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
-                <label className="flex items-start gap-2 text-small cursor-pointer" style={{ color: 'rgba(60,60,67,0.6)' }}>
+                <label className="flex items-start gap-2 text-small cursor-pointer text-white/50">
                   <input type="checkbox" checked={bizAgreeTerms} onChange={e => setBizAgreeTerms(e.target.checked)} className="mt-0.5 rounded" />
-                  <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#4F46E5' }} className="font-semibold">Terms of Service</a></span>
+                  <span>I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-indigo-400">Terms of Service</a></span>
                 </label>
               </>
             )}
             <AnimatePresence mode="wait">
-              {error && <motion.p key="error" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} className="text-small" style={{ color: '#FF3B30' }}>{error}</motion.p>}
+              {error && <motion.p key="error" initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} className="text-small" style={{ color: '#FF6B6B' }}>{error}</motion.p>}
             </AnimatePresence>
             <button type="submit" disabled={loading}
-              className="w-full h-[48px] rounded-xl text-body font-semibold inline-flex items-center justify-center gap-2 btn-glass-primary disabled:opacity-50">
+              className="w-full h-[48px] rounded-xl text-body font-semibold inline-flex items-center justify-center gap-2 liquid-glass-strong text-white hover:scale-[1.02] transition-transform disabled:opacity-50">
               {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating account...</> : "Create Account"}
             </button>
           </form>
-          <p className="mt-6 text-center text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>
-            Already have an account? <Link to="/signin" className="font-semibold transition-fast" style={{ color: '#4F46E5' }}>Sign In</Link>
+          <p className="mt-6 text-center text-small text-white/40">
+            Already have an account? <Link to="/signin" className="font-semibold text-indigo-400">Sign In</Link>
           </p>
         </motion.div>
       </div>

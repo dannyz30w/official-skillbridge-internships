@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WORDS = ["Discover", "Connect", "Bridge"];
+const VIDEO_URL = "https://ussszdsedbqjgktsxxpx.supabase.co/storage/v1/object/public/vidd/12231468-uhd_3840_2160_30fps.mp4";
 
 const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
   const [wordIndex, setWordIndex] = useState(0);

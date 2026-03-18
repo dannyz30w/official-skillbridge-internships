@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import HowItWorks from "@/components/HowItWorks";
 import SEOHead from "@/components/SEOHead";
 
@@ -11,7 +10,6 @@ const HowItWorksPage = () => (
     <main className="pt-16">
       <HowItWorks />
     </main>
-    <Footer />
   </div>
 );
 

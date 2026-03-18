@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import skillbridgeLogo from "@/assets/skillbridge-logo.png";
-import SEOHead from "@/components/SEOHead";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
+import { trackEvent } from "@/lib/analytics";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -54,44 +54,55 @@ const RESOURCES = [
   },
 ];
 
+const ResourceCategory = ({ category, links }: { category: string; links: { label: string; url: string }[] }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="liquid-glass-strong rounded-2xl overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left">
+        <h2 className="text-h4 font-bold text-white" style={{ fontFamily: "var(--font-body)" }}>{category}</h2>
+        <ChevronDown className={`h-5 w-5 text-white/40 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="px-6 pb-6 space-y-3">
+          {links.map(l => (
+            <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('resource_link_clicked')} className="block text-body font-medium transition-colors" style={{ color: '#818CF8' }}>
+              {l.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ResourcesPage = () => (
   <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
     <SEOHead title="Resources, SkillBridge" description="Free resume templates, interview guides, skill-building courses, and professional communication resources for young adults starting their careers." path="/resources" jsonLd={{"@context":"https://schema.org","@type":"CollectionPage","name":"SkillBridge Resources","hasPart": RESOURCES.map((r) => ({"@type":"CreativeWork","name": r.category}))}} />
     <Navbar />
     <main className="pt-32 pb-24 px-4 sm:px-6">
       <div className="mx-auto max-w-3xl">
-        <motion.h1 className="font-display text-h1 font-bold" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+        <motion.h1 className="text-h1 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
           Resources
         </motion.h1>
-        <motion.p className="mt-4 text-body" style={{ color: 'rgba(60,60,67,0.6)', fontSize: 18 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
+        <motion.p className="mt-4 text-lg text-white/50" style={{ fontFamily: "var(--font-body)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
           Everything you need to land your first paid internship and thrive once you do.
         </motion.p>
 
-        <div className="mt-16 space-y-8">
+        <div className="mt-16 space-y-4">
           {RESOURCES.map((cat, i) => (
-            <motion.div key={cat.category} className="glass-card p-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
-              <h2 className="font-display text-h3 font-bold mb-6">{cat.category}</h2>
-              <ul className="space-y-3">
-                {cat.links.map(l => (
-                  <li key={l.url}>
-                    <a href={l.url} target="_blank" rel="noopener noreferrer" className="text-body font-medium transition-fast" style={{ color: '#4F46E5' }}>
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            <motion.div key={cat.category} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
+              <ResourceCategory category={cat.category} links={cat.links} />
             </motion.div>
           ))}
         </div>
 
         <motion.div className="mt-16" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5, ease }}>
-          <Link to="/signup" className="btn-glass-primary inline-flex items-center justify-center h-12 px-8">
+          <Link to="/signup" className="liquid-glass-strong rounded-full px-8 py-4 text-sm text-white font-medium hover:scale-[1.03] transition-transform inline-block" style={{ fontFamily: "var(--font-body)" }}>
             Get Started Today
           </Link>
         </motion.div>
       </div>
     </main>
-    <Footer />
   </div>
 );
 
