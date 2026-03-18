@@ -1,27 +1,27 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const Mission = () => (
-  <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+  <div className="min-h-screen relative z-10" style={{ background: 'transparent' }}>
     <SEOHead title="Our Mission, SkillBridge" description="SkillBridge was built to close the opportunity gap. Every listing is paid. Every business is verified. Every young person gets a fair shot." path="/mission" jsonLd={{"@context":"https://schema.org","@type":"AboutPage","name":"SkillBridge Mission","description":"SkillBridge exists to close the opportunity gap for young adults through verified paid internships."}} />
     <Navbar />
 
     <main className="pt-32 pb-24 px-4 sm:px-6">
       <div className="mx-auto max-w-[680px]">
         <motion.h1
-          className="font-display text-h1 font-bold mb-16"
+          className="text-h1 font-bold mb-16 text-white"
+          style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease }}
         >
           Our Mission
         </motion.h1>
 
-        <div className="space-y-8" style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(28,28,30,0.85)' }}>
+        <div className="space-y-8" style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(255,255,255,0.65)', fontFamily: "var(--font-body)" }}>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
             Millions of young people graduate every year ready to work, but locked out of opportunity by a system that demands experience before giving them a chance. SkillBridge exists to break that cycle.
           </motion.p>
@@ -35,7 +35,8 @@ const Mission = () => (
           </motion.p>
 
           <motion.p
-            className="font-display font-bold text-h3 pt-8"
+            className="text-h3 pt-8 text-white"
+            style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700 }}
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5, ease }}
           >
@@ -43,14 +44,13 @@ const Mission = () => (
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.5, ease }} className="pt-8">
-            <Link to="/signup" className="btn-glass-primary inline-flex items-center justify-center h-12 px-8">
+            <Link to="/signup" className="liquid-glass-strong rounded-full px-8 py-4 text-sm text-white font-medium hover:scale-[1.03] transition-transform inline-block" style={{ fontFamily: "var(--font-body)" }}>
               Get Started Today
             </Link>
           </motion.div>
         </div>
       </div>
     </main>
-    <Footer />
   </div>
 );
 
