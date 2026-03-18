@@ -57,10 +57,10 @@ const RESOURCES = [
 const ResourceCategory = ({ category, links }: { category: string; links: { label: string; url: string }[] }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="liquid-glass-strong rounded-2xl overflow-hidden">
+    <div className="ocean-panel rounded-2xl overflow-hidden">
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left">
-        <h2 className="text-h4 font-bold text-white" style={{ fontFamily: "var(--font-body)" }}>{category}</h2>
-        <ChevronDown className={`h-5 w-5 text-white/40 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <h2 className="text-h4 font-bold ocean-title" style={{ fontFamily: "var(--font-body)" }}>{category}</h2>
+        <ChevronDown className={`h-5 w-5 text-slate-300/80 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
         <div className="px-6 pb-6 space-y-3">
@@ -76,15 +76,15 @@ const ResourceCategory = ({ category, links }: { category: string; links: { labe
 };
 
 const ResourcesPage = () => (
-  <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+  <div className="min-h-screen ocean-page">
     <SEOHead title="Resources, SkillBridge" description="Free resume templates, interview guides, skill-building courses, and professional communication resources for young adults starting their careers." path="/resources" jsonLd={{"@context":"https://schema.org","@type":"CollectionPage","name":"SkillBridge Resources","hasPart": RESOURCES.map((r) => ({"@type":"CreativeWork","name": r.category}))}} />
     <Navbar />
     <main className="pt-32 pb-24 px-4 sm:px-6">
       <div className="mx-auto max-w-3xl">
-        <motion.h1 className="text-h1 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
+        <motion.h1 className="text-h1 font-bold ocean-title" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease }}>
           Resources
         </motion.h1>
-        <motion.p className="mt-4 text-lg text-white/50" style={{ fontFamily: "var(--font-body)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
+        <motion.p className="mt-4 text-lg ocean-copy" style={{ fontFamily: "var(--font-body)" }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
           Everything you need to land your first paid internship and thrive once you do.
         </motion.p>
 
