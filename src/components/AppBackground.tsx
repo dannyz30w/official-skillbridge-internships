@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 const AppBackground = () => {
   const { pathname } = useLocation();
 
-  // Keep landing page visuals untouched (video hero owns the background there).
   if (pathname === "/") return null;
 
   return (
@@ -11,22 +10,23 @@ const AppBackground = () => {
       <div
         className="app-bg-layer"
         style={{
-          background: "#000000",
-        }}
-      />
-      <div
-        className="app-bg-layer"
-        style={{
-          opacity: 0.4,
-          backgroundImage:
-            "radial-gradient(circle at 20% 18%, rgba(255,255,255,0.08) 0 1px, transparent 2px), radial-gradient(circle at 68% 30%, rgba(255,255,255,0.06) 0 1px, transparent 2px), radial-gradient(circle at 45% 72%, rgba(255,255,255,0.05) 0 1px, transparent 2px)",
+          background:
+            "linear-gradient(180deg, #030712 0%, #020617 45%, #000000 100%)",
         }}
       />
       <div
         className="app-bg-layer"
         style={{
           background:
-            "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.7) 100%)",
+            "radial-gradient(circle at 16% 18%, rgba(59,130,246,0.16), transparent 24%), radial-gradient(circle at 82% 16%, rgba(99,102,241,0.12), transparent 22%), radial-gradient(circle at 50% 78%, rgba(14,165,233,0.1), transparent 28%)",
+          opacity: 0.85,
+        }}
+      />
+      <div
+        className="app-bg-layer"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(2,6,23,0.12) 0%, rgba(2,6,23,0.38) 40%, rgba(0,0,0,0.62) 100%)",
         }}
       />
     </div>

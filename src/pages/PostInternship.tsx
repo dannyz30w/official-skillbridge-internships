@@ -63,7 +63,7 @@ const PostInternship = () => {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
@@ -71,7 +71,7 @@ const PostInternship = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen flex flex-col">
         <nav className="border-b border-border bg-background/80 backdrop-blur-md">
           <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
             <Link to="/" className="flex items-center gap-2">
@@ -111,7 +111,7 @@ const PostInternship = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <nav className="border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2">
