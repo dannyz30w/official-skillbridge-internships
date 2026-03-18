@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { trackEvent } from "@/lib/analytics";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
+import { Typewriter } from "@/components/ui/typewriter-text";
 
 const BUSINESS_TYPES = ['Retail', 'Food & Beverage', 'Healthcare', 'Tech', 'Creative & Media', 'Trades & Construction', 'Education', 'Nonprofit', 'Finance', 'Other'];
 const TRUSTED_DOMAINS = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'protonmail.com', 'proton.me', 'mail.com', 'zoho.com', 'yandex.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'tutanota.com', 'hey.com', 'pm.me', 'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net', 'charter.net', 'bellsouth.net', 'earthlink.net', 'aim.com'];
@@ -134,7 +135,7 @@ const SignUp = () => {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease, delay: 0.04 }} className="w-full max-w-lg">
             <div className="text-center mb-8">
               <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
-              <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>Create your account</h1>
+              <h1 className="text-h2 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}><Typewriter text="Create your account" speed={70} className="text-white" /></h1>
               <p className="mt-2 text-body auth-copy-muted">Choose how you want to use SkillBridge</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -174,7 +175,7 @@ const SignUp = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease, delay: 0.04 }} className="w-full max-w-sm">
           <div className="text-center mb-8">
             <img src={skillbridgeLogo} alt="SkillBridge logo" className="h-10 w-auto mx-auto mb-6" width={160} height={40} loading="eager" />
-            <h1 className="text-h3 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>{isIntern ? 'Intern Sign Up' : 'Business Sign Up'}</h1>
+            <h1 className="text-h3 font-bold text-white" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}><Typewriter text={isIntern ? 'Intern Sign Up' : 'Business Sign Up'} speed={70} className="text-white" /></h1>
           </div>
           <form onSubmit={isIntern ? handleInternSubmit : handleBusinessSubmit} className="space-y-4">
             {isIntern ? (
