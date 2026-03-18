@@ -166,7 +166,7 @@ const BrowseInternships = () => {
               Browse Internships
             </h1>
             <p className="mt-2 text-muted-foreground">
-              Real roles, real pay — from vetted companies.
+              Real roles, real pay, from vetted companies.
             </p>
 
             <div className="mt-8 relative">
@@ -203,7 +203,7 @@ const BrowseInternships = () => {
                       ? "Try adjusting your search terms."
                       : (
                         <>
-                          Be the first to post —{" "}
+                          Be the first to post.{" "}
                           <Link to="/post-internship" className="font-medium text-primary hover:text-primary/80 transition-smooth">
                             list an internship
                           </Link>.

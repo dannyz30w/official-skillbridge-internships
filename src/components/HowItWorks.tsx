@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Navbar from "@/components/Navbar";
+import SEOHead from "@/components/SEOHead";
 
 const internSteps = [
-  { num: "01", title: "Create your profile in five minutes", description: "Fill out your portfolio with your skills, school, and interests. No resume needed, no cover letter, no hassle." },
+  { num: "01", title: "Create your profile in five minutes", description: "Fill out your portfolio with your interests and background. No resume needed, no cover letter, no hassle." },
   { num: "02", title: "Browse paid internships near you or remote", description: "Search real opportunities from verified businesses. Filter by category, location, pay rate, and work setting." },
   { num: "03", title: "Apply with one click, no resume required", description: "Your profile does the heavy lifting. Hit apply and you are done. Businesses review your portfolio directly." },
-  { num: "04", title: "Complete your internship and earn a verified skill certificate", description: "Build real experience, earn real pay, and grow your professional portfolio with every completed role." },
+  { num: "04", title: "Earn a verified skill certificate", description: "Build real experience, earn real pay, and grow your professional portfolio with every completed role." },
 ];
 
 const businessSteps = [
@@ -22,10 +24,11 @@ const HowItWorks = () => {
   const steps = view === 'intern' ? internSteps : businessSteps;
 
   return (
-    <section id="how-it-works" className="py-16 sm:py-24 px-4 sm:px-6">
+    <section id="how-it-works" className="py-16 sm:py-24 px-4 sm:px-6 relative z-10">
       <div className="container mx-auto max-w-3xl">
         <motion.h2
-          className="font-display text-h2 font-bold text-center"
+          className="text-h2 font-bold text-center text-white"
+          style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
@@ -41,23 +44,23 @@ const HowItWorks = () => {
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.38, ease, delay: 0.04 }}
         >
-          <div className="glass-card-sm inline-flex p-1 gap-1" style={{ borderRadius: 100 }}>
+          <div className="liquid-glass inline-flex p-1 gap-1 rounded-full">
             <button
               onClick={() => setView('intern')}
-              className="px-6 py-2 rounded-full text-small font-semibold transition-fast"
+              className="px-6 py-2 rounded-full text-small font-semibold transition-all"
               style={view === 'intern'
                 ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
-                : { color: 'rgba(60,60,67,0.6)' }
+                : { color: 'rgba(255,255,255,0.5)' }
               }
             >
               For Interns
             </button>
             <button
               onClick={() => setView('business')}
-              className="px-6 py-2 rounded-full text-small font-semibold transition-fast"
+              className="px-6 py-2 rounded-full text-small font-semibold transition-all"
               style={view === 'business'
                 ? { background: 'rgba(79, 70, 229, 0.9)', color: 'white' }
-                : { color: 'rgba(60,60,67,0.6)' }
+                : { color: 'rgba(255,255,255,0.5)' }
               }
             >
               For Businesses
@@ -78,11 +81,11 @@ const HowItWorks = () => {
                 className={`flex items-start gap-8 sm:gap-16 ${isEven ? '' : 'flex-row-reverse text-right'}`}
               >
                 <div className="flex-shrink-0">
-                  <span className="font-display font-bold" style={{ fontSize: 80, lineHeight: 1, color: 'rgba(79, 70, 229, 0.08)' }}>{step.num}</span>
+                  <span style={{ fontSize: 80, lineHeight: 1, color: 'rgba(79, 70, 229, 0.2)', fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 700 }}>{step.num}</span>
                 </div>
                 <div className="pt-4">
-                  <h3 className="font-display text-h4 font-bold">{step.title}</h3>
-                  <p className="mt-3 text-body" style={{ color: 'rgba(60,60,67,0.6)' }}>{step.description}</p>
+                  <h3 className="text-h4 font-bold text-white" style={{ fontFamily: "var(--font-body)" }}>{step.title}</h3>
+                  <p className="mt-3 text-body text-white/50" style={{ fontFamily: "var(--font-body)" }}>{step.description}</p>
                 </div>
               </motion.div>
             );
