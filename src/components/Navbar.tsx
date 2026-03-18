@@ -1,15 +1,8 @@
 import { Link } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -48,6 +41,17 @@ const navLinkClass = "text-sm text-white/80 hover:text-white transition-colors p
 
 const Navbar = () => {
   const { user, accountType } = useAuth();
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const resourcesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (!resourcesRef.current) return;
+      if (!resourcesRef.current.contains(e.target as Node)) setResourcesOpen(false);
+    };
+    document.addEventListener("mousedown", onDocClick);
+    return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
 
   return (
     <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-[rgba(10,10,15,0.68)] backdrop-blur-2xl">
@@ -57,65 +61,48 @@ const Navbar = () => {
           <span className="text-white font-semibold">SkillBridge</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-2">
-          <NavigationMenu>
-            <NavigationMenuList className="gap-1">
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link to="/" className={navLinkClass}>Home</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link to="/browse" className={navLinkClass}>Browse</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link to="/how-it-works" className={navLinkClass}>How It Works</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
+        <div className="hidden md:flex items-center gap-1">
+          <Link to="/" className={navLinkClass}>Home</Link>
+          <Link to="/browse" className={navLinkClass}>Browse</Link>
+          <Link to="/how-it-works" className={navLinkClass}>How It Works</Link>
 
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-white/80 hover:text-white hover:bg-transparent data-[state=open]:bg-transparent">
-                  Resources
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="rounded-xl border border-white/10 bg-[#14141e]/95 backdrop-blur-xl w-[520px] p-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    {RESOURCES.map((group) => (
-                      <div key={group.category}>
-                        <p className="text-xs text-white/70 font-semibold mb-2">{group.category}</p>
-                        <div className="space-y-1">
-                          {group.links.map((link) => (
-                            <a
-                              key={link.url}
-                              href={link.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block text-xs text-indigo-300 hover:text-indigo-200"
-                            >
-                              {link.label}
-                            </a>
-                          ))}
-                        </div>
+          <div ref={resourcesRef} className="relative" onMouseEnter={() => setResourcesOpen(true)} onMouseLeave={() => setResourcesOpen(false)}>
+            <button
+              type="button"
+              onClick={() => setResourcesOpen((v) => !v)}
+              className="inline-flex items-center gap-1 text-sm text-white/80 hover:text-white transition-colors px-3 py-2"
+            >
+              Resources <ChevronDown className={`h-4 w-4 transition-transform ${resourcesOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {resourcesOpen && (
+              <div className="absolute top-full mt-2 right-0 w-[560px] rounded-xl border border-white/10 bg-[#14141e]/95 backdrop-blur-xl p-4 shadow-2xl">
+                <div className="grid grid-cols-2 gap-4">
+                  {RESOURCES.map((group) => (
+                    <div key={group.category}>
+                      <p className="text-xs text-white/70 font-semibold mb-2">{group.category}</p>
+                      <div className="space-y-1">
+                        {group.links.map((link) => (
+                          <a
+                            key={link.url}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-xs text-indigo-300 hover:text-indigo-200"
+                          >
+                            {link.label}
+                          </a>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link to="/mission" className={navLinkClass}>Mission</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link to="/for-businesses" className={navLinkClass}>For Businesses</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          <Link to="/mission" className={navLinkClass}>Mission</Link>
+          <Link to="/for-businesses" className={navLinkClass}>For Businesses</Link>
         </div>
 
         <div className="hidden md:flex items-center gap-3">
