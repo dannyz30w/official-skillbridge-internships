@@ -28,8 +28,8 @@ const ContactPage = () => {
   const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
 
   return (
-    <div className="min-h-screen relative z-10" style={{ background: 'transparent' }}>
-      <SEOHead title="Contact SkillBridge" description="Reach out to the SkillBridge team. Questions, partnerships, or feedback. We respond to every message." path="/contact" jsonLd={{"@context":"https://schema.org","@type":"ContactPage","name":"Contact SkillBridge"}} />
+    <div className="min-h-screen" style={{ background: '#F2F2F7' }}>
+      <SEOHead title="Contact SkillBridge" description="Reach out to the SkillBridge team. Questions, partnerships, or feedback — we respond to every message." path="/contact" jsonLd={{"@context":"https://schema.org","@type":"ContactPage","name":"Contact SkillBridge"}} />
       <Navbar />
       <main className="pt-32 pb-24 px-4 sm:px-6">
         <div className="mx-auto max-w-lg">

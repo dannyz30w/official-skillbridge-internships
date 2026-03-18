@@ -70,21 +70,11 @@ const LandingNav = () => {
           <button onClick={() => { setResourcesOpen(!resourcesOpen); trackEvent('resources_opened'); }} className="text-sm text-white/60 hover:text-white transition-colors inline-flex items-center gap-1" style={{ fontFamily: "var(--font-body)" }}>
             Resources <ChevronDown className={`h-3.5 w-3.5 transition-transform ${resourcesOpen ? 'rotate-180' : ''}`} />
           </button>
-          {/* Hover bridge to prevent gap-based closing */}
-          {resourcesOpen && (
-            <div
-              style={{ position: "absolute", top: "100%", right: 0, width: 360, height: 16, background: "transparent" }}
-              onMouseEnter={openResources}
-            />
-          )}
           <AnimatePresence>
             {resourcesOpen && (
               <motion.div initial={{ opacity: 0, y: 8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.96 }} transition={{ duration: 0.2 }}
                 className="absolute top-full right-0 mt-3 w-[360px] p-4 space-y-2 z-[60]"
-                style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.7)', borderRadius: 16 }}
-                onMouseEnter={openResources}
-                onMouseLeave={closeResourcesWithDelay}
-              >
+                style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(24px)', border: '1px solid rgba(255,255,255,0.7)', borderRadius: 16 }}>
                 {RESOURCES.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent('resource_link_clicked')} className="block text-small" style={{ color: '#4F46E5' }}>{l.label}</a>)}
                 <Link to="/resources" onClick={() => setResourcesOpen(false)} className="block text-small font-semibold pt-2" style={{ color: '#4F46E5' }}>View All Resources</Link>
               </motion.div>

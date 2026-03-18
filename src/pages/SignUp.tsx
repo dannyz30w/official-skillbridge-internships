@@ -123,8 +123,8 @@ const SignUp = () => {
 
   if (step === 'select') {
     return (
-      <div className="min-h-screen flex flex-col relative z-10" style={{ background: 'transparent' }}>
-        <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required." path="/signup" />
+      <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+        <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required. For ages 16-22." path="/signup" />
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
           <Link to="/" className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
             <ArrowLeft className="h-4 w-4" /> Back to home
@@ -163,8 +163,8 @@ const SignUp = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative z-10" style={{ background: 'transparent' }}>
-      <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required." path="/signup" />
+    <div className="min-h-screen flex flex-col" style={{ background: '#F2F2F7' }}>
+      <SEOHead title="Create Your Free Account, SkillBridge" description="Join SkillBridge free in under 5 minutes. Find paid internships near you or remote. No resume required. For ages 16-22." path="/signup" />
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }} className="p-6">
         <button onClick={() => { setStep('select'); setError(''); }} className="inline-flex items-center gap-2 text-small font-medium text-white/50 hover:text-white transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back
