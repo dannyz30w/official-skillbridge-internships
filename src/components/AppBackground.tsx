@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { Boxes } from "@/components/ui/background-boxes";
 
 const AppBackground = () => {
   const { pathname } = useLocation();
