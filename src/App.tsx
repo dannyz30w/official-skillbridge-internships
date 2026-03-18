@@ -7,7 +7,6 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
-import { Analytics } from "@vercel/analytics/react";
 import AppBackground from "@/components/AppBackground";
 import CuteCursorBuddy from "@/components/CuteCursorBuddy";
 
