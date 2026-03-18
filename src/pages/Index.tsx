@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import SEOHead from "@/components/SEOHead";
-import LandingNav from "@/components/LandingNav";
+import Navbar from "@/components/Navbar";
 import LandingFooter from "@/components/LandingFooter";
 import LoadingScreen from "@/components/LoadingScreen";
+import { Typewriter } from "@/components/ui/typewriter-text";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 const VIDEO_URL = "https://ussszdsedbqjgktsxxpx.supabase.co/storage/v1/object/public/vidd/12231468-uhd_3840_2160_30fps.mp4";
 
@@ -95,7 +97,7 @@ const Index = () => {
         {/* Bottom gradient blend */}
         <div className="absolute bottom-0 left-0 right-0 h-[300px] z-[1]" style={{ background: "linear-gradient(to bottom, transparent, #0a0a0f)" }} />
 
-        <LandingNav />
+        <Navbar />
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-start px-6 md:px-16 lg:px-24 pt-24 md:pt-32 pb-32 md:pb-40 max-w-[700px]">
@@ -116,7 +118,14 @@ const Index = () => {
 
           {/* Subtext */}
           <p className="mt-6 text-base md:text-lg font-light text-white/60 max-w-lg leading-relaxed animate-fade-rise-delay-2" style={{ fontFamily: "var(--font-body)" }}>
-            SkillBridge connects motivated young adults aged 16 to 22 with local businesses offering real paid internships. No resume required. No connections needed.
+            <Typewriter
+              text={["Find your first paid internship.", "No experience required.", "Apply in one click."]}
+              speed={80}
+              loop={true}
+              deleteSpeed={40}
+              delay={2000}
+              className="text-white/70"
+            />
           </p>
 
           {/* Split Pill CTA */}
@@ -157,7 +166,8 @@ const Index = () => {
             { val: "Paid", label: "Every internship on SkillBridge is paid" },
             { val: "Verified", label: "Business listings are admin-reviewed" },
           ].map((s, i) => (
-            <div key={i} className="liquid-glass rounded-2xl px-6 py-6 text-center">
+            <div key={i} className="relative liquid-glass rounded-2xl px-6 py-6 text-center">
+              <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
               <p className="text-3xl md:text-4xl italic text-white" style={{ fontFamily: "var(--font-display)" }}>{s.val}</p>
               <p className="text-xs text-white/50 uppercase tracking-widest mt-2" style={{ fontFamily: "var(--font-body)" }}>{s.label}</p>
             </div>
