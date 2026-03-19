@@ -15,7 +15,7 @@ const sections = [
   { title: "8. Limitation of Liability", body: "SkillBridge is not responsible for the conduct of any user, the quality or safety of any internship, or any outcome resulting from connections made through the platform. Use of the platform is at the user's own risk." },
   { title: "9. Account Termination", body: "SkillBridge reserves the right to suspend or permanently terminate any account that violates these terms at any time without prior notice." },
   { title: "10. Modifications to Terms", body: "SkillBridge may update these Terms of Service at any time. Continued use of the platform after changes are posted constitutes acceptance of the updated terms." },
-  { title: "11. Contact", body: "For questions about these terms contact us at skillbridgeintern@gmail.com" },
+  { title: "11. Contact", body: "For questions about these terms contact us at skillbridgeinternships@gmail.com" },
 ];
 
 const Terms = () => (

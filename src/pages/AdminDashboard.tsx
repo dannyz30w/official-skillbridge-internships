@@ -118,7 +118,7 @@ const AdminDashboard = () => {
       <main className="flex-1 md:ml-60 p-4 md:p-8 pt-28 md:pt-8">
         <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }}>
           {tab === 'queue' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Listing Queue</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Listing Queue</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : pending.length === 0 ? (
               <div className="glass-card p-16 text-center"><ClipboardList className="h-10 w-10 mx-auto mb-4" style={{ color: 'rgba(60,60,67,0.3)' }} /><p style={{ color: 'rgba(60,60,67,0.6)' }}>No listings pending review.</p></div>
             ) : <div className="space-y-4">{pending.map(l => (
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
           </div>}
 
           {tab === 'listings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>All Listings</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">All Listings</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : <div className="space-y-3">{allListings.map(l => (
               <div key={l.id} className="glass-card p-4 flex items-center justify-between card-hover">
                 <div><p className="text-caption" style={{ color: 'rgba(60,60,67,0.6)' }}>{bizNames[l.business_id] || '...'}</p><h3 className="font-display font-bold">{l.title}</h3></div>
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
           </div>}
 
           {tab === 'interns' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Intern Portfolios</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Intern Portfolios</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : <div className="grid gap-4 sm:grid-cols-2">{interns.map(i => (
               <div key={i.id} className="glass-card p-6 card-hover">
                 <h3 className="font-display font-bold">{i.first_name} {i.last_name}</h3>
@@ -163,7 +163,7 @@ const AdminDashboard = () => {
           </div>}
 
           {tab === 'businesses' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Business Accounts</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Business Accounts</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : <div className="grid gap-4 sm:grid-cols-2">{businesses.map(b => (
               <div key={b.id} className="glass-card p-6 card-hover">
                 <h3 className="font-display font-bold">{b.business_name}</h3>
@@ -175,7 +175,7 @@ const AdminDashboard = () => {
           </div>}
 
           {tab === 'settings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Settings</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Settings</h1>
             <div className="glass-card p-8 space-y-6">
               <div>
                 <p className="text-small font-semibold mb-1" style={{ color: '#3C3C43' }}>Account</p>

@@ -253,7 +253,7 @@ const BusinessDashboard = () => {
           </div>}
 
           {tab === 'messages' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Messages</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Messages</h1>
             {sentMsgs.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No messages sent yet. Accept an applicant to start messaging.</p> :
             <div className="space-y-3">{sentMsgs.map(m => (
               <div key={m.id} className="glass-card p-4 card-hover">
@@ -264,7 +264,7 @@ const BusinessDashboard = () => {
           </div>}
 
           {tab === 'settings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Settings</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Settings</h1>
             <div className="glass-card p-8 space-y-6">
               <div>
                 <p className="text-small font-semibold mb-1" style={{ color: '#3C3C43' }}>Account</p>

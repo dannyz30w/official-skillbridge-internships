@@ -273,7 +273,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'notifications' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Notifications</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Notifications</h1>
             {messages.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No notifications yet.</p> :
             <div className="space-y-3">{messages.map(m => (
               <div key={m.id} className={`glass-card p-4 card-hover cursor-pointer`} onClick={() => !m.read && markRead(m.id)}
@@ -291,7 +291,7 @@ const InternDashboard = () => {
           </div>}
 
           {tab === 'settings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Settings</h1>
+            <h1 className="font-display text-h2 font-bold mb-8 ocean-title">Settings</h1>
             <div className="glass-card p-8 space-y-6">
               <div>
                 <p className="text-small font-semibold mb-1" style={{ color: '#3C3C43' }}>Account</p>

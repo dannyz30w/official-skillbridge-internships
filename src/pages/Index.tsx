@@ -58,7 +58,7 @@ const Index = () => {
   const internSteps = [
     { num: "01", title: "Create your profile quickly", desc: "Fill out your portfolio with your interests and background. No resume needed." },
     { num: "02", title: "Browse paid internships near you or remote", desc: "Search real opportunities from verified businesses. Filter by category, location, and pay." },
-    { num: "03", title: "Apply with one click, no resume required", desc: "Your profile does the heavy lifting. Hit apply and you are done." },
+    { num: "03", title: "Apply to opportunities", desc: "Submit your application directly to businesses. Your profile showcases your potential." },
     { num: "04", title: "Earn a verified skill certificate", desc: "Build real experience, earn real pay, and grow your professional portfolio." },
   ];
   const businessSteps = [

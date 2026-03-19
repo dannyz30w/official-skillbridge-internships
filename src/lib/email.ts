@@ -18,7 +18,7 @@ export interface EmailOptions {
 export async function sendEmail(options: EmailOptions) {
   try {
     const result = await resend.emails.send({
-      from: options.from || 'noreply@skillbridgeintern.org',
+      from: options.from || 'skillbridgeinternships@gmail.com',
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -57,7 +57,7 @@ export async function sendInternWelcomeEmail(email: string, firstName: string) {
         <li>Connect with businesses and start your career</li>
       </ul>
       <p style="color: #1C1C1E; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-        If you have any questions, reach out to us at <a href="mailto:skillbridgeintern@gmail.com" style="color: #4F46E5; text-decoration: none;">skillbridgeintern@gmail.com</a>
+        If you have any questions, reach out to us at <a href="mailto:skillbridgeinternships@gmail.com" style="color: #4F46E5; text-decoration: none;">skillbridgeinternships@gmail.com</a>
       </p>
       <p style="color: #666; font-size: 14px; margin-top: 32px; border-top: 1px solid #eee; padding-top: 16px;">
         © 2026 SkillBridge. All rights reserved.
@@ -92,7 +92,7 @@ export async function sendBusinessWelcomeEmail(email: string, businessName: stri
         <li>Track applications and manage your listings</li>
       </ul>
       <p style="color: #1C1C1E; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
-        Our team is here to support you. Contact us at <a href="mailto:skillbridgeintern@gmail.com" style="color: #4F46E5; text-decoration: none;">skillbridgeintern@gmail.com</a> with any questions.
+        Our team is here to support you. Contact us at <a href="mailto:skillbridgeinternships@gmail.com" style="color: #4F46E5; text-decoration: none;">skillbridgeinternships@gmail.com</a> with any questions.
       </p>
       <p style="color: #666; font-size: 14px; margin-top: 32px; border-top: 1px solid #eee; padding-top: 16px;">
         © 2026 SkillBridge. All rights reserved.

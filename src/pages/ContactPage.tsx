@@ -59,7 +59,7 @@ const ContactPage = () => {
           </motion.form>
 
           <motion.p className="mt-8 text-small text-center ocean-copy" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-            You can also reach us at <a href="mailto:skillbridgeintern@gmail.com" style={{ color: '#a5b4fc' }} className="font-semibold">skillbridgeintern@gmail.com</a>
+            You can also reach us at <a href="mailto:skillbridgeinternships@gmail.com" style={{ color: '#a5b4fc' }} className="font-semibold">skillbridgeinternships@gmail.com</a>
           </motion.p>
         </div>
       </main>
