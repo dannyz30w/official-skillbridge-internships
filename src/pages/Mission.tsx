@@ -44,7 +44,7 @@ const Mission = () => (
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.5, ease }} className="pt-8">
-            <Link to="/signup" className="liquid-glass-strong rounded-full px-8 py-4 text-sm font-medium hover:scale-[1.03] transition-transform inline-block" style={{ fontFamily: "var(--font-body)", color: '#1C1C1E' }}>
+            <Link to="/signup" className="liquid-glass-strong rounded-full px-8 py-4 text-sm font-medium hover:scale-[1.03] transition-transform inline-block" style={{ fontFamily: "var(--font-body)", color: '#FFFFFF' }}>
               Get Started Today
             </Link>
           </motion.div>
