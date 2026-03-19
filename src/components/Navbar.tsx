@@ -43,6 +43,15 @@ const Navbar = () => {
   const { user, accountType } = useAuth();
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const resourcesRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openResources = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    setResourcesOpen(true);
+  };
+  const scheduleClose = () => {
+    closeTimerRef.current = setTimeout(() => setResourcesOpen(false), 120);
+  };
 
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
@@ -50,7 +59,10 @@ const Navbar = () => {
       if (!resourcesRef.current.contains(e.target as Node)) setResourcesOpen(false);
     };
     document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
   }, []);
 
   return (
@@ -66,7 +78,7 @@ const Navbar = () => {
           <Link to="/browse" className={navLinkClass}>Browse</Link>
           <Link to="/how-it-works" className={navLinkClass}>How It Works</Link>
 
-          <div ref={resourcesRef} className="relative" onMouseEnter={() => setResourcesOpen(true)} onMouseLeave={() => setResourcesOpen(false)}>
+          <div ref={resourcesRef} className="relative" onMouseEnter={openResources} onMouseLeave={scheduleClose}>
             <button
               type="button"
               onClick={() => setResourcesOpen((v) => !v)}
@@ -76,7 +88,8 @@ const Navbar = () => {
             </button>
 
             {resourcesOpen && (
-              <div className="absolute top-full mt-2 right-0 w-[560px] rounded-xl border border-white/10 bg-[#14141e]/95 backdrop-blur-xl p-4 shadow-2xl">
+              <div className="absolute top-full mt-0 right-0 w-[560px] rounded-xl border border-white/10 bg-[#14141e]/95 backdrop-blur-xl p-4 shadow-2xl" style={{ paddingTop: '8px' }}>
+                <div style={{ height: 8, marginTop: -8 }} />
                 <div className="grid grid-cols-2 gap-4">
                   {RESOURCES.map((group) => (
                     <div key={group.category}>

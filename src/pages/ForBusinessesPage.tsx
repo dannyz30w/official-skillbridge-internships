@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -30,9 +31,12 @@ const ForBusinessesPage = () => (
 
         <div className="mt-16 grid sm:grid-cols-2 gap-6">
           {features.map((f, i) => (
-            <motion.div key={f.title} className="ocean-panel rounded-[24px] p-8" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
-              <h3 className="font-display text-h4 font-bold ocean-title">{f.title}</h3>
-              <p className="mt-3 text-body ocean-copy">{f.desc}</p>
+            <motion.div key={f.title} className="relative rounded-[24px]" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.05, duration: 0.5, ease }}>
+              <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
+              <div className="ocean-panel rounded-[24px] p-8 card-hover">
+                <h3 className="font-display text-h4 font-bold ocean-title">{f.title}</h3>
+                <p className="mt-3 text-body ocean-copy">{f.desc}</p>
+              </div>
             </motion.div>
           ))}
         </div>

@@ -237,15 +237,21 @@ const Index = () => {
           </Reveal>
           <div className="grid md:grid-cols-2 gap-8">
             <Reveal delay={0.1}>
-              <div className="liquid-glass rounded-2xl p-6 text-left">
-                <p className="text-sm text-white/50 mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>Before SkillBridge</p>
-                <p className="text-base text-white/65" style={{ fontFamily: "var(--font-body)" }}>Young people are often filtered out for lacking prior experience, even when they are ready to learn and work.</p>
+              <div className="relative rounded-2xl">
+                <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
+                <div className="liquid-glass rounded-2xl p-6 text-left card-hover">
+                  <p className="text-sm text-white/50 mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>Before SkillBridge</p>
+                  <p className="text-base text-white/65" style={{ fontFamily: "var(--font-body)" }}>Young people are often filtered out for lacking prior experience, even when they are ready to learn and work.</p>
+                </div>
               </div>
             </Reveal>
             <Reveal delay={0.3}>
-              <div className="liquid-glass rounded-2xl p-6 text-left">
-                <p className="text-sm text-white/50 mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>With SkillBridge</p>
-                <p className="text-base text-white/65" style={{ fontFamily: "var(--font-body)" }}>Interns get direct access to verified, paid listings and businesses discover motivated early talent faster.</p>
+              <div className="relative rounded-2xl">
+                <GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} />
+                <div className="liquid-glass rounded-2xl p-6 text-left card-hover">
+                  <p className="text-sm text-white/50 mb-3 uppercase tracking-widest" style={{ fontFamily: "var(--font-body)" }}>With SkillBridge</p>
+                  <p className="text-base text-white/65" style={{ fontFamily: "var(--font-body)" }}>Interns get direct access to verified, paid listings and businesses discover motivated early talent faster.</p>
+                </div>
               </div>
             </Reveal>
           </div>

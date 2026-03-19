@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { Home, PlusCircle, List, Users, MessageSquare, Settings, LogOut, Loader2, Check, X, Send, Eye, Edit } from "lucide-react";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
+import { ButtonHoldAndRelease } from "@/components/ui/hold-and-release-button";
+import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 const db = supabase as any;
 const CATEGORIES = ['Technology', 'Marketing', 'Design', 'Finance', 'Healthcare', 'Education', 'Retail', 'Food & Beverage', 'Creative & Media', 'Other'];
@@ -157,16 +159,16 @@ const BusinessDashboard = () => {
       <main className="flex-1 md:ml-60 p-4 md:p-8 pt-28 md:pt-8 pb-24 md:pb-8">
         <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.38, ease }}>
           {tab === 'home' && <div className="stagger-children">
-            <h1 className="font-display text-h2 font-bold mb-8 text-white">Dashboard</h1>
+            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Dashboard</h1>
             <div className="grid gap-4 sm:grid-cols-3">
-              <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#10B981' }}>{myListings.filter(l => l.status === 'live').length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Live Listings</p></div>
-              <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#FF9F0A' }}>{myListings.filter(l => l.status === 'pending').length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Pending Review</p></div>
-              <div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold">{myListings.length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Total Listings</p></div>
+              <div className="relative rounded-2xl"><GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} /><div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#10B981' }}>{myListings.filter(l => l.status === 'live').length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Live Listings</p></div></div>
+              <div className="relative rounded-2xl"><GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} /><div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#FF9F0A' }}>{myListings.filter(l => l.status === 'pending').length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Pending Review</p></div></div>
+              <div className="relative rounded-2xl"><GlowingEffect spread={40} glow={true} disabled={false} proximity={64} inactiveZone={0.01} borderWidth={2} /><div className="glass-card p-6 text-center card-hover"><p className="text-h1 font-bold" style={{ color: '#1C1C1E' }}>{myListings.length}</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>Total Listings</p></div></div>
             </div>
           </div>}
 
           {tab === 'post' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8 text-white">Post New Listing</h1>
+            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Post New Listing</h1>
             {postSuccess ? <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="glass-card p-12 text-center"><Check className="h-10 w-10 mx-auto mb-4" style={{ color: '#10B981' }} /><p className="font-display font-bold text-h4">Listing submitted for review!</p><p className="text-small mt-1" style={{ color: 'rgba(60,60,67,0.6)' }}>You will be notified once it is approved.</p></motion.div> :
             <form onSubmit={handlePost} className="glass-card p-8 space-y-6 max-w-2xl">
               <div><label htmlFor="post-title" className={labelCls} style={{ color: 'rgba(60,60,67,0.6)' }}>Internship Title *</label><input id="post-title" value={form.title} onChange={e => setForm(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Marketing Intern" className={inputCls} /></div>
@@ -198,7 +200,7 @@ const BusinessDashboard = () => {
           </div>}
 
           {tab === 'listings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8 text-white">My Listings</h1>
+            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>My Listings</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : myListings.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No listings yet.</p> :
             <div className="space-y-3">{myListings.map(l => (
               <div key={l.id} className="glass-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 card-hover">
@@ -213,7 +215,7 @@ const BusinessDashboard = () => {
           </div>}
 
           {tab === 'applicants' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8 text-white">Applicants</h1>
+            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Applicants</h1>
             {loading ? <div className="skeleton-shimmer h-32 w-full" /> : apps.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No applications yet.</p> :
             <div className="space-y-4">
               {myListings.filter(l => apps.some(a => a.listing_id === l.id)).map(listing => {
@@ -251,7 +253,7 @@ const BusinessDashboard = () => {
           </div>}
 
           {tab === 'messages' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8 text-white">Messages</h1>
+            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Messages</h1>
             {sentMsgs.length === 0 ? <p style={{ color: 'rgba(60,60,67,0.6)' }}>No messages sent yet. Accept an applicant to start messaging.</p> :
             <div className="space-y-3">{sentMsgs.map(m => (
               <div key={m.id} className="glass-card p-4 card-hover">
@@ -262,9 +264,34 @@ const BusinessDashboard = () => {
           </div>}
 
           {tab === 'settings' && <div>
-            <h1 className="font-display text-h2 font-bold mb-8 text-white">Settings</h1>
-            <div className="glass-card p-8"><p className="text-small mb-4" style={{ color: 'rgba(60,60,67,0.6)' }}>Signed in as: {user?.email}</p>
-            <button onClick={signOut} className="btn-glass-destructive h-12 px-6 text-body font-semibold">Sign Out</button></div>
+            <h1 className="font-display text-h2 font-bold mb-8" style={{ color: '#1C1C1E' }}>Settings</h1>
+            <div className="glass-card p-8 space-y-6">
+              <div>
+                <p className="text-small font-semibold mb-1" style={{ color: '#3C3C43' }}>Account</p>
+                <p className="text-small" style={{ color: 'rgba(60,60,67,0.6)' }}>Signed in as: {user?.email}</p>
+              </div>
+              <div className="pt-4" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <button onClick={signOut} className="btn-glass-secondary h-11 px-6 text-body font-semibold">Sign Out</button>
+              </div>
+              <div className="pt-4" style={{ borderTop: '1px solid rgba(255,59,48,0.15)' }}>
+                <p className="text-small font-semibold mb-1" style={{ color: '#DC2626' }}>Danger Zone</p>
+                <p className="text-small mb-4" style={{ color: 'rgba(60,60,67,0.6)' }}>Permanently delete your business account and all associated data. This action cannot be undone.</p>
+                <ButtonHoldAndRelease
+                  holdDuration={3000}
+                  onComplete={async () => {
+                    if (!user) return;
+                    try {
+                      await (supabase as any).from('business_profiles').delete().eq('user_id', user.id);
+                      await (supabase as any).from('profiles').delete().eq('user_id', user.id);
+                      await supabase.auth.signOut();
+                      toast.success('Account deleted.');
+                    } catch {
+                      toast.error('Failed to delete account. Please contact support.');
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </div>}
         </motion.div>
 
