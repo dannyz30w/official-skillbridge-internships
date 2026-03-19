@@ -21,7 +21,7 @@ const Mission = () => (
           Our Mission
         </motion.h1>
 
-        <div className="space-y-8" style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(226,232,240,0.82)', fontFamily: "var(--font-body)" }}>
+        <div className="space-y-8" style={{ fontSize: 17, lineHeight: 1.7, color: 'rgba(203,213,225,0.95)', fontFamily: "var(--font-body)" }}>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.5, ease }}>
             Millions of young people graduate every year ready to work, but locked out of opportunity by a system that demands experience before giving them a chance. SkillBridge exists to break that cycle.
           </motion.p>

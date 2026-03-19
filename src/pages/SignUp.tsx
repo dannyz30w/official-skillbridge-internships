@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Typewriter } from "@/components/ui/typewriter-text";
+import { sendInternWelcomeEmail, sendBusinessWelcomeEmail } from "@/lib/email";
 
 const BUSINESS_TYPES = ['Retail', 'Food & Beverage', 'Healthcare', 'Tech', 'Creative & Media', 'Trades & Construction', 'Education', 'Nonprofit', 'Finance', 'Other'];
 const TRUSTED_DOMAINS = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'protonmail.com', 'proton.me', 'mail.com', 'zoho.com', 'yandex.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'tutanota.com', 'hey.com', 'pm.me', 'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net', 'charter.net', 'bellsouth.net', 'earthlink.net', 'aim.com'];
@@ -17,17 +18,22 @@ const inputCls = "w-full h-[48px] px-4 rounded-xl text-[16px] bg-white/5 border 
 const labelCls = "block text-small font-medium mb-2 auth-copy-muted";
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const checkDomainAge = async (email: string): Promise<{ allowed: boolean; flagged: boolean }> => {
+const checkEmailAge = async (email: string): Promise<{ allowed: boolean; reason?: string }> => {
   const domain = email.split('@')[1]?.toLowerCase();
-  if (!domain) return { allowed: false, flagged: false };
-  if (TRUSTED_DOMAINS.some(d => domain === d || domain.endsWith('.' + d)) || domain.endsWith('.edu')) return { allowed: true, flagged: false };
+  if (!domain) return { allowed: false, reason: 'Invalid email' };
+  if (TRUSTED_DOMAINS.some(d => domain === d || domain.endsWith('.' + d)) || domain.endsWith('.edu')) return { allowed: true };
   try {
-    const { data, error } = await supabase.functions.invoke('check-domain-age', { body: { domain } });
-    if (error || !data) return { allowed: true, flagged: true };
-    if (data.age_days !== undefined && data.age_days < 30) return { allowed: false, flagged: false };
-    if (data.age_days === null) return { allowed: true, flagged: true };
-    return { allowed: true, flagged: false };
-  } catch { return { allowed: true, flagged: true }; }
+    const { data, error } = await supabase.functions.invoke('check-email-age', { body: { email } });
+    if (error || !data) return { allowed: true };
+    if (data.age_days !== undefined && data.age_days < 30) {
+      return { allowed: false, reason: `Email must be at least 30 days old. Your email is ${data.age_days} days old.` };
+    }
+    if (data.age_days === null) return { allowed: true };
+    return { allowed: true };
+  } catch (err) {
+    console.error('Email age check error:', err);
+    return { allowed: true };
+  }
 };
 
 const calcAge = (dateStr: string) => {
@@ -90,12 +96,17 @@ const SignUp = () => {
     if (age > 22) { setError("Intern accounts are for users aged 16 to 22."); return; }
     if (!agreeTerms) { setError("You must agree to the Terms of Service."); return; }
     setError(""); setLoading(true);
-    const domainResult = await checkDomainAge(email);
-    if (!domainResult.allowed) { setError("Please use an established email address to sign up."); setLoading(false); return; }
+    const emailAgeResult = await checkEmailAge(email);
+    if (!emailAgeResult.allowed) { setError(emailAgeResult.reason || "Please use an established email address to sign up."); setLoading(false); return; }
     const { error: err } = await supabase.auth.signUp({ email, password, options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } } });
     setLoading(false);
     if (err) { setError(err.message); return; }
     trackEvent('intern_signup');
+    try {
+      await sendInternWelcomeEmail(email, firstName);
+    } catch (emailErr) {
+      console.error('Welcome email failed:', emailErr);
+    }
     toast.success("Account created! Welcome to SkillBridge.");
   };
 
@@ -107,12 +118,17 @@ const SignUp = () => {
     if (bizPassword !== bizConfirmPassword) { setError("Passwords do not match."); return; }
     if (!bizAgreeTerms) { setError("You must agree to the Terms of Service."); return; }
     setError(""); setLoading(true);
-    const domainResult = await checkDomainAge(bizEmail);
-    if (!domainResult.allowed) { setError("Please use an established email address to sign up."); setLoading(false); return; }
+    const emailAgeResult = await checkEmailAge(bizEmail);
+    if (!emailAgeResult.allowed) { setError(emailAgeResult.reason || "Please use an established email address to sign up."); setLoading(false); return; }
     const { error: err } = await supabase.auth.signUp({ email: bizEmail, password: bizPassword, options: { data: { full_name: contactName, account_type: 'business', business_name: bizName, contact_name: contactName, business_type: bizType } } });
     setLoading(false);
     if (err) { setError(err.message); return; }
     trackEvent('business_signup');
+    try {
+      await sendBusinessWelcomeEmail(bizEmail, bizName);
+    } catch (emailErr) {
+      console.error('Welcome email failed:', emailErr);
+    }
     toast.success("Account created! Welcome to SkillBridge.");
   };
 

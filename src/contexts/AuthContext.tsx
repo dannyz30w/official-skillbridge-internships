@@ -9,11 +9,12 @@ interface AuthContextType {
   accountType: string | null;
   signOut: () => Promise<void>;
   refreshAccountType: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   session: null, user: null, loading: true, accountType: null,
-  signOut: async () => {}, refreshAccountType: async () => {},
+  signOut: async () => {}, refreshAccountType: async () => {}, deleteAccount: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -55,8 +56,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccountType(null);
   };
 
+  const deleteAccount = async () => {
+    if (!session?.user) throw new Error('No user logged in');
+    const userId = session.user.id;
+    try {
+      await supabase.from('profiles').delete().eq('user_id', userId);
+      await supabase.from('intern_profiles').delete().eq('user_id', userId);
+      await supabase.from('business_profiles').delete().eq('user_id', userId);
+      await supabase.auth.signOut();
+      setAccountType(null);
+    } catch (error) {
+      console.error('Delete account error:', error);
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, accountType, signOut, refreshAccountType }}>
+    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, accountType, signOut, refreshAccountType, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

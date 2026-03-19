@@ -33,7 +33,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 const mobileTabs = [{ id:'home',label:'Home',icon:Home},{id:'browse',label:'Browse',icon:Search},{id:'applications',label:'Applications',icon:Briefcase},{id:'notifications',label:'Messages',icon:Bell},{id:'portfolio',label:'Profile',icon:FileText}];
 
 const InternDashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, deleteAccount } = useAuth();
   const [tab, setTab] = useState('home');
   const [listings, setListings] = useState<Listing[]>([]);
   const [myApps, setMyApps] = useState<Application[]>([]);
@@ -306,13 +306,10 @@ const InternDashboard = () => {
                 <ButtonHoldAndRelease
                   holdDuration={3000}
                   onComplete={async () => {
-                    if (!user) return;
                     try {
-                      await (supabase as any).from('intern_profiles').delete().eq('user_id', user.id);
-                      await (supabase as any).from('profiles').delete().eq('user_id', user.id);
-                      await supabase.auth.signOut();
-                      toast.success('Account deleted.');
-                    } catch {
+                      await deleteAccount();
+                      toast.success('Account deleted successfully.');
+                    } catch (error) {
                       toast.error('Failed to delete account. Please contact support.');
                     }
                   }}

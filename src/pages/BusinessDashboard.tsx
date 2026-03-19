@@ -32,7 +32,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 const mobileTabs = [{id:'home',label:'Home',icon:Home},{id:'listings',label:'Listings',icon:List},{id:'applicants',label:'Applicants',icon:Users},{id:'messages',label:'Messages',icon:MessageSquare},{id:'settings',label:'Settings',icon:Settings}];
 
 const BusinessDashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, deleteAccount } = useAuth();
   const [tab, setTab] = useState('home');
   const [myListings, setMyListings] = useState<Listing[]>([]);
   const [apps, setApps] = useState<Application[]>([]);
@@ -279,13 +279,10 @@ const BusinessDashboard = () => {
                 <ButtonHoldAndRelease
                   holdDuration={3000}
                   onComplete={async () => {
-                    if (!user) return;
                     try {
-                      await (supabase as any).from('business_profiles').delete().eq('user_id', user.id);
-                      await (supabase as any).from('profiles').delete().eq('user_id', user.id);
-                      await supabase.auth.signOut();
-                      toast.success('Account deleted.');
-                    } catch {
+                      await deleteAccount();
+                      toast.success('Account deleted successfully.');
+                    } catch (error) {
                       toast.error('Failed to delete account. Please contact support.');
                     }
                   }}

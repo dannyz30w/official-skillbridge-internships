@@ -60,7 +60,7 @@ const ResourceCategory = ({ category, links }: { category: string; links: { labe
     <div className="ocean-panel rounded-2xl overflow-hidden">
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between p-6 text-left">
         <h2 className="text-h4 font-bold ocean-title" style={{ fontFamily: "var(--font-body)" }}>{category}</h2>
-        <ChevronDown className={`h-5 w-5 text-slate-300/80 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`h-5 w-5 transition-transform ${open ? 'rotate-180' : ''}`} style={{ color: 'rgba(203,213,225,0.9)' }} />
       </button>
       {open && (
         <div className="px-6 pb-6 space-y-3">

@@ -31,13 +31,13 @@ const Terms = () => (
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <h1 className="text-h1 font-bold mb-2 ocean-title" style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}>SkillBridge Terms of Service</h1>
-        <p className="text-small mb-16 text-slate-200/80" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
+        <p className="text-small mb-16 ocean-copy" style={{ fontFamily: "var(--font-body)" }}>Last updated: March 2026</p>
 
         <div className="space-y-12">
           {sections.map((s, i) => (
             <section key={i}>
-              <h2 className="text-h4 font-bold mb-4 text-white" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
-              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(226,232,240,0.82)', fontFamily: "var(--font-body)" }}>{s.body}</p>
+              <h2 className="text-h4 font-bold mb-4 ocean-title" style={{ fontFamily: "var(--font-body)" }}>{s.title}</h2>
+              <p style={{ fontSize: 16, lineHeight: 1.7, color: 'rgba(203,213,225,0.95)', fontFamily: "var(--font-body)" }}>{s.body}</p>
             </section>
           ))}
         </div>
