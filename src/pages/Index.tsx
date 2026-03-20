@@ -161,7 +161,6 @@ const Index = () => {
       <section className="py-16 px-6" style={{ background: "#0a0a0f" }}>
         <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
-            { val: "1 Click", label: "Apply without a resume" },
             { val: "16–22", label: "Age group SkillBridge serves" },
             { val: "Paid", label: "Every internship on SkillBridge is paid" },
             { val: "Verified", label: "Business listings are admin-reviewed" },
