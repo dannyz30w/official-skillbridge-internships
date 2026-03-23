@@ -76,7 +76,6 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-1">
           <Link to="/" className={navLinkClass}>Home</Link>
           <Link to="/browse" className={navLinkClass}>Browse</Link>
-          <Link to="/how-it-works" className={navLinkClass}>How It Works</Link>
 
           <div ref={resourcesRef} className="relative" onMouseEnter={openResources} onMouseLeave={scheduleClose}>
             <button
@@ -139,10 +138,9 @@ const Navbar = () => {
                 {[
                   ["Home", "/"],
                   ["Browse", "/browse"],
-                  ["How It Works", "/how-it-works"],
                   ["Mission", "/mission"],
                   ["For Businesses", "/for-businesses"],
-                  ["Contact", "/contact"],
+                  ["Contact", "/contact"]
                 ].map(([label, to]) => (
                   <Link key={to} to={to} className="block py-2 text-white/85">{label}</Link>
                 ))}
