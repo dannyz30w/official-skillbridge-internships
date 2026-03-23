@@ -9,7 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Typewriter } from "@/components/ui/typewriter-text";
-import { sendInternWelcomeEmail, sendBusinessWelcomeEmail } from "@/lib/email";
+// Email sending disabled until Lovable Pro is available
+// import { sendInternWelcomeEmail, sendBusinessWelcomeEmail } from "@/lib/email";
 
 const BUSINESS_TYPES = ['Retail', 'Food & Beverage', 'Healthcare', 'Tech', 'Creative & Media', 'Trades & Construction', 'Education', 'Nonprofit', 'Finance', 'Other'];
 const TRUSTED_DOMAINS = ['gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com', 'live.com', 'msn.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com', 'protonmail.com', 'proton.me', 'mail.com', 'zoho.com', 'yandex.com', 'gmx.com', 'gmx.net', 'fastmail.com', 'tutanota.com', 'hey.com', 'pm.me', 'comcast.net', 'verizon.net', 'att.net', 'sbcglobal.net', 'cox.net', 'charter.net', 'bellsouth.net', 'earthlink.net', 'aim.com'];
@@ -102,12 +103,13 @@ const SignUp = () => {
     setLoading(false);
     if (err) { setError(err.message); return; }
     trackEvent('intern_signup');
-    try {
-      await sendInternWelcomeEmail(email, firstName);
-    } catch (emailErr) {
-      console.error('Welcome email failed:', emailErr);
-    }
-    toast.success("Account created! Welcome to SkillBridge.");
+    // Email sending disabled until Lovable Pro
+    // try {
+    //   await sendInternWelcomeEmail(email, firstName);
+    // } catch (emailErr) {
+    //   console.error('Welcome email failed:', emailErr);
+    // }
+    toast.success("Account created! Welcome to SkillBridge. You can now sign in.");
   };
 
   const handleBusinessSubmit = async (e: React.FormEvent) => {
@@ -124,12 +126,13 @@ const SignUp = () => {
     setLoading(false);
     if (err) { setError(err.message); return; }
     trackEvent('business_signup');
-    try {
-      await sendBusinessWelcomeEmail(bizEmail, bizName);
-    } catch (emailErr) {
-      console.error('Welcome email failed:', emailErr);
-    }
-    toast.success("Account created! Welcome to SkillBridge.");
+    // Email sending disabled until Lovable Pro
+    // try {
+    //   await sendBusinessWelcomeEmail(bizEmail, bizName);
+    // } catch (emailErr) {
+    //   console.error('Welcome email failed:', emailErr);
+    // }
+    toast.success("Account created! Welcome to SkillBridge. You can now sign in.");
   };
 
   const isIntern = step === 'intern';
