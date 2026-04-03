@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import SEOHead from "@/components/SEOHead";
-import LandingNav from "@/components/LandingNav";
+import Navbar from "@/components/Navbar";
 import LandingFooter from "@/components/LandingFooter";
 import LoadingScreen from "@/components/LoadingScreen";
 import { Typewriter } from "@/components/ui/typewriter-text";
