@@ -97,7 +97,7 @@ const Index = () => {
         {/* Bottom gradient blend */}
         <div className="absolute bottom-0 left-0 right-0 h-[300px] z-[1]" style={{ background: "linear-gradient(to bottom, transparent, #0a0a0f)" }} />
 
-        <LandingNav />
+        <Navbar />
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-start px-6 md:px-16 lg:px-24 pt-24 md:pt-32 pb-32 md:pb-40 max-w-[700px]">
