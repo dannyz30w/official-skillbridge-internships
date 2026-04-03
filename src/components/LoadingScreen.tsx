@@ -81,7 +81,7 @@ const LoadingScreen = ({ onComplete, readyPromise }: { onComplete: () => void; r
   const counter = String(Math.floor(progress)).padStart(3, "0");
 
   return (
-    <motion.div className="fixed inset-0 z-[9999] flex flex-col justify-between" style={{ background: "linear-gradient(180deg, #05253a 0%, #03131f 100%)" }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
+    <motion.div className="fixed inset-0 z-[9999] flex flex-col justify-between" style={{ background: "#000" }} exit={{ opacity: 0 }} transition={{ duration: 0.6 }}>
       <motion.p className="px-8 pt-8 text-xs uppercase tracking-[0.3em]" style={{ color: "rgba(210,245,255,0.72)", fontFamily: "var(--font-body)" }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
         SkillBridge
       </motion.p>
