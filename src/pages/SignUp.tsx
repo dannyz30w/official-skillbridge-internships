@@ -9,6 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Typewriter } from "@/components/ui/typewriter-text";
+import { withAuthRetry } from "@/lib/authRetry";
+
 // Email sending disabled until Lovable Pro is available
 // import { sendInternWelcomeEmail, sendBusinessWelcomeEmail } from "@/lib/email";
 
@@ -99,9 +101,16 @@ const SignUp = () => {
     setError(""); setLoading(true);
     const emailAgeResult = await checkEmailAge(email);
     if (!emailAgeResult.allowed) { setError(emailAgeResult.reason || "Please use an established email address to sign up."); setLoading(false); return; }
-    const { error: err } = await supabase.auth.signUp({ email, password, options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } } });
+    let err: any = null;
+    try {
+      const res = await withAuthRetry(() => supabase.auth.signUp({ email, password, options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } } }));
+      err = res.error;
+    } catch (e: any) {
+      err = { message: "Network error reaching auth server. Please try again in a moment." };
+    }
     setLoading(false);
     if (err) { setError(err.message); return; }
+
     trackEvent('intern_signup');
     // Email sending disabled until Lovable Pro
     // try {
@@ -122,9 +131,16 @@ const SignUp = () => {
     setError(""); setLoading(true);
     const emailAgeResult = await checkEmailAge(bizEmail);
     if (!emailAgeResult.allowed) { setError(emailAgeResult.reason || "Please use an established email address to sign up."); setLoading(false); return; }
-    const { error: err } = await supabase.auth.signUp({ email: bizEmail, password: bizPassword, options: { data: { full_name: contactName, account_type: 'business', business_name: bizName, contact_name: contactName, business_type: bizType } } });
+    let err: any = null;
+    try {
+      const res = await withAuthRetry(() => supabase.auth.signUp({ email: bizEmail, password: bizPassword, options: { data: { full_name: contactName, account_type: 'business', business_name: bizName, contact_name: contactName, business_type: bizType } } }));
+      err = res.error;
+    } catch (e: any) {
+      err = { message: "Network error reaching auth server. Please try again in a moment." };
+    }
     setLoading(false);
     if (err) { setError(err.message); return; }
+
     trackEvent('business_signup');
     // Email sending disabled until Lovable Pro
     // try {

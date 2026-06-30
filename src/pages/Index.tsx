@@ -101,10 +101,6 @@ const Index = () => {
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-start px-6 md:px-16 lg:px-24 pt-24 md:pt-32 pb-32 md:pb-40 max-w-[700px]">
-          {/* Badge */}
-          <div className="liquid-glass rounded-full px-4 py-1.5 text-xs font-medium text-white/80 uppercase tracking-widest animate-fade-rise" style={{ fontFamily: "var(--font-body)" }}>
-            WSI Impact League Finalist
-          </div>
 
           {/* Headline */}
           <h1 className="mt-8 animate-fade-rise-delay" style={{ fontFamily: "var(--font-display)" }}>
@@ -272,19 +268,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* === WSI CREDENTIAL === */}
-      <section className="py-24 px-6 text-center" style={{ background: "#0a0a0f" }}>
-        <Reveal>
-          <div className="liquid-glass-strong rounded-3xl max-w-2xl mx-auto p-10 md:p-12">
-            <div className="liquid-glass rounded-full px-4 py-1.5 text-xs text-white/70 uppercase tracking-widest w-fit mx-auto mb-6" style={{ fontFamily: "var(--font-body)" }}>Recognition</div>
-            <h2 className="text-3xl md:text-5xl italic text-white" style={{ fontFamily: "var(--font-display)" }}>Built to close the opportunity gap.</h2>
-            <p className="mt-6 font-light text-white/60 text-base leading-relaxed max-w-lg mx-auto" style={{ fontFamily: "var(--font-body)" }}>
-              SkillBridge was recognized as a Global Finalist in the NFTE World Series of Innovation, among thousands of global participants worldwide. Built as a solo innovator. Built for every young person who deserves a fair shot.
-            </p>
-            <p className="mt-6 text-sm text-white/50" style={{ fontFamily: "var(--font-body)" }}>WSI Impact League Finalist</p>
-          </div>
-        </Reveal>
-      </section>
 
       {/* === MISSION PARALLAX === */}
       <section className="py-24 md:py-32 px-6" style={{ background: "#0a0a0f" }}>
