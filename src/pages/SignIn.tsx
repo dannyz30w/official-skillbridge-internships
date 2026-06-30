@@ -94,7 +94,13 @@ const SignIn = () => {
     const locked = await checkLockout(email);
     if (locked) return;
     setError(""); setLoading(true);
-    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+    let err: any = null;
+    try {
+      const res = await withAuthRetry(() => supabase.auth.signInWithPassword({ email, password }));
+      err = res.error;
+    } catch (e: any) {
+      err = { message: "Network error reaching auth server. Please try again in a moment." };
+    }
     setLoading(false);
     if (err) {
       const count = await recordFailedAttempt(email);
@@ -105,6 +111,7 @@ const SignIn = () => {
       } else { setError(err.message); }
       return;
     }
+
     await clearAttempts(email);
     toast.success("Welcome back!");
   };
