@@ -9,7 +9,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { Typewriter } from "@/components/ui/typewriter-text";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 
-const VIDEO_URL = "https://ussszdsedbqjgktsxxpx.supabase.co/storage/v1/object/public/vidd/12231468-uhd_3840_2160_30fps.mp4";
+const VIDEO_URL = "https://eseftedsxosdjcafzfai.supabase.co/storage/v1/object/public/sb/13089301_1920_1080_25fps%20(1).mp4";
 
 const CATEGORIES = ["Tech and Software", "Creative and Design", "Healthcare and Wellness", "Food and Hospitality", "Trades and Construction", "Marketing and Social Media", "Education and Tutoring", "Finance", "Retail", "Nonprofit"];
 
