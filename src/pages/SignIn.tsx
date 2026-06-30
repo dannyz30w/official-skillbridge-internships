@@ -18,7 +18,14 @@ const LOCKOUT_SCHEDULE: Record<number, number> = {
   3: 60, 4: 180, 5: 600, 6: 1800, 7: 3600, 8: 10800, 9: 36000,
 };
 
-const db = supabase as any;
+async function callLoginAttempts(action: 'check' | 'record_failure' | 'clear', email: string) {
+  try {
+    const { data } = await supabase.functions.invoke('login-attempts', { body: { action, email } });
+    return data as any;
+  } catch {
+    return null;
+  }
+}
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -63,31 +70,24 @@ const SignIn = () => {
   }, []);
 
   const checkLockout = async (emailAddr: string) => {
-    const { data } = await db.from('login_attempts').select('*').eq('email', emailAddr).maybeSingle();
-    if (data?.locked_until) {
-      const lockEnd = new Date(data.locked_until).getTime();
-      if (lockEnd > Date.now()) { startCountdown(lockEnd); return true; }
+    const res = await callLoginAttempts('check', emailAddr);
+    if (res?.locked && res.lockedUntil) {
+      startCountdown(new Date(res.lockedUntil).getTime());
+      return true;
     }
     return false;
   };
 
   const recordFailedAttempt = async (emailAddr: string) => {
-    const { data } = await db.from('login_attempts').select('*').eq('email', emailAddr).maybeSingle();
-    const count = (data?.failed_count || 0) + 1;
-    const lockoutSecs = count >= 10 ? 86400 : LOCKOUT_SCHEDULE[count];
-    const lockedUntil = lockoutSecs ? new Date(Date.now() + lockoutSecs * 1000).toISOString() : null;
-    if (data) {
-      await db.from('login_attempts').update({ failed_count: count, locked_until: lockedUntil, last_attempt: new Date().toISOString() }).eq('email', emailAddr);
-    } else {
-      await db.from('login_attempts').insert({ email: emailAddr, failed_count: count, locked_until: lockedUntil });
-    }
-    if (lockedUntil) startCountdown(new Date(lockedUntil).getTime());
-    return count;
+    const res = await callLoginAttempts('record_failure', emailAddr);
+    if (res?.lockedUntil) startCountdown(new Date(res.lockedUntil).getTime());
+    return res?.count || 0;
   };
 
   const clearAttempts = async (emailAddr: string) => {
-    await db.from('login_attempts').update({ failed_count: 0, locked_until: null }).eq('email', emailAddr);
+    await callLoginAttempts('clear', emailAddr);
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
