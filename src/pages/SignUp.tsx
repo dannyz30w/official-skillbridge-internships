@@ -9,6 +9,8 @@ import { trackEvent } from "@/lib/analytics";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Typewriter } from "@/components/ui/typewriter-text";
+import { withAuthRetry } from "@/lib/authRetry";
+
 // Email sending disabled until Lovable Pro is available
 // import { sendInternWelcomeEmail, sendBusinessWelcomeEmail } from "@/lib/email";
 
