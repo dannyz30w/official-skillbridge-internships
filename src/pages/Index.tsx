@@ -101,10 +101,6 @@ const Index = () => {
 
         {/* Hero content */}
         <div className="relative z-10 flex flex-col items-start px-6 md:px-16 lg:px-24 pt-24 md:pt-32 pb-32 md:pb-40 max-w-[700px]">
-          {/* Badge */}
-          <div className="liquid-glass rounded-full px-4 py-1.5 text-xs font-medium text-white/80 uppercase tracking-widest animate-fade-rise" style={{ fontFamily: "var(--font-body)" }}>
-            WSI Impact League Finalist
-          </div>
 
           {/* Headline */}
           <h1 className="mt-8 animate-fade-rise-delay" style={{ fontFamily: "var(--font-display)" }}>
