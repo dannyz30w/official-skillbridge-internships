@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import skillbridgeLogo from "@/assets/skillbridge-logo.png";
 import SEOHead from "@/components/SEOHead";
 import { Typewriter } from "@/components/ui/typewriter-text";
+import { withAuthRetry } from "@/lib/authRetry";
+
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const inputCls = "w-full h-[48px] pl-12 pr-4 rounded-xl text-[16px] bg-white/5 border border-white/10 text-white placeholder:text-slate-300/45 focus:border-indigo-400/50 focus:outline-none focus:ring-1 focus:ring-indigo-400/20 transition-all";
