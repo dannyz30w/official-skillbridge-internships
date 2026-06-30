@@ -101,9 +101,16 @@ const SignUp = () => {
     setError(""); setLoading(true);
     const emailAgeResult = await checkEmailAge(email);
     if (!emailAgeResult.allowed) { setError(emailAgeResult.reason || "Please use an established email address to sign up."); setLoading(false); return; }
-    const { error: err } = await supabase.auth.signUp({ email, password, options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } } });
+    let err: any = null;
+    try {
+      const res = await withAuthRetry(() => supabase.auth.signUp({ email, password, options: { data: { full_name: `${firstName} ${lastName}`, account_type: 'intern', first_name: firstName, last_name: lastName, date_of_birth: dob } } }));
+      err = res.error;
+    } catch (e: any) {
+      err = { message: "Network error reaching auth server. Please try again in a moment." };
+    }
     setLoading(false);
     if (err) { setError(err.message); return; }
+
     trackEvent('intern_signup');
     // Email sending disabled until Lovable Pro
     // try {
